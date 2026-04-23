@@ -31,7 +31,6 @@ require 'db.php';
 					<li><a href="aboutus.php" class="active">Tentang Kami</a></li>
 					<li><a href="destinations.php">Destinasi</a></li>
 					<li><a href="review.php">Testimoni</a></li>
-                    
 				</ul>
 			</nav>
 
