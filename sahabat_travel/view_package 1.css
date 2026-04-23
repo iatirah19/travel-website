@@ -255,11 +255,13 @@ body {
 .include-box h4 {
     color: green;
     font-size: 20px;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .exclude-box h4 {
     color: red;
     font-size: 20px;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .exclude-box ul {
@@ -267,6 +269,7 @@ body {
     line-height: 1.5;
     font-family: 'Segoe UI', sans-serif;
     font-weight: 500;
+    color: #444;
 }
 
 .sub-include {
@@ -276,6 +279,8 @@ body {
 .sub-include h5 {
     margin-bottom: 5px;
     font-size: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
 }
 
 .sub-include ul {
