@@ -74,7 +74,7 @@ if ($package_id) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo ucwords(strtolower($data['title'] . ' ' . $data['duration'])); ?></title>
-    <link rel="stylesheet" href="view_package 1.css">
+    <link rel="stylesheet" href="view_package.css">
     
 </head>
 
