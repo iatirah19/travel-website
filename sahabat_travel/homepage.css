@@ -209,8 +209,8 @@ nav ul li a.active {
     background: rgba(255, 255, 255, 0.5);
 }
 
-.prev { left: 0px; }
-.next { right: 0px; }
+.prev { left: 25px; }
+.next { right: 25px; }
 
 /* --- Susunan Kandungan (Container) --- */
 .section {
