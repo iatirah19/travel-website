@@ -2,7 +2,6 @@ body {
     margin: 0;
     padding: 0;
     background: #ccc;
-    font-family: Arial, sans-serif;
 }
 
 /* PAGE WRAPPER */
@@ -236,6 +235,7 @@ body {
     animation: fadeIn 0.3s ease;
     max-height: 80vh;
     overflow-y: auto;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .close-btn {
