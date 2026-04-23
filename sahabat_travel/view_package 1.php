@@ -181,7 +181,7 @@ if ($package_id) {
 
                     <p>
                         📋 <a href="#" class="view-link" onclick="openPopup(); return false;">
-                            Include & Exclude
+                            Tour Details
                         </a>
                     </p>
 
