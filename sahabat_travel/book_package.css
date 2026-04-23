@@ -11,6 +11,9 @@ body {
     color: #19516B;
     text-align: center;
     letter-spacing: 1px;
+    margin: 5px 0 20px;
+    margin-top: 10px;   /* kecilkan ruang atas */
+    margin-bottom: 20px; /* optional bagi bawah sikit */
 }
 
 /* BACK BUTTON */
