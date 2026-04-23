@@ -204,8 +204,6 @@ if ($package_id) {
 
             <span class="close-btn" onclick="closePopup()">&times;</span>
 
-            <h3>Tour Details</h3>
-
             <?php if (!empty($halfboard) || !empty($fullboard)) { ?>
             <div class="include-box">
 
