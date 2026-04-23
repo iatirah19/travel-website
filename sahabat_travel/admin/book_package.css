@@ -1,0 +1,77 @@
+body {
+    font-family: Arial;
+    background: #f5f5f5;
+    }
+
+.box {
+    width: 500px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+	
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+	box-sizing: border-box; /* penting */
+    }
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #19516B;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+	box-sizing: border-box; /* penting */
+    }
+
+.dropdown {
+    width: 300px;
+    position: relative;
+    cursor: pointer;
+    }
+
+ .dropdown-selected {
+	width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+	box-sizing: border-box; /* penting */
+    }
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    width: 100%;
+    border: 1px solid #ccc;
+    background: white;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 999;
+	box-sizing: border-box; /* penting */
+    }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+			box-sizing: border-box; /* penting */
+        }
+
+        .dropdown-item img {
+            width: 25px;
+            height: 25px;
+        }
+
+        .dropdown-item:hover {
+            background: #f2f2f2;
+        }
+
+        #bank_section {
+            display: none;
+            margin-top: 10px;
+        }

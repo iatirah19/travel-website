@@ -1,0 +1,439 @@
+/* Reset asas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+	background: linear-gradient(135deg, #ffffff, #e3f2fd, #dee2e6);
+    background-attachment: fixed;
+}
+
+/* HEADER */
+.main-header {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* CONTAINER */
+.header-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+/* LOGO */
+.logo img {
+    height: 60px;
+}
+
+/* HAMBURGER BUTTON */
+.menu-toggle{
+    display:none;
+    font-size:28px;
+    cursor:pointer;
+}
+
+/* RIGHT SIDE */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+/* MENU */
+.nav-menu ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu ul li a {
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Gaya untuk menu yang ACTIVE */
+nav ul li a.active {
+    color: #19516B;
+    font-weight: bold;
+}
+
+.nav-menu ul li a:hover {
+    color: #19516B;
+}
+
+/* BUTTON */
+.btn-hubungi {
+    background: #9E1F25;
+    color: white;
+    padding: 12px 28px;
+    text-decoration: none;
+    border-radius: 35px;
+    font-weight: 700;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.btn-hubungi:hover {
+    transform: translateY(-2px);
+}
+
+/* SECTION BACKGROUND */
+section{
+    padding:60px 20px;
+    text-align:center;
+}
+
+/* TITLE */
+section h2{
+    font-size:2rem;
+    margin-bottom:40px;
+	color: #000;
+}
+
+section h3{
+    font-size:15px;
+    font-weight:400;
+    color:#555;
+    margin-bottom:40px;
+}
+
+.empty-state {
+    width: 100%;
+    text-align: center;
+    padding: 80px 20px;
+    color: #666;
+}
+
+.empty-state h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    font-size: 15px;
+}
+
+/* CONTAINER GRID */
+.pakej-container {
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* CARD */
+.card-pakej{
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+	width: 90%;
+}
+
+/* IMAGE CONTAINER */
+.image-container{
+    position: relative;
+    width: 100%; /* FULL */
+    height: 250px;
+    overflow: hidden;
+}
+
+/* FIX GAMBAR */
+.pakej-img img{
+    width: 100%;
+    height: 250px;
+    object-fit: cover; /* penting */
+    display: block;
+    transition: 0.4s;
+}
+
+/* HOVER ZOOM (SMOOTH) */
+.card-pakej:hover .pakej-img img{
+    transform: scale(1.1);
+}
+
+/* OVERLAY */
+.overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.75),
+        rgba(0,0,0,0.3),
+        transparent
+    );
+
+    display: flex;
+    justify-content: left;
+    align-items: flex-end;
+    padding: 20px;
+
+    opacity: 1;
+    transition: all 0.4s ease;
+}
+
+.card-pakej:hover .overlay{
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* TEXT */
+.pakej-info{
+    text-align: left;
+}
+
+.pakej-info h3{
+    color: white;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+	text-transform: capitalize;
+}
+
+/* BUTTON */
+.btn-details{
+    display: inline-block;
+    padding: 8px 18px;
+    background: #9E1F25;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-details:hover{
+    background: #c72b32;
+}
+
+.main-footer {
+    background-color: #9E1F25; /* Warna gelap */
+    padding: 20px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px; /* Jarak antara kolom */
+    padding: 40px;
+}
+
+.footer-column {
+    flex: 1; /* INI KUNCINYA: Memberi ruang seimbang kepada setiap kolom */
+    text-align: left;
+}
+
+.footer-column h3 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.footer-column p, .footer-column li {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+}
+
+/* Copyright Section */
+.footer-bottom {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.footer-bottom p {
+    font-size: 13px;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.contact-list li {
+    display: flex;
+    gap: 12px;           /* Jarak antara ikon dan teks */
+    margin-bottom: 15px;
+    align-items: flex-start; /* Kunci utama: Ikon akan sentiasa selari dengan baris pertama teks */
+}
+
+.contact-list li i {
+    margin-top: 4px;     /* Laraskan sikit ke bawah supaya betul-betul center dengan baris pertama */
+    color: #bdc3c7;      /* Warna emas mengikut tema Hubungi Kami anda */
+    font-size: 1.1rem;   /* Saiz ikon yang seimbang */
+    width: 20px;         /* Lebar tetap supaya teks di sebelah kiri selari secara menegak */
+    text-align: center;
+}
+
+.contact-list li span {
+    flex: 1;             /* Supaya teks mengambil baki ruang yang ada */
+    line-height: 1.5;    /* Memberi ruang antara baris teks yang lebih selesa dibaca */
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons a {
+    color: #bdc3c7;
+    font-size: 1.2rem; /* Kecilkan sedikit saiz ikon supaya muat cantik dalam kotak */
+    transition: all 0.3s ease;
+    
+    /* Tambahan untuk kotak */
+    width: 45px;
+    height: 45px;
+    border: 1px solid #bdc3c7; /* Garisan kotak */
+    display: flex;
+    align-items: center;     /* Letak ikon di tengah (menegak) */
+    justify-content: center;  /* Letak ikon di tengah (mendatar) */
+    border-radius: 50%;      /* Lengkungan di bucu kotak (buang baris ini jika nak kotak tajam) */
+    text-decoration: none;
+}
+
+/* 1. Facebook (Biru) */
+.social-icons a:nth-child(1):hover {
+    background-color: #1877F2;
+    border-color: #1877F2;
+    color: white;
+    transform: translateY(-5px);
+}
+
+/* 2. Instagram (Gradient Purple/Pink) */
+.social-icons a:nth-child(2):hover {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    border-color: transparent;
+    color: white;
+    transform: translateY(-5px);
+}
+
+/* 3. TikTok (Hitam) */
+.social-icons a:nth-child(3):hover {
+    background-color: #000000;
+    border-color: #000000;
+    color: white;
+    /* Efek shadow sikit untuk vibe TikTok */
+    box-shadow: 2px 2px #ee1d52, -2px -2px #69c9d0;
+    transform: translateY(-5px);
+}
+
+/* 4. WhatsApp (Hijau) */
+.social-icons a:nth-child(4):hover {
+    background-color: #25D366;
+    border-color: #25D366;
+    color: white;
+    transform: translateY(-5px);
+}
+
+@media (max-width: 768px) {
+
+    .footer-column {
+        text-align: left;   /* Semua content dalam kolom ikut kanan */
+        margin-bottom: 20px; /* Supaya jarak bawah antar kolom mobile */
+    }
+
+    .footer-column h3 {
+        text-align: left;   /* Tajuk ikut kanan */
+    }
+
+    .footer-column p,
+    .footer-column li {
+        text-align: left;   /* Semua teks ikut kanan */
+    }
+
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .social-icons {
+        justify-content: center;
+    }
+    
+    .main-header{
+        padding:10px 0;
+    }
+    
+    .menu-toggle{
+        display:block;
+    }
+
+    .header-right{
+        position:absolute;
+        top:80px;
+        left:0;
+        width:100%;
+        background:white;
+        flex-direction:column;
+        align-items:center;
+        gap:20px;
+        padding:20px 0;
+        border-bottom:1px solid #eee;
+
+        opacity:0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+
+    .header-right.active{
+        opacity:1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .nav-menu ul{
+        flex-direction:column;
+        gap:15px;
+        text-align:center;
+    }
+
+    .btn-hubungi{
+        margin-top:10px;
+    }
+    
+    .pakej-container{
+        grid-template-columns: repeat (2,1fr);
+    }
+    
+    .image-container{
+        height:180px;
+    }
+}

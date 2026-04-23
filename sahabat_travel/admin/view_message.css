@@ -1,0 +1,64 @@
+body {
+    font-family: 'Playfair Display', serif;
+    background: linear-gradient(135deg, #f4f6f9, #e9ecef);
+    margin: 0;
+    padding: 0;
+	justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 50%;
+    margin: 50px auto;
+}
+
+h2 {
+    text-align: center;
+    color: #000;
+    margin-bottom: 20px;
+	font-size: 30px;
+}
+
+.card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card p {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #000;
+}
+
+.message-box {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-left: 5px solid #4CAF50;
+    border-radius: 8px;
+	color: #000;
+}
+
+.message-box p {
+    margin-top: 8px;
+    white-space: pre-line;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 18px;
+    background: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: 0.3s;
+	font-family: 'Playfair Display', serif;
+	font-size: 18px;
+}
+
+.back-btn:hover {
+    background: #495057;
+}
