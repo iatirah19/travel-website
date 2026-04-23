@@ -81,7 +81,7 @@ $packages = $conn->query("SELECT * FROM packages WHERE country_id=$country_id");
             </div>
 
             <div class="pakej-action">
-                <a href="view_package 1.php?id=<?php echo $row['package_id']; ?>" class="btn-lihat">
+                <a href="view_package.php?id=<?php echo $row['package_id']; ?>" class="btn-lihat">
                     Lihat Details
                 </a>
             </div>
