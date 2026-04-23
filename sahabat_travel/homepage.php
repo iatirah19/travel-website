@@ -51,7 +51,7 @@ require 'db.php';
                 <h2>Selamat Datang ke Sahabat International Travel</h2>
                 <h4>Rakan perjalanan anda untuk menerokai dunia tanpa batasan.</h4>
                 <div class="btn-group">
-                    <a href="destinations.php" class="hero-btn primary-btn">Terokai Sekarang</a>
+                    <a href="destination.php" class="hero-btn primary-btn">Terokai Sekarang</a>
                 </div>
             </div>
         </div>
