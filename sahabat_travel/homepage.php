@@ -81,7 +81,7 @@ require 'db.php';
                 <h2>Perjalanan Selesa & Selamat Untuk Semua</h2>
                 <h4>Sama ada percutian keluarga, bulan madu atau trip berkumpulan - kami sedia membantu.</h4>
                 <div class="btn-group">
-                    <a href="hubungi-kami.html" class="hero-btn primary-btn">Hubungi Kami</a>
+                    <a href="contactus.php" class="hero-btn primary-btn">Hubungi Kami</a>
                 </div>
             </div>
         </div>
