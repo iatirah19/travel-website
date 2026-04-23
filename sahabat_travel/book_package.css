@@ -44,7 +44,7 @@ body {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    margin: 30px 0 50px 0;
+    margin: 0 0 0 0;
 	padding: 20px 10px;
     background: linear-gradient(135deg, #ffffff, #f7f9fc);
     border: 1px solid #eef2f7;
@@ -56,7 +56,7 @@ body {
 .progress-container::before {
     content: "";
     position: absolute;
-    top: 25%;
+    top: 30%;
     left: 10%;
     right: 10%;
     height: 6px;
@@ -67,7 +67,7 @@ body {
 /* green completed line */
 .progress-line {
     position: absolute;
-    top: 25%;
+    top: 30%;
     left: 10%;
 	right: 10%;
     height: 6px;
