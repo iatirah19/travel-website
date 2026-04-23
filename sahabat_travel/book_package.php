@@ -98,7 +98,7 @@ if (isset($_POST['book'])) {
     <div class="step-content active">
         <h3>Package Details</h3>
 
-        <p><b>Package Name:</b> <?php echo $pack['title']; ?> (<?php echo $pack['duration']; ?>)</p>
+        <p><b>Package Name:</b> <?php echo $pack['title']; ?> <?php echo $pack['duration']; ?></p>
         <p><b>Travel Date:</b> <?php echo $travel_date; ?></p>
 
         <input type="hidden" name="package_id" value="<?php echo $package_id; ?>">
