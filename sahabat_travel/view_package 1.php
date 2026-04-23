@@ -173,6 +173,7 @@ if ($package_id) {
                         <p>💰 Price <span class="highlight-word">RM <?php echo number_format($data['price'] ?? 0, 2); ?></span></p>
                         <p>💰 Deposit per pax <span class="highlight-word">RM <?php echo $data['deposit'] ?? '0'; ?></span></p>
                         <p>Group Departure</p>
+                        <p>Group Departure</p>
                         <p>👥 Min <?php echo $data['min_pax'] ?? '0'; ?> Pax</p>
                         <p>✈️ Flight: <?php echo $data['flight'] ?? 'TBA'; ?></p>
                     <?php } else { ?>
