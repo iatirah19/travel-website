@@ -254,10 +254,12 @@ body {
 /* INCLUDE / EXCLUDE */
 .include-box h4 {
     color: green;
+    font-size: 20px;
 }
 
 .exclude-box h4 {
     color: red;
+    font-size: 20px;
 }
 
 .exclude-box ul {
@@ -273,7 +275,7 @@ body {
 
 .sub-include h5 {
     margin-bottom: 5px;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .sub-include ul {
@@ -281,6 +283,7 @@ body {
     line-height: 1.5;
     font-family: 'Segoe UI', sans-serif;
     font-weight: 500;
+    color: #444;
 }
 
 .highlight-word {
