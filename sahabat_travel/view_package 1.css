@@ -235,7 +235,6 @@ body {
     animation: fadeIn 0.3s ease;
     max-height: 80vh;
     overflow-y: auto;
-    font-family: 'Segoe UI', sans-serif;
 }
 
 .close-btn {
@@ -258,6 +257,8 @@ body {
 .exclude-box ul {
     text-transform: capitalize;
     line-height: 1.5;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
 }
 
 .sub-include {
@@ -272,6 +273,8 @@ body {
 .sub-include ul {
     text-transform: capitalize;
     line-height: 1.5;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
 }
 
 .highlight-word {
