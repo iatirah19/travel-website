@@ -1,77 +1,264 @@
 body {
-    font-family: Arial;
-    background: #f5f5f5;
-    }
+    font-family: 'Segoe UI', sans-serif;
+    background: #f5f7fb;
+    margin: 0;
+    padding: 40px;
+}
 
-.box {
-    width: 500px;
-    margin: 50px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-	
-input, select {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-	box-sizing: border-box; /* penting */
-    }
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #19516B;
+    text-align: center;
+    letter-spacing: 1px;
+    margin: 5px 0 20px;
+    margin-top: 10px;   /* kecilkan ruang atas */
+    margin-bottom: 20px; /* optional bagi bawah sikit */
+}
 
-button {
-    width: 100%;
-    padding: 10px;
+/* BACK BUTTON */
+.back-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    margin-bottom: 20px;
+    background: #ffffff;
+    color: #19516B;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 1px solid #dfe6ee;
+    font-weight: 500;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+}
+
+/* hover effect */
+.back-btn:hover {
     background: #19516B;
     color: #fff;
-    border: none;
-    cursor: pointer;
-	box-sizing: border-box; /* penting */
-    }
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(25,81,107,0.25);
+}
 
-.dropdown {
-    width: 300px;
+.progress-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: relative;
-    cursor: pointer;
-    }
+    margin: 0 0 0 0;
+	padding: 20px 10px;
+    background: linear-gradient(135deg, #ffffff, #f7f9fc);
+    border: 1px solid #eef2f7;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
 
- .dropdown-selected {
-	width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-	box-sizing: border-box; /* penting */
-    }
-
-.dropdown-list {
-    display: none;
+/* LINE TENGAH SAHAJA */
+.progress-container::before {
+    content: "";
     position: absolute;
+    top: 30%;
+    left: 10%;
+    right: 10%;
+    height: 6px;
+    background: #ddd;
+    z-index: 0;
+}
+
+/* green completed line */
+.progress-line {
+    position: absolute;
+    top: 30%;
+    left: 10%;
+	right: 10%;
+    height: 6px;
+    background: #4CAF50;
+    z-index: 0;
+    transition: width 0.3s ease;
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+	position: relative;
+    z-index: 2;
+}
+
+.circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    font-size: 14px;
+	position: relative;
+    z-index: 3;
+}
+
+.step.active .circle {
+    background: #2196F3;
+    color: white;
+}
+
+.step.completed .circle {
+    background: #4CAF50;
+    color: white;
+}
+
+.step:first-child::after {
+    content: none;
+}
+
+.step-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.step-content.active {
+    display: block;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    margin-top: 20px;
+}
+
+/* TITLE */
+.step-content h3 {
+    font-size: 20px;
+    color: #19516B;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.step-content h3::after {
+    content: "";
+    width: 50px;
+    height: 3px;
+    background: #4CAF50;
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    border-radius: 5px;
+}
+
+/* TEXT */
+.step-content p {
+    font-size: 15px;
+    color: #333;
+    margin: 8px 0;
+    text-transform: capitalize;
+}
+
+/* LABEL BOLD STYLE */
+.step-content b {
+    color: #19516B;
+}
+
+/* BUTTON STYLE (NEXT) */
+.step-content button {
+    background: linear-gradient(135deg, #19516B, #2f5bff);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+.step-content button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* FADE ANIMATION */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* INPUT & SELECT */
+input, select, textarea {
     width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
     border: 1px solid #ccc;
-    background: white;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 999;
-	box-sizing: border-box; /* penting */
+    box-sizing: border-box;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #19516B;
+    outline: none;
+    box-shadow: 0 0 5px rgba(25,81,107,0.2);
+}
+
+/* PAX FORM */
+#paxForm {
+    margin-top: 10px;
+}
+
+#paxForm h4 {
+    margin-top: 20px;
+    color: #2f5bff;
+}
+
+#paxForm hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+}
+
+/* PLUS MINUS BUTTON */
+button[onclick*="changePax"] {
+    width: 40px;
+    display: inline-block;
+    margin: 0 5px;
+    background: #2f5bff;
+}
+
+/* NUMBER INPUT */
+input[type="number"] {
+    width: 80px;
+    text-align: center;
+    display: inline-block;
+}
+
+/* PAYMENT SECTION */
+#paymentDetails {
+    margin-top: 15px;
+    padding: 10px;
+    background: #f9fafc;
+    border-radius: 8px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+
+    .progress-bar {
+        flex-direction: column;
+        gap: 10px;
     }
 
-        .dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-			box-sizing: border-box; /* penting */
-        }
+    .step {
+        font-size: 12px;
+    }
 
-        .dropdown-item img {
-            width: 25px;
-            height: 25px;
-        }
-
-        .dropdown-item:hover {
-            background: #f2f2f2;
-        }
-
-        #bank_section {
-            display: none;
-            margin-top: 10px;
-        }
+    button {
+        font-size: 14px;
+    }
+}

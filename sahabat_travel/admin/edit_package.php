@@ -96,6 +96,18 @@ $exclude   = getList($conn, $package_id);
     </select>
 </div>
 
+<!-- PACKAGE TYPE -->
+<div class="form-group">
+    <label>Package Type</label>
+    <select name="package_type" required>
+        <option value="">-- Select Type --</option>
+        <option value="SIT" <?php if($row['package_type']=='SIT') echo 'selected'; ?>>SIT</option>
+        <option value="MTB" <?php if($row['package_type']=='MTB') echo 'selected'; ?>>MTB</option>
+        <option value="JJ" <?php if($row['package_type']=='JJ') echo 'selected'; ?>>JJ</option>
+        <option value="SUKA" <?php if($row['package_type']=='SUKA') echo 'selected'; ?>>SUKA</option>
+    </select>
+</div>
+
 <!-- DURATION -->
 <div class="form-group">
     <label>Duration</label>

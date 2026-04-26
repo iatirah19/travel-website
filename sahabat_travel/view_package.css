@@ -70,21 +70,19 @@ body {
     position: absolute;
     top: 20px;
     left: 20px;
-    z-index: 10;
-    padding: 8px 16px;
-    border-radius: 30px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(8px);
-    color: #fff;
-    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    background: #fff;
+    color: #19516B;
     text-decoration: none;
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 1px solid #19516B;
     transition: 0.3s;
 }
 
 .back-btn:hover {
-    background: #ff7a00;
-    border-color: #ff7a00;
+    background: #19516B;
+    color: #fff;
 }
 
 /* TITLE */
@@ -160,20 +158,46 @@ body {
     box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
-.date-table th,
+.date-table th {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    font-size: 20px;
+}
+
 .date-table td {
     padding: 12px;
     text-align: center;
     border-bottom: 1px solid #eee;
+    font-size: 16px;
 }
 
-.date-table th {
-    background: #ff7a00;
-    color: #fff;
+.th-sit {
+    background: #9E1F25;
+    color: white;
 }
+
+.th-mtb {
+    background: #6B1E51;
+    color: white;
+}
+
+.th-jj {
+    background: #1e68c4;
+    color: white;
+}
+
+.th-suka {
+    background: #ff6a00;
+    color: white;
+}
+
+.btn-sit { background:#9E1F25; }
+.btn-mtb { background:#6B1E51; }
+.btn-jj { background:#1e68c4; }
+.btn-suka { background:#ff6a00; }
 
 .btn-book {
-    background: #ff7a00;
     color: white;
     padding: 6px 12px;
     border-radius: 20px;

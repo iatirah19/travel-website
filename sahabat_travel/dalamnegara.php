@@ -10,35 +10,22 @@ require 'db.php';
     <title>Pakej Dalam Negara - Sahabat International Travel Sdn Bhd</title>
     <link rel="stylesheet" href="dalamnegara.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="main-header">
-    <div class="header-container">
-        <div class="logo">
-            <img src="picture/LOGO-SAHABAT.png" alt="Logo Sahabat International Travel">
+    <div class="header-bar">
+        <div class="back-btn">
+            <a href="javascript:history.back()">← Back</a>
         </div>
 
-        <div class="menu-toggle">☰</div>
-
-        <div class="header-right">
-        <nav class="nav-menu">
-            <ul>
-                <li><a href="homepage.php">Utama</a></li>
-                <li><a href="aboutus.php">Tentang Kami</a></li>
-                <li><a href="destinations.php">Destinasi</a></li>
-                <li><a href="review.php">Testimoni</a></li>
-            </ul>
-        </nav>
-
-        <div class="header-action">
-            <a href="contactus.php" class="btn-hubungi"></i> Hubungi Kami
-            </a>
-        </div>
-        </div>
+        <h2 class="section-title">Senarai Pakej Eksklusif</h2>
     </div>
-    </header>
 
-<h2 class="section-title">Senarai Pakej Eksklusif</h2>
+    <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Cari pakej...">
+    </div>
+
 <div class="pakej-table-container">
 
 	<?php
@@ -58,7 +45,6 @@ require 'db.php';
 
 			<div class="pakej-main-info">
 				<h3><?php echo $row['title']; ?></h3>
-				<p class="pakej-desc"><?php echo $row['duration']; ?></p>
 			</div>
 
 			<div class="pakej-action">

@@ -42,7 +42,7 @@ require 'db.php';
 <div class="pakej-table-container">
 
 	<?php
-	$category_id = 1;
+	$category_id = 3;
 	$sql = "SELECT * FROM packages WHERE category_id = $category_id";
 	$result = $conn->query($sql);
 

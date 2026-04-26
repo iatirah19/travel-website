@@ -22,6 +22,9 @@ if ($package_id) {
     }
 
     $data = mysqli_fetch_assoc($package);
+    
+    // PACKAGE TYPE (FINAL CORRECT)
+    $type = strtolower($data['package_type'] ?? 'sit');
 
     // HIGHLIGHTS
     $highlights = mysqli_query($conn, 
@@ -131,8 +134,8 @@ if ($package_id) {
                 <table class="date-table">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Action</th>
+                            <th class="th-<?php echo $type; ?>">Date</th>
+                            <th class="th-<?php echo $type; ?>">Action</th>
                         </tr>
                     </thead>
 
@@ -145,8 +148,9 @@ if ($package_id) {
                                 <tr>
                                     <td><?php echo $date; ?></td>
                                     <td>
-                                        <a href="book_package.php?package_id=<?php echo $package_id; ?>&travel_date=<?php echo $d['departure_date']; ?>" class="btn-book">
-                                            Book Now
+                                        <a href="book_package.php?package_id=<?php echo $package_id; ?>&travel_date=<?php echo $d['departure_date']; ?>" 
+                                        class="btn-book btn-<?php echo $type; ?>">
+                                        Book Now
                                         </a>
                                     </td>
                                 </tr>
@@ -172,7 +176,9 @@ if ($package_id) {
                     <?php if ($data) { ?>
                         <p>💰 Price <span class="highlight-word">RM <?php echo number_format($data['price'] ?? 0, 2); ?></span></p>
                         <p>💵 Deposit per pax <span class="highlight-word">RM <?php echo $data['deposit'] ?? '0'; ?></span></p>
-                        <p>👨‍👩‍👧‍👦 Group Departure</p>
+                        <p>👨‍👩‍👧‍👦 Group Package</p>
+                        <p>🚶 Private Package</p>
+                        <p>🧑‍🤝‍🧑 Honeymoon Package</p>
                         <p>👥 Min <?php echo $data['min_pax'] ?? '0'; ?> Pax</p>
                         <p>✈️ Flight: <?php echo $data['flight'] ?? 'TBA'; ?></p>
                     <?php } else { ?>
@@ -250,6 +256,7 @@ if ($package_id) {
 
 </div>
 
+<!-- POPUP JS -->
 <script>
 function openPopup() {
     document.getElementById("popupBox").classList.add("active");

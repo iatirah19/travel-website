@@ -10,36 +10,24 @@ include 'db.php';
     <title>Pakej Luar Negara - Sahabat International Travel Sdn Bhd</title>
     <link rel="stylesheet" href="luarnegara.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="main-header">
-    <div class="header-container">
-        <div class="logo">
-            <img src="picture/LOGO-SAHABAT.png" alt="Logo Sahabat International Travel">
+    <div class="header-bar">
+
+        <div class="back-btn">
+            <a href="javascript:history.back()">← Back</a>
         </div>
 
-        <div class="menu-toggle">☰</div>
+        <h2 class="section-title">Terokai Senarai Negara Impian Untuk Dilawati</h2>
 
-        <div class="header-right">
-        <nav class="nav-menu">
-            <ul>
-                <li><a href="homepage.php">Utama</a></li>
-                <li><a href="aboutus.php">Tentang Kami</a></li>
-                <li><a href="destinations.php">Destinasi</a></li>
-                <li><a href="review.php">Testimoni</a></li>
-            </ul>
-        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="Cari pakej...">
+        </div>
 
-        <div class="header-action">
-            <a href="contactus.php" class="btn-hubungi"></i> Hubungi Kami
-            </a>
-        </div>
-        </div>
     </div>
-    </header>
 
     <section>
-    <h2>Terokai Senarai Negara Impian Untuk Dilawati</h2>
 
     <div class="pakej-container">
 

@@ -62,6 +62,18 @@ require '../db.php';
     </select>
 </div>
 
+<!-- PACKAGE TYPE -->
+<div class="form-group">
+    <label>Package Type</label>
+    <select name="package_type" required>
+        <option value="">-- Select Type --</option>
+        <option value="SIT">SIT</option>
+        <option value="MTB">MTB</option>
+        <option value="JJ">JJ</option>
+        <option value="SUKA">SUKA</option>
+    </select>
+</div>
+
 <!-- DURATION -->
 <div class="form-group">
     <label>Duration</label>

@@ -53,6 +53,11 @@ body {
     background: #146c43;
 }
 
+.filter-box {
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
 /* TABLE */
 table {
     width: 100%;

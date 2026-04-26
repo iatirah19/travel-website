@@ -40,6 +40,7 @@ if (isset($_POST['add_package'])) {
     $flight       = mysqli_real_escape_string($conn, $_POST['flight']);
     $min_pax      = (int)$_POST['min_pax'];
     $status       = $_POST['status'];
+    $package_type = $_POST['package_type'];
 
     if ($country_id === "" || $country_id === "0") {
         $country_id = null;
@@ -73,9 +74,9 @@ if (isset($_POST['add_package'])) {
     /* INSERT PACKAGE */
     mysqli_query($conn, "
         INSERT INTO packages
-        (title, country_id, category_id, duration, price, deposit, flight, min_pax, status, image, itinerary_file)
-        VALUES
-        ('$package_name', $country_value, '$category_id', '$duration', '$price', '$deposit', '$flight', '$min_pax', '$status', '$image', '$itinerary_file')
+        (title, country_id, category_id, duration, price, deposit, flight, min_pax, status, image, itinerary_file, package_type)
+        VALUES 
+        ('$package_name', $country_value, '$category_id', '$duration', '$price', '$deposit', '$flight', '$min_pax', '$status', '$image', '$itinerary_file', '$package_type')
     ");
 
     $new_package_id = mysqli_insert_id($conn);
@@ -175,6 +176,7 @@ if (isset($_POST['update_package'])) {
     $flight       = mysqli_real_escape_string($conn, $_POST['flight']);
     $min_pax      = (int)$_POST['min_pax'];
     $status       = $_POST['status'];
+    $package_type = $_POST['package_type'];
 
     if ($country_id === "" || $country_id === "0") {
         $country_id = null;
@@ -223,7 +225,8 @@ if (isset($_POST['update_package'])) {
             deposit = '$deposit',
             flight = '$flight',
             min_pax = '$min_pax',
-            status = '$status'
+            status = '$status',
+            package_type = '$package_type'
             $image_sql
             $itinerary_sql
         WHERE package_id = $id
@@ -357,7 +360,9 @@ if (isset($_POST['highlight_name'])) {
 /* =========================
    GET DATA
 ========================= */
-$result = mysqli_query($conn, "
+$type_filter = $_GET['type_filter'] ?? '';
+
+$sql = "
 SELECT 
     packages.*,
     categories.category_name,
@@ -367,8 +372,15 @@ LEFT JOIN categories
     ON packages.category_id = categories.category_id
 LEFT JOIN countries 
     ON packages.country_id = countries.country_id
-ORDER BY packages.package_id DESC
-");
+";
+
+if ($type_filter != '') {
+    $sql .= " WHERE packages.package_type = '$type_filter' ";
+}
+
+$sql .= " ORDER BY packages.package_id DESC";
+
+$result = mysqli_query($conn, $sql);
 ?>
 
 <!DOCTYPE html>
@@ -392,11 +404,24 @@ ORDER BY packages.package_id DESC
 
 </div>
 
+<form method="GET" style="margin-bottom: 15px;">
+    <label>Filter Type:</label>
+
+    <select name="type_filter" class="filter-box" onchange="this.form.submit()">
+        <option value="">-- All Types --</option>
+        <option value="SIT" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='SIT') echo 'selected'; ?>>SIT</option>
+        <option value="MTB" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='MTB') echo 'selected'; ?>>MTB</option>
+        <option value="JJ" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='JJ') echo 'selected'; ?>>JJ</option>
+        <option value="SUKA" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='SUKA') echo 'selected'; ?>>SUKA</option>
+    </select>
+</form>
+
     <table>
         <tr>
             <th>ID</th>
 			<th>Category</th>
             <th>Country</th>
+            <th>Type</th>
             <th>Image</th>
             <th>Package Name</th>
             <th>Duration</th>
@@ -414,6 +439,8 @@ ORDER BY packages.package_id DESC
 			<td><?php echo htmlspecialchars($row['category_name']); ?></td>
             
             <td><?php echo htmlspecialchars($row['country_name']); ?></td>
+            
+            <td><?php echo htmlspecialchars($row['package_type']); ?></td>
 
             <td>
                 <?php if($row['image']): ?>
@@ -430,7 +457,9 @@ ORDER BY packages.package_id DESC
             <td>RM <?php echo number_format($row['price'], 2); ?></td>
 
             <td>RM <?php echo number_format($row['deposit'], 2); ?></td>
+            
             <td><?php echo htmlspecialchars($row['flight']); ?></td>
+            
             <td><?php echo $row['min_pax']; ?></td>
 
             <td>
