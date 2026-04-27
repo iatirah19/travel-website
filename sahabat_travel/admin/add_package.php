@@ -74,6 +74,17 @@ require '../db.php';
     </select>
 </div>
 
+<!-- PACKAGE CATEGORY (MTB ONLY) -->
+<div class="form-group" id="packageCategoryBox" style="display:none;">
+    <label>Package Category</label>
+    <select name="package_category">
+        <option value="">-- Select Category --</option>
+        <option value="group">Group Package</option>
+        <option value="private">Private Package</option>
+        <option value="honeymoon">Honeymoon Package</option>
+    </select>
+</div>
+
 <!-- DURATION -->
 <div class="form-group">
     <label>Duration</label>
@@ -210,13 +221,17 @@ function addHighlight() {
 }
 </script>
 
-<!-- COUNTRY TOGGLE -->
+<!-- COUNTRY AND PACKAGE CATEGORY TOGGLE -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
     const categorySelect = document.getElementById("categorySelect");
     const countryBox = document.getElementById("countryBox");
     const countrySelect = countryBox.querySelector("select");
+
+    const packageType = document.querySelector("select[name='package_type']");
+    const packageCategoryBox = document.getElementById("packageCategoryBox");
+    const packageCategorySelect = packageCategoryBox.querySelector("select");
 
     function toggleCountry() {
         let category = categorySelect.value;
@@ -229,8 +244,22 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function togglePackageCategory() {
+        let type = packageType.value;
+
+        if (type === "MTB") {
+            packageCategoryBox.style.display = "block";
+        } else {
+            packageCategoryBox.style.display = "none";
+            packageCategorySelect.value = "";
+        }
+    }
+
     categorySelect.addEventListener("change", toggleCountry);
+    packageType.addEventListener("change", togglePackageCategory);
+
     toggleCountry();
+    togglePackageCategory();
 });
 </script>
 

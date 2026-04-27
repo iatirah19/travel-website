@@ -176,9 +176,20 @@ if ($package_id) {
                     <?php if ($data) { ?>
                         <p>💰 Price <span class="highlight-word">RM <?php echo number_format($data['price'] ?? 0, 2); ?></span></p>
                         <p>💵 Deposit per pax <span class="highlight-word">RM <?php echo $data['deposit'] ?? '0'; ?></span></p>
-                        <p>👨‍👩‍👧‍👦 Group Package</p>
-                        <p>🚶 Private Package</p>
-                        <p>🧑‍🤝‍🧑 Honeymoon Package</p>
+                        <?php
+$icons = [
+    'group' => '👨‍👩‍👧‍👦 Group Package',
+    'private' => '🚶 Private Package',
+    'honeymoon' => '🧑‍🤝‍🧑 Honeymoon Package'
+];
+
+if (!empty($row) && isset($row['package_type']) && $row['package_type'] == 'MTB') {
+
+    if (!empty($row['package_category']) && isset($icons[$row['package_category']])) {
+        echo "<p>{$icons[$row['package_category']]}</p>";
+    }
+}
+?>
                         <p>👥 Min <?php echo $data['min_pax'] ?? '0'; ?> Pax</p>
                         <p>✈️ Flight: <?php echo $data['flight'] ?? 'TBA'; ?></p>
                     <?php } else { ?>

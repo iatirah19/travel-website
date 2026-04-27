@@ -41,6 +41,12 @@ if (isset($_POST['add_package'])) {
     $min_pax      = (int)$_POST['min_pax'];
     $status       = $_POST['status'];
     $package_type = $_POST['package_type'];
+    $package_category = $_POST['package_category'] ?? 'group';
+
+// kalau bukan MTB → auto group
+if ($package_type !== 'MTB') {
+    $package_category = 'group';
+}
 
     if ($country_id === "" || $country_id === "0") {
         $country_id = null;
@@ -74,9 +80,9 @@ if (isset($_POST['add_package'])) {
     /* INSERT PACKAGE */
     mysqli_query($conn, "
         INSERT INTO packages
-        (title, country_id, category_id, duration, price, deposit, flight, min_pax, status, image, itinerary_file, package_type)
+        (title, country_id, category_id, duration, price, deposit, flight, min_pax, status, image, itinerary_file, package_type, package_category)
         VALUES 
-        ('$package_name', $country_value, '$category_id', '$duration', '$price', '$deposit', '$flight', '$min_pax', '$status', '$image', '$itinerary_file', '$package_type')
+        ('$package_name', $country_value, '$category_id', '$duration', '$price', '$deposit', '$flight', '$min_pax', '$status', '$image', '$itinerary_file', '$package_type', '$package_category')
     ");
 
     $new_package_id = mysqli_insert_id($conn);
@@ -177,6 +183,11 @@ if (isset($_POST['update_package'])) {
     $min_pax      = (int)$_POST['min_pax'];
     $status       = $_POST['status'];
     $package_type = $_POST['package_type'];
+    $package_category = $_POST['package_category'] ?? 'group';
+
+if ($package_type !== 'MTB') {
+    $package_category = 'group';
+}
 
     if ($country_id === "" || $country_id === "0") {
         $country_id = null;
@@ -226,7 +237,8 @@ if (isset($_POST['update_package'])) {
             flight = '$flight',
             min_pax = '$min_pax',
             status = '$status',
-            package_type = '$package_type'
+            package_type = '$package_type',
+            package_category = '$package_category'
             $image_sql
             $itinerary_sql
         WHERE package_id = $id
@@ -421,8 +433,8 @@ $result = mysqli_query($conn, $sql);
             <th>ID</th>
 			<th>Category</th>
             <th>Country</th>
-            <th>Type</th>
-            <th>Image</th>
+            <th>Package Type</th>
+            <th>Package Category</th>
             <th>Package Name</th>
             <th>Duration</th>
             <th>Price (RM)</th>
@@ -443,11 +455,13 @@ $result = mysqli_query($conn, $sql);
             <td><?php echo htmlspecialchars($row['package_type']); ?></td>
 
             <td>
-                <?php if($row['image']): ?>
-                    <img src="../uploads/<?php echo $row['image']; ?>" class="img-preview" alt="Package Image">
-                <?php else: ?>
-                    <small>No Image</small>
-                <?php endif; ?>
+                <?php 
+                if ($row['package_type'] == 'MTB') {
+                    echo ucfirst($row['package_category']);
+                } else {
+                    echo '-';
+                }
+                ?>
             </td>
 
             <td><strong><?php echo htmlspecialchars($row['title']); ?></strong></td>

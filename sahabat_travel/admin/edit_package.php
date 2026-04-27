@@ -108,6 +108,17 @@ $exclude   = getList($conn, $package_id);
     </select>
 </div>
 
+<!-- PACKAGE CATEGORY (MTB ONLY) -->
+<div class="form-group" id="packageCategoryBox" style="display:none;">
+    <label>Package Category</label>
+    <select name="package_category">
+        <option value="">-- Select Category --</option>
+        <option value="group" <?php if($row['package_category']=='group') echo 'selected'; ?>>Group Package</option>
+        <option value="private" <?php if($row['package_category']=='private') echo 'selected'; ?>>Private Package</option>
+        <option value="honeymoon" <?php if($row['package_category']=='honeymoon') echo 'selected'; ?>>Honeymoon Package</option>
+    </select>
+</div>
+
 <!-- DURATION -->
 <div class="form-group">
     <label>Duration</label>
@@ -257,16 +268,32 @@ function addDate() {
     document.querySelector(".date-wrapper").appendChild(div);
 }
 
+
 document.addEventListener("DOMContentLoaded", function () {
+
     const categorySelect = document.getElementById("categorySelect");
     const countryBox = document.getElementById("countryBox");
+
+    const packageType = document.querySelector("select[name='package_type']");
+    const packageCategoryBox = document.getElementById("packageCategoryBox");
 
     function toggleCountry() {
         countryBox.style.display = (categorySelect.value === "2") ? "block" : "none";
     }
 
+    function togglePackageCategory() {
+        if (packageType.value === "MTB") {
+            packageCategoryBox.style.display = "block";
+        } else {
+            packageCategoryBox.style.display = "none";
+        }
+    }
+
     categorySelect.addEventListener("change", toggleCountry);
+    packageType.addEventListener("change", togglePackageCategory);
+
     toggleCountry();
+    togglePackageCategory();
 });
 </script>
 
