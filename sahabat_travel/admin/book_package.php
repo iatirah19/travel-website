@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require '../db.php';
 
 // ✅ FIX: define step (avoid undefined error)
 $step = $_GET['step'] ?? 1;

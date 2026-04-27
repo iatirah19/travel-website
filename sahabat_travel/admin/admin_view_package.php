@@ -1,321 +1,278 @@
 <?php
 require '../db.php';
 
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// GET ID
+$package_id = $_GET['id'] ?? null;
 
-if ($id <= 0) {
-    echo "Invalid package ID";
-    exit;
-}
-
-/* =========================
-   GET PACKAGE
-========================= */
-$sql = "
-    SELECT packages.*, countries.country_name
-    FROM packages
-    JOIN countries ON packages.country_id = countries.country_id
-    WHERE packages.package_id = $id
-";
-
-$result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result);
-
-if (!$row) {
-    echo "Package not found";
-    exit;
-}
-
-/* =========================
-   GET DATES
-========================= */
-$date_query = mysqli_query($conn, "
-    SELECT departure_date
-    FROM package_dates
-    WHERE package_id = $id
-    ORDER BY departure_date ASC
-");
-
-/* =========================
-   GET INCLUDE (HALF + FULL)
-========================= */
+$data = null;
+$highlights = null;
+$date_query = null;
 $halfboard = [];
 $fullboard = [];
-
-$include_query = mysqli_query($conn, "
-    SELECT type, description 
-    FROM package_include 
-    WHERE package_id = $id
-");
-
-while ($i = mysqli_fetch_assoc($include_query)) {
-
-    if ($i['type'] == 'halfboard') {
-        $halfboard[] = $i['description'];
-    }
-
-    if ($i['type'] == 'fullboard') {
-        $fullboard[] = $i['description'];
-    }
-}
-
-/* =========================
-   GET EXCLUDE (OPTIONAL)
-========================= */
 $exclude = [];
 
-$exclude_query = mysqli_query($conn, "
-    SELECT description 
-    FROM package_exclude 
-    WHERE package_id = $id
-");
+if ($package_id) {
 
-while ($e = mysqli_fetch_assoc($exclude_query)) {
-    $exclude[] = $e['description'];
+    // PACKAGE
+    $package = mysqli_query($conn, 
+        "SELECT * FROM packages WHERE package_id='$package_id'");
+    
+    if (!$package) {
+        die("Query Error: " . mysqli_error($conn));
+    }
+
+    $data = mysqli_fetch_assoc($package);
+    
+    // PACKAGE TYPE (FINAL CORRECT)
+    $type = strtolower($data['package_type'] ?? 'sit');
+
+    // HIGHLIGHTS
+    $highlights = mysqli_query($conn, 
+        "SELECT * FROM package_highlights WHERE package_id='$package_id'");
+
+    if (!$highlights) {
+        die("Query Error: " . mysqli_error($conn));
+    }
+
+    // DATES
+    $date_query = mysqli_query($conn, "
+        SELECT departure_date
+        FROM package_dates
+        WHERE package_id='$package_id'
+        ORDER BY departure_date ASC
+    ");
+
+    // INCLUDE
+    $include_query = mysqli_query($conn, "
+        SELECT type, description 
+        FROM package_include 
+        WHERE package_id='$package_id'
+    ");
+
+    while ($i = mysqli_fetch_assoc($include_query)) {
+        if ($i['type'] == 'halfboard') {
+            $halfboard[] = $i['description'];
+        }
+        if ($i['type'] == 'fullboard') {
+            $fullboard[] = $i['description'];
+        }
+    }
+
+    // EXCLUDE
+    $exclude_query = mysqli_query($conn, "
+        SELECT description 
+        FROM package_exclude 
+        WHERE package_id='$package_id'
+    ");
+
+    while ($e = mysqli_fetch_assoc($exclude_query)) {
+        $exclude[] = $e['description'];
+    }
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo htmlspecialchars($row['title']); ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo ucwords(strtolower($data['title'] . ' ' . $data['duration'])); ?></title>
     <link rel="stylesheet" href="admin_view_package.css">
+    
 </head>
 
-<body style="
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-    url('../uploads/<?php echo htmlspecialchars($row['image']); ?>');
-    background-size: cover;
-">
+<body>
 
-<?php
-$package_id = (int)$row['package_id'];
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <a href="javascript:history.back()" class="back-btn">← Back</a>
+    <?php if($data) { ?>
+        <img src="../uploads/<?php echo $data['image']; ?>" class="hero-img">
+    <?php } ?>
+</section>
 
-$highlight_check = mysqli_query($conn, "
-    SELECT 1 FROM package_highlights 
-    WHERE package_id = $package_id
-    LIMIT 1
-");
+<div class="page-container">
 
-$has_highlight = mysqli_num_rows($highlight_check) > 0;
-?>
+    <!-- TITLE -->
+    <?php if($data) { ?>
+        <h1 class="package-title">
+            <?php echo $data['title']; ?> <?php echo $data['duration']; ?>
+        </h1>
+    <?php } else { ?>
+        <h1 class="package-title">Package not found</h1>
+    <?php } ?>
 
-<!-- ================= NAV ================= -->
-<div class="package-short-nav">
-  <?php if ($has_highlight) { ?>
-    <button class="nav-box active" onclick="showSection('highlight')">📍 Tarikan</button>
-  <?php } ?>
-  
-  <button class="nav-box" onclick="showSection('itinerary')">📅 Itinerary</button>
-  <button class="nav-box" onclick="showSection('harga')">💰 Harga</button>
-  <button class="nav-box" onclick="showSection('tarikh')">🗓️ Tarikh</button>
-</div>
+    <div class="layout-wrapper">
 
-<h1>
-<?php 
-echo strtoupper(htmlspecialchars($row['title'])) . " " . htmlspecialchars($row['duration']);
-?>
-</h1>
+        <!-- LEFT SIDE -->
+        <div class="left-side">
 
-<div id="highlight" class="content-section">
-<?php
-$package_id = (int)$row['package_id'];
+            <!-- HIGHLIGHT -->
+            <div class="box">
+                <h2 class="section-title">Highlight Places</h2>
 
-$highlight = mysqli_query($conn, "
-    SELECT * FROM package_highlights 
-    WHERE package_id = $package_id
-");
+                <div class="highlight-container">
+                    <?php if ($highlights && mysqli_num_rows($highlights) > 0) { ?>
+                        <?php while($row = mysqli_fetch_assoc($highlights)) { ?>
+                            <div class="highlight-card">
+                                <img src="../uploads/<?php echo $row['image']; ?>">
+                                <div class="highlight-name">
+                                    <?php echo $row['name']; ?>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <p style="text-align:center;">No highlights found</p>
+                    <?php } ?>
+                </div>
+            </div>
 
-if (mysqli_num_rows($highlight) > 0) {
-?>
+            <!-- DATE -->
+            <div class="box">
+                <h2 class="section-title">Available Travel Dates</h2>
 
-<!-- ================= HIGHLIGHTS ================= -->
-    <h2>Tarikan Utama</h2>
+                <table class="date-table">
+                    <thead>
+                        <tr>
+                            <th class="th-<?php echo $type; ?>">Date</th>
+                            <th class="th-<?php echo $type; ?>">Action</th>
+                        </tr>
+                    </thead>
 
-    <div class="highlight-container">
+                    <tbody>
+                        <?php
+                        if ($date_query && mysqli_num_rows($date_query) > 0) {
+                            while ($d = mysqli_fetch_assoc($date_query)) {
+                                $date = date('d M Y', strtotime($d['departure_date']));
+                        ?>
+                                <tr>
+                                    <td><?php echo $date; ?></td>
+                                    <td>
+                                        <a href="book_package.php?package_id=<?php echo $package_id; ?>&travel_date=<?php echo $d['departure_date']; ?>" 
+                                        class="btn-book btn-<?php echo $type; ?>">
+                                        Book Now
+                                        </a>
+                                    </td>
+                                </tr>
+                        <?php
+                            }
+                        } else {
+                            echo "<tr><td colspan='2'>No travel dates available.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
-        <?php while ($h = mysqli_fetch_assoc($highlight)) { ?>
+        </div>
 
-        <div class="card">
+        <!-- RIGHT SIDE -->
+        <div class="right-side">
 
-            <?php if (!empty($h['image'])) { ?>
-                <img src="uploads/<?php echo htmlspecialchars($h['image']); ?>" alt="">
+            <div class="box">
+                <h2 class="section-title">Tour Information</h2>
+
+                <div class="tour-row">
+                    <?php if ($data) { ?>
+                        <p>💰 Price <span class="highlight-word">RM <?php echo number_format($data['price'] ?? 0, 2); ?></span></p>
+                        <p>💵 Deposit per pax <span class="highlight-word">RM <?php echo $data['deposit'] ?? '0'; ?></span></p>
+                        <p>👨‍👩‍👧‍👦 Group Package</p>
+                        <p>🚶 Private Package</p>
+                        <p>🧑‍🤝‍🧑 Honeymoon Package</p>
+                        <p>👥 Min <?php echo $data['min_pax'] ?? '0'; ?> Pax</p>
+                        <p>✈️ Flight: <?php echo $data['flight'] ?? 'TBA'; ?></p>
+                    <?php } else { ?>
+                        <p style="text-align:center;">No package data found</p>
+                    <?php } ?>
+
+                    <p>
+                        📋 <a href="#" class="view-link" onclick="openPopup(); return false;">
+                            Tour Details
+                        </a>
+                    </p>
+
+                    <p>
+                        📄 Download Itinerary:
+                        <a href="uploads/<?php echo $data['itinerary_file'] ?? '#'; ?>" class="view-link" download>
+                            Click here
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- POPUP (UNCHANGED) -->
+    <div id="popupBox" class="popup-overlay">
+        <div class="popup-content">
+
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+
+            <?php if (!empty($halfboard) || !empty($fullboard)) { ?>
+            <div class="include-box">
+
+                <h4>✅ Included</h4>
+
+                <?php if (!empty($halfboard)) { ?>
+                <div class="sub-include">
+                    <h5>🍽️ Halfboard</h5>
+                    <ul>
+                        <?php foreach ($halfboard as $item) { ?>
+                            <li><?php echo $item; ?></li>
+                        <?php } ?>
+                    </ul>
+                </div>
+                <?php } ?>
+
+                <?php if (!empty($fullboard)) { ?>
+                <div class="sub-include">
+                    <h5>🍴 Fullboard</h5>
+                    <ul>
+                        <?php foreach ($fullboard as $item) { ?>
+                            <li><?php echo $item; ?></li>
+                        <?php } ?>
+                    </ul>
+                </div>
+                <?php } ?>
+
+            </div>
             <?php } ?>
 
-            <h3><?php echo htmlspecialchars($h['name']); ?></h3>
+            <?php if (!empty($exclude)) { ?>
+            <div class="exclude-box">
+                <h4>❌ Not Included</h4>
+                <ul>
+                    <?php foreach ($exclude as $item) { ?>
+                        <li><?php echo $item; ?></li>
+                    <?php } ?>
+                </ul>
+            </div>
+            <?php } ?>
 
         </div>
-
-        <?php } ?>
-
     </div>
 
-<?php
-} // END IF
-?>
 </div>
 
-<div id="itinerary" class="content-section">
-<!-- ================= ITINERARY ================= -->
-    <div class="accordion">
-
-        <?php
-        if (!empty($row['itinerary'])) {
-
-            $itinerary = str_replace("\r", "", $row['itinerary']);
-			$days = preg_split("/(?=Day\s*\d+)/", $itinerary);
-
-            foreach ($days as $day) {
-                $day = trim($day);
-                if ($day == '') continue;
-
-                $lines = explode("\n", $day);
-                $title = array_shift($lines);
-        ?>
-
-        <button class="accordion-btn"><?php echo htmlspecialchars($title); ?></button>
-
-        <div class="accordion-content">
-            <ul>
-                <?php foreach ($lines as $item) {
-                    $item = trim($item);
-                    if ($item == '') continue;
-                ?>
-                <li><?php echo htmlspecialchars($item); ?></li>
-                <?php } ?>
-            </ul>
-        </div>
-
-        <?php
-            }
-        } else {
-            echo "<p>No itinerary available.</p>";
-        }
-        ?>
-
-    </div>
-</div>
-
-<div id="harga" class="content-section">
-
-<!-- ================= INCLUDE ================= -->
-<div class="include-wrapper">
-
-    <?php if (!empty($halfboard)) { ?>
-        <div class="include-box">
-            <h3>✔ Halfboard Included</h3>
-            <ul>
-                <?php foreach ($halfboard as $item) { ?>
-                    <li><?php echo htmlspecialchars($item); ?></li>
-                <?php } ?>
-            </ul>
-        </div>
-    <?php } ?>
-
-    <?php if (!empty($fullboard)) { ?>
-        <div class="include-box">
-            <h3>✔ Fullboard Included</h3>
-            <ul>
-                <?php foreach ($fullboard as $item) { ?>
-                    <li><?php echo htmlspecialchars($item); ?></li>
-                <?php } ?>
-            </ul>
-        </div>
-    <?php } ?>
-
-</div>
-
-<!-- ================= EXCLUDE (OPTIONAL) ================= -->
-<?php if (!empty($exclude)) { ?>
-<div class="exclude-box">
-    <h3>✘ Not Included</h3>
-    <ul>
-        <?php foreach ($exclude as $item) { ?>
-            <li><?php echo htmlspecialchars($item); ?></li>
-        <?php } ?>
-    </ul>
-</div>
-<?php } ?>
-
-</div>
-
-<div id="tarikh" class="content-section">
-<!-- ================= TRAVEL DATES (BOTTOM) ================= -->
-    <h2>Available Travel Dates</h2>
-
-    <table class="date-table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-
-        <tbody>
-        <?php
-        if (mysqli_num_rows($date_query) > 0) {
-            while ($d = mysqli_fetch_assoc($date_query)) {
-
-                $date = date('d M Y', strtotime($d['departure_date']));
-        ?>
-            <tr>
-                <td><?php echo $date; ?></td>
-
-                <td>
-                    <a href="book_package.php?package_id=<?php echo $row['package_id']; ?>&travel_date=<?php echo $d['departure_date']; ?>" class="btn-book">
-					Book Now
-					</a>
-                </td>
-            </tr>
-        <?php
-            }
-        } else {
-            echo "<tr><td colspan='2'>No travel dates available.</td></tr>";
-        }
-        ?>
-        </tbody>
-    </table>
-</div>
-
-
-
+<!-- POPUP JS -->
 <script>
-const acc = document.querySelectorAll(".accordion-btn");
-
-acc.forEach(btn => {
-    btn.addEventListener("click", () => {
-        const content = btn.nextElementSibling;
-        content.style.display =
-            content.style.display === "block" ? "none" : "block";
-    });
-});
-</script>
-
-<script>
-function showSection(sectionId) {
-
-  // hide semua content
-  document.querySelectorAll('.content-section').forEach(sec => {
-    sec.classList.remove('active');
-  });
-
-  // buang active nav
-  document.querySelectorAll('.nav-box').forEach(btn => {
-    btn.classList.remove('active');
-  });
-
-  // show section dipilih
-  document.getElementById(sectionId).classList.add('active');
-
-  // highlight button
-  event.target.classList.add('active');
+function openPopup() {
+    document.getElementById("popupBox").classList.add("active");
 }
 
-// default buka section pertama
-document.addEventListener("DOMContentLoaded", function() {
-  showSection('itinerary'); // boleh tukar default
-});
+function closePopup() {
+    document.getElementById("popupBox").classList.remove("active");
+}
+
+// klik luar popup tutup
+window.onclick = function(e) {
+    let popup = document.getElementById("popupBox");
+    if (e.target === popup) {
+        popup.classList.remove("active");
+    }
+}
 </script>
 </body>
 </html>

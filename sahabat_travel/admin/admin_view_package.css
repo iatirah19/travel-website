@@ -1,163 +1,419 @@
-/* BACKGROUND */
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-                url('uploads/<?php echo $row["package_image"]; ?>');
-    background-size: cover;
-    background-position: center;
+    padding: 0;
+    background: #ccc;
+}
+
+/* PAGE WRAPPER */
+.page-container {
+    width: 100%;
+    max-width: 1300px;
+    margin: auto;
+}
+
+/* FLEX LAYOUT */
+.layout-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* LEFT / RIGHT */
+.left-side {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.right-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* BOX STYLE (UNIFIED) */
+.box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+/* HERO SECTION */
+.hero {
+    position: relative;
+    width: 100%;
+    height: 50vh;
+    overflow: hidden;
+}
+
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+}
+
+/* BACK BUTTON */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    background: #fff;
+    color: #19516B;
+    text-decoration: none;
+    border: 1px solid #19516B;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background: #19516B;
     color: #fff;
 }
 
 /* TITLE */
-h1 {
+.package-title {
     text-align: center;
-    font-size: 2.5rem;
-    margin-top: 40px;
+    font-size: 2rem;
+    margin: 25px 0;
+    color: #222;
+    text-transform: uppercase;
 }
 
-/* NAV */
-.package-short-nav {
-    position: sticky;
-    top: 0;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    padding: 15px;
-    z-index: 1000;
+/* SECTION TITLE */
+.section-title {
+    text-align: left;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #222;
 }
 
-.nav-box {
-    padding: 10px 20px;
-    background: #19516B;
-    color: white;
-    border-radius: 8px;
-    text-decoration: none;
-}
-
-.nav-box.active {
-  background: #9E1F25;
-  color: white;
-}
-
-.content-section {
-	display: none;
-	padding: 60px 20px;
-    max-width: 1000px;
-    margin: auto;
-}
-
-.content-section.active {
-  display: block;
-}
-
-/* ================= HIGHLIGHT ================= */
 .highlight-container {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-/* card khas highlight (elak clash dengan class lain) */
-.card {
-    flex: 1;
-    min-width: 220px;
-    background: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-}
-
-.card h3 {
-    padding: 15px;
-    font-size: 14px;
-}
-
-/* ACCORDION */
-.accordion-btn {
-    width: 100%;
-    padding: 15px;
-    background: #eee;
-    border: none;
-    margin-top: 10px;
-    font-weight: bold;
-    color: #19516B;
-    border-radius: 10px;
-}
-
-.accordion-content {
-    display: none;
-    padding: 20px;
-    background: white;
-    color: black;
-    border-radius: 10px;
-}
-
-/* INCLUDE */
-.include-wrapper {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
 }
 
-.include-box, .exclude-box {
-    flex: 1;
-    background: white;
-    color: black;
-    padding: 20px;
+.highlight-card {
+    position: relative;
     border-radius: 10px;
-	margin-bottom: 20px;
+    overflow: hidden;
+    height: 190px;
 }
 
-.include-box h3 {
-    color: green;
+/* IMAGE */
+.highlight-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: 0.4s;
 }
 
-.exclude-box h3 {
-    color: red;
+.highlight-card:hover img {
+    transform: scale(1.1);
 }
-		
+
+/* NAME AT BOTTOM + CENTER TEXT */
+.highlight-name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    padding: 10px;
+
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
+
+    text-align: center;
+
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+/* DATE TABLE */
 .date-table {
     width: 100%;
-    border-collapse: collapse;
     margin-top: 15px;
+    border-collapse: collapse;
+    background: #e6e6e6;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
 .date-table th {
     padding: 12px;
-    border-bottom: 1px solid #ddd;
     text-align: center;
-	color: black;
-	background: #f5f5f5;
+    border-bottom: 1px solid #eee;
+    font-size: 20px;
 }
 
 .date-table td {
-	padding: 12px;
-    border-bottom: 1px solid #ddd;
+    padding: 12px;
     text-align: center;
-	color: white;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
 }
 
+.th-sit {
+    background: #9E1F25;
+    color: white;
+}
+
+.th-mtb {
+    background: #6B1E51;
+    color: white;
+}
+
+.th-jj {
+    background: #1e68c4;
+    color: white;
+}
+
+.th-suka {
+    background: #ff6a00;
+    color: white;
+}
+
+.btn-sit { background:#9E1F25; }
+.btn-mtb { background:#6B1E51; }
+.btn-jj { background:#1e68c4; }
+.btn-suka { background:#ff6a00; }
+
 .btn-book {
-    background: maroon;
     color: white;
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 20px;
     text-decoration: none;
     display: inline-block;
 }
 
-.btn-book:hover {
-    background: #800000;
+/* TOUR INFO */
+.tour-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tour-row p {
+    margin: 0;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #444;
+    background: #f9f9f9;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+}
+
+/* LINK */
+.view-link {
+    color: #094bae;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* POPUP */
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 999;
+    justify-content: center;
+    align-items: center;
+}
+
+/* bila popup buka */
+.popup-overlay.active {
+    display: flex;
+}
+
+.popup-content {
+    background: #fff;
+    width: 400px;
+    max-width: 90%;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    animation: fadeIn 0.3s ease;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.popup-content h3 {
+    font-size: 25px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 35px;
+    cursor: pointer;
+}
+
+/* INCLUDE / EXCLUDE */
+.include-box h4 {
+    color: green;
+    font-size: 20px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.exclude-box h4 {
+    color: red;
+    font-size: 20px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.exclude-box ul {
+    text-transform: capitalize;
+    line-height: 1.5;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 500;
+    color: #444;
+    font-size: 15px;
+}
+
+.sub-include {
+    margin-top: 10px;
+}
+
+.sub-include h5 {
+    margin-bottom: 5px;
+    font-size: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+}
+
+.sub-include ul {
+    text-transform: capitalize;
+    line-height: 1.5;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 500;
+    color: #444;
+    font-size: 15px;
+}
+
+.highlight-word {
+    font-weight: 700;
+    color: #e67e22;
+    font-size: 16px;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+    from {transform: scale(0.8); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+}
+
+/* =========================
+   RESPONSIVE (TABLET & MOBILE)
+========================= */
+@media (max-width: 768px) {
+
+    /* PAGE */
+    .page-container {
+        width: 95%;
+    }
+
+    /* STACK LAYOUT */
+    .layout-wrapper {
+        flex-direction: column;
+    }
+
+    .left-side,
+    .right-side {
+        width: 100%;
+    }
+
+    /* HERO */
+    .hero {
+        height: 35vh;
+    }
+
+    /* TITLE */
+    .package-title {
+        font-size: 1.5rem;
+        margin: 15px 0;
+        padding: 0 10px;
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+        font-size: 1.2rem;
+    }
+
+    /* BOX */
+    .box {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* HIGHLIGHT GRID → 2 COLUMN */
+    .highlight-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .highlight-card {
+        height: 140px;
+    }
+
+    .highlight-name {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    /* DATE TABLE */
+    .date-table th,
+    .date-table td {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .btn-book {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    /* TOUR INFO */
+    .tour-row p {
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    /* POPUP */
+    .popup-content {
+        width: 95%;
+        padding: 15px;
+    }
+
+    /* BACK BUTTON */
+    .back-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
 }
