@@ -467,7 +467,7 @@ $result = mysqli_query($conn, $sql);
                     <a href="admin_view_package.php?id=<?php echo $row['package_id']; ?>">View</a> |
                     <a href="edit_package.php?id=<?php echo $row['package_id']; ?>">Edit</a> |
                     <a href="admin_manage_package.php?delete=<?php echo $row['package_id']; ?>" 
-                       onclick="return confirm('Delete this package?')">Delete</a>
+                       onclick="return confirm('Are you sure want to delete this package?')">Delete</a>
                 </div>
             </td>
         </tr>

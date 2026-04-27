@@ -103,7 +103,7 @@ $result = mysqli_query($conn, "SELECT * FROM countries");
             <td>
                 <a href="edit_country.php?id=<?php echo $row['country_id']; ?>">Edit</a> |
 				<a href="admin_manage_country.php?delete=<?php echo $row['country_id']; ?>" 
-                   onclick="return confirm('Delete this country?')">Delete</a>
+                   onclick="return confirm('Are you sure want to delete this country?')">Delete</a>
             </td>
         </tr>
         <?php } ?>

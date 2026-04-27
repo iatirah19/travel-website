@@ -13,47 +13,136 @@ body {
     background-attachment: fixed;
 }
 
-.header-bar {
+/* HEADER */
+.main-header {
+    width: 100%;
+    height: 80px;
     display: flex;
     align-items: center;
+    background-color: #ffffff;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* CONTAINER */
+.header-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
     justify-content: space-between;
-    gap: 20px;
-    padding: 10px 20px;
+    align-items: center;
+    padding: 0 20px;
 }
 
-.back-btn a {
+/* LOGO */
+.logo img {
+    height: 60px;
+}
+
+/* HAMBURGER BUTTON */
+.menu-toggle{
+    display:none;
+    font-size:28px;
+    cursor:pointer;
+}
+
+/* RIGHT SIDE */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+/* MENU */
+.nav-menu ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu ul li a {
     text-decoration: none;
-    color: #19516B;
+    color: black;
     font-weight: 600;
-    padding: 8px 12px;
-    border: 1px solid #19516B;
-    border-radius: 8px;
-    display: inline-block;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    font-family: 'Montserrat', sans-serif;
 }
 
-.back-btn a:hover {
-    background: #19516B;
-    color: #fff;
+.nav-menu ul li a:hover {
+    color: #19516B;
+}
+
+/* BUTTON */
+.btn-hubungi {
+    background: #9E1F25;
+    color: white;
+    padding: 12px 28px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.btn-hubungi:hover {
+    transform: translateY(-2px);
 }
 
 /* TITLE */
 .section-title {
-    font-size: 30px;
-    font-weight: 800;
+    font-size: 26px;
+    font-weight: 700;
     font-family: Geneva, sans-serif;
-    color: #000;
-    margin: 0;
+    color: #111;
     text-align: center;
-    white-space: nowrap; /* tak pecah line */
+    margin-top: 30px;
+    letter-spacing: 0.5px;
 }
 
-/* SEARCH */
+/* SEARCH BAR */
+.search-bar {
+    justify-content: center;
+    margin: 25px 0 35px; /* bagi ruang atas & bawah */
+    position: relative;
+    display: flex;
+}
+
+/* IMPORTANT: ikut width card */
 .search-bar input {
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+    width: 1020px; /* sama macam .pakej-row width */
+    padding: 12px 15px 12px 42px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
     outline: none;
-    width: 200px;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.search-bar input:focus {
+    border-color: #19516B;
+    box-shadow: 0 4px 15px rgba(25, 81, 107, 0.2);
+}
+
+/* ICON DALAM INPUT */
+.search-icon {
+    position: absolute;
+    left: 22%;
+    transform: translateX(-115px); /* adjust ikut width input */
+    top: 50%;
+    transform: translate(-115px, -50%);
+    font-size: 14px;
+    opacity: 0.6;
 }
 
 /* SECTION BACKGROUND */

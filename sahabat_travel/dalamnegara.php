@@ -13,13 +13,33 @@ require 'db.php';
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="header-bar">
-        <div class="back-btn">
-            <a href="javascript:history.back()">← Back</a>
+    <header class="main-header">
+    <div class="header-container">
+        <div class="logo">
+            <img src="picture/LOGO-SAHABAT.png" alt="Logo Sahabat International Travel">
         </div>
 
-        <h2 class="section-title">Senarai Pakej Eksklusif</h2>
+        <div class="menu-toggle">☰</div>
+
+        <div class="header-right">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Utama</a></li>
+                <li><a href="tentang-kami.html">Tentang Kami</a></li>
+                <li><a href="destinasi.html">Destinasi</a></li>
+                <li><a href="testimoni.html">Testimoni</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-action">
+            <a href="hubungi-kami.html" class="btn-hubungi"></i> Hubungi Kami
+            </a>
+        </div>
+        </div>
     </div>
+    </header>
+
+    <h2 class="section-title">Senarai Pakej Eksklusif</h2>
 
     <div class="search-bar">
             <span class="search-icon">🔍</span>

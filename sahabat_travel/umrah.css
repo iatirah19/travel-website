@@ -98,6 +98,53 @@ body {
     transform: translateY(-2px);
 }
 
+/* TITLE */
+.section-title {
+    font-size: 26px;
+    font-weight: 700;
+    font-family: Geneva, sans-serif;
+    color: #111;
+    text-align: center;
+    margin-top: 30px;
+    letter-spacing: 0.5px;
+}
+
+/* SEARCH BAR */
+.search-bar {
+    justify-content: center;
+    margin: 25px 0 35px; /* bagi ruang atas & bawah */
+    position: relative;
+    display: flex;
+}
+
+/* IMPORTANT: ikut width card */
+.search-bar input {
+    width: 1020px; /* sama macam .pakej-row width */
+    padding: 12px 15px 12px 42px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    outline: none;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.search-bar input:focus {
+    border-color: #19516B;
+    box-shadow: 0 4px 15px rgba(25, 81, 107, 0.2);
+}
+
+/* ICON DALAM INPUT */
+.search-icon {
+    position: absolute;
+    left: 22%;
+    transform: translateX(-115px); /* adjust ikut width input */
+    top: 50%;
+    transform: translate(-115px, -50%);
+    font-size: 14px;
+    opacity: 0.6;
+}
+
 .pakej-table-container {
     max-width: 1100px;
     margin: 40px auto;

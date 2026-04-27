@@ -39,6 +39,12 @@ require 'db.php';
     </header>
 
     <h2 class="section-title">Senarai Pakej Umrah Eksklusif</h2>
+
+    <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Cari pakej...">
+    </div>
+    
 <div class="pakej-table-container">
 
 	<?php

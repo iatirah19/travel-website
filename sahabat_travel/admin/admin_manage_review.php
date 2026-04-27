@@ -1,6 +1,17 @@
 <?php
 require '../db.php';
 
+// DELETE (same page)
+if (isset($_GET['delete_id'])) {
+    $id = $_GET['delete_id'];
+
+    mysqli_query($conn, "DELETE FROM reviews WHERE review_id = '$id'");
+
+    // redirect supaya tak repeat delete bila refresh
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit;
+}
+
 /* =========================
    ADD REVIEW
 ========================= */
@@ -61,6 +72,7 @@ if (isset($_POST['add_review'])) {
 					<th>Name</th>
 					<th>Star</th>
 					<th>Message</th>
+                    <th>Action</th>
 				</tr>
 			</thead>
 
@@ -78,6 +90,14 @@ if (isset($_POST['add_review'])) {
 					</td>
 
 					<td><?php echo nl2br(htmlspecialchars($row['message'])); ?></td>
+
+                    <td>
+                        <a href="?delete_id=<?php echo $row['review_id']; ?>"
+                        onclick="return confirm('Are you sure want to delete this review?')"
+                        class="btn-delete">
+                        Delete
+                        </a>
+                    </td>
 				</tr>
 			<?php } ?>
 			</tbody>

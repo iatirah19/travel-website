@@ -85,6 +85,7 @@
 		border-collapse: collapse;
 		background: white;
 		border-radius: 8px;
+        margin-bottom: 20px;
 		overflow: hidden;
 		box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 		font-family: 'Playfair Display', serif;
@@ -122,3 +123,16 @@
 		word-wrap: break-word;
 		max-width: 400px;
 	}
+
+    .btn-delete {
+    background: #ff4d4d;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.btn-delete:hover {
+    background: #cc0000;
+}
