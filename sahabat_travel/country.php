@@ -25,6 +25,7 @@ $packages = $conn->query("SELECT * FROM packages WHERE country_id=$country_id");
     <title><?php echo $country['country_name']; ?> Tour Packages</title>
     <link rel="stylesheet" href="country.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="main-header">
