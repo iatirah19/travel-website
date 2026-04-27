@@ -12,7 +12,6 @@ body {
     text-align: center;
     letter-spacing: 1px;
     margin: 5px 0 20px;
-    margin-top: 10px;   /* kecilkan ruang atas */
     margin-bottom: 20px; /* optional bagi bawah sikit */
 }
 
@@ -28,14 +27,12 @@ body {
     border: 1px solid #dfe6ee;
     font-weight: 500;
     box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-    transition: all 0.3s ease;
 }
 
 /* hover effect */
 .back-btn:hover {
     background: #19516B;
     color: #fff;
-    transform: translateY(-2px);
     box-shadow: 0 6px 14px rgba(25,81,107,0.25);
 }
 
@@ -162,7 +159,7 @@ body {
 
 /* BUTTON STYLE (NEXT) */
 .step-content button {
-    background: linear-gradient(135deg, #19516B, #2f5bff);
+    background: #19516B;
     color: white;
     border: none;
     padding: 12px 18px;
@@ -174,7 +171,6 @@ body {
 
 .step-content button:hover {
     opacity: 0.9;
-    transform: translateY(-1px);
 }
 
 /* FADE ANIMATION */

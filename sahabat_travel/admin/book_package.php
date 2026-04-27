@@ -71,7 +71,7 @@ if (isset($_POST['book'])) {
 <!DOCTYPE html>
 <html>
 <head>
-<title>Book Package</title>
+<title>Book Package - Sahabat International Travel Sdn Bhd</title>
 <link rel="stylesheet" href="book_package.css">
 </head>
 
@@ -114,20 +114,20 @@ if (isset($_POST['book'])) {
 
         <label>Dewasa:</label>
         <button type="button" onclick="changePax('adult', -1)">-</button>
-        <input type="number" id="adult" name="adult" value="0" min="0">
+        <input type="number" id="adult" name="adult" value="0" required>
         <button type="button" onclick="changePax('adult', 1)">+</button>
 
         <br><br>
 
         <label>Kanak-kanak:</label>
         <button type="button" onclick="changePax('child', -1)">-</button>
-        <input type="number" id="child" name="child" value="0" min="0">
+        <input type="number" id="child" name="child" value="0" required>
         <button type="button" onclick="changePax('child', 1)">+</button>
 
         <br><br>
 
         <button type="button" onclick="prevStep()">Back</button>
-        <button type="button" onclick="generatePaxForm(); nextStep()">Next</button>
+        <button type="button" onclick="validateStep2()">Next</button>
     </div>
 
     <!-- STEP 3 -->
@@ -141,7 +141,7 @@ if (isset($_POST['book'])) {
 
         <br><br>
         <button type="button" onclick="prevStep()">Back</button>
-        <button type="button" onclick="nextStep()">Next</button>
+        <button type="button" onclick="validateStep3()">Next</button>
     </div>
 
     <!-- STEP 4 -->
@@ -196,28 +196,78 @@ function showStep(index) {
     contents[index].classList.add("active");
 
     currentStep = index;
-
     updateProgressLine();
 }
 
 function updateProgressLine() {
     const progressLine = document.getElementById("progressLine");
-
-    const totalSteps = steps.length;
-    const percent = (currentStep / (totalSteps - 1)) * 100;
-
+    const percent = (currentStep / (steps.length - 1)) * 100;
     progressLine.style.width = percent + "%";
-}
-
-function nextStep() {
-    if (currentStep < contents.length - 1) {
-        showStep(currentStep + 1);
-    }
 }
 
 function prevStep() {
     if (currentStep > 0) {
         showStep(currentStep - 1);
+    }
+}
+
+// =====================
+// FIXED NEXT STEP (CLEAN VERSION)
+// =====================
+function nextStep() {
+
+    // STEP 2: pax validation (IMPORTANT FIX)
+    if (currentStep === 1) {
+
+        let adult = parseInt(document.getElementById("adult").value) || 0;
+        let child = parseInt(document.getElementById("child").value) || 0;
+
+        if (adult + child < 1) {
+            alert("Please select at least 1 pax");
+            return;
+        }
+
+        generatePaxForm();
+    }
+
+    // STEP 3: validate pax form + address
+    if (currentStep === 2) {
+
+        let paxInputs = document.querySelectorAll("#paxForm input, #paxForm select");
+        let address = document.querySelector("textarea[name='address']");
+
+        if (paxInputs.length === 0) {
+            alert("Please complete Step 2 first");
+            return;
+        }
+
+        for (let field of paxInputs) {
+            if (!field.checkValidity()) {
+                field.reportValidity();
+                return;
+            }
+        }
+
+        if (!address.checkValidity()) {
+            address.reportValidity();
+            return;
+        }
+    }
+
+    // STEP 4: payment validation
+    if (currentStep === 3) {
+
+        let payment = document.getElementById("payment_method").value;
+
+        if (payment === "") {
+            alert("Please select payment method");
+            return;
+        }
+    }
+
+    // move step
+    if (currentStep < contents.length - 1) {
+        showStep(currentStep + 1);
     }
 }
 
@@ -237,7 +287,6 @@ function changePax(type, value) {
     }
 }
 
-// generate pax form
 function generatePaxForm() {
 
     let adult = parseInt(document.getElementById("adult").value) || 0;
@@ -245,7 +294,7 @@ function generatePaxForm() {
 
     let total = adult + child;
 
-    if (total <= 0) {
+    if (total < 1) {
         alert("Please select at least 1 pax");
         return;
     }
