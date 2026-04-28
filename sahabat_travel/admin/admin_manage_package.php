@@ -438,7 +438,6 @@ $result = mysqli_query($conn, $sql);
             <th>Package Name</th>
             <th>Duration</th>
             <th>Price (RM)</th>
-            <th>Deposit</th>
             <th>Flight</th>
             <th>Min Pax</th>
             <th>Action</th>
@@ -469,8 +468,6 @@ $result = mysqli_query($conn, $sql);
             <td><?php echo htmlspecialchars($row['duration']); ?></td>
 
             <td>RM <?php echo number_format($row['price'], 2); ?></td>
-
-            <td>RM <?php echo number_format($row['deposit'], 2); ?></td>
             
             <td><?php echo htmlspecialchars($row['flight']); ?></td>
             
