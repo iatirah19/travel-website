@@ -81,13 +81,11 @@ $totalPackages = mysqli_fetch_assoc($packageResult)['total_packages'];
 <table>
     <tr>
         <th>Bil</th>
-        <th>Name</th>
+        <th>Customer</th>
         <th>Package</th>
         <th>Travel Date</th>
-        <th>Pax</th>
-        <th>Phone Number</th>
+        <th>Total Pax</th>
         <th>Status</th>
-        <th>Date Booked</th>
         <th>Action</th>
     </tr>
 
@@ -108,15 +106,23 @@ $totalPackages = mysqli_fetch_assoc($packageResult)['total_packages'];
     ?>
     <tr>
         <td><?php echo $bil++; ?></td>
-        <td><?php echo htmlspecialchars($row['customer_name']); ?></td>
+
+        <!-- MAIN CUSTOMER ONLY -->
+        <td>
+            <?php echo htmlspecialchars($row['customer_name']); ?><br>
+            <small><?php echo htmlspecialchars($row['phone']); ?></small>
+        </td>
+
         <td><?php echo htmlspecialchars($row['title']); ?></td>
+
         <td><?php echo date("d M Y", strtotime($row['travel_date'])); ?></td>
+
         <td><?php echo $row['pax']; ?></td>
-        <td><?php echo htmlspecialchars($row['phone']); ?></td>
+
         <td class="status <?php echo strtolower($row['status']); ?>">
-			<?php echo $row['status']; ?>
-		</td>
-        <td><?php echo date("d M Y", strtotime($row['created_at'])); ?></td>
+            <?php echo ucfirst($row['status']); ?>
+        </td>
+
         <td>
             <a href="view_booking.php?id=<?php echo $row['booking_id']; ?>">View</a> | 
             <a href="delete_booking.php?id=<?php echo $row['booking_id']; ?>" 
@@ -126,7 +132,7 @@ $totalPackages = mysqli_fetch_assoc($packageResult)['total_packages'];
     <?php 
         }
     } else {
-        echo "<tr><td colspan='9'>No bookings found</td></tr>";
+        echo "<tr><td colspan='7'>No bookings found</td></tr>";
     }
     ?>
 </table>

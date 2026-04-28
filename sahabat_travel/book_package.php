@@ -1,64 +1,110 @@
 <?php
 require 'db.php';
 
-// ✅ FIX: define step (avoid undefined error)
-$step = $_GET['step'] ?? 1;
-
 $package_id = $_GET['package_id'] ?? '';
 $travel_date = $_GET['travel_date'] ?? '';
+
+if (empty($package_id)) {
+    die("Package ID missing");
+}
+
+$package_id = mysqli_real_escape_string($conn, $package_id);
 
 $package = mysqli_query($conn, "SELECT * FROM packages WHERE package_id='$package_id'");
 $pack = mysqli_fetch_assoc($package);
 
-// ✅ elak error null
 if (!$pack) {
-    $pack['title'] = "No package found";
+    die("Invalid package selected");
 }
 
+// =======================
+// SUBMIT BOOKING
+// =======================
 if (isset($_POST['book'])) {
 
-    $package_id = $_POST['package_id'];
+    $package_id = mysqli_real_escape_string($conn, $_POST['package_id']);
     $travel_date = $_POST['travel_date'] ?? '';
 
-    $adult = $_POST['adult'];
-    $child = $_POST['child'];
+    $adult = (int)($_POST['adult'] ?? 0);
+    $child = (int)($_POST['child'] ?? 0);
     $pax = $adult + $child;
 
-    $pax_names = $_POST['pax_name'];
-    $pax_phones = $_POST['pax_phone'];
-    $pax_gender = $_POST['pax_gender'];
-    $pax_state = $_POST['pax_state'];
+    $pax_names = $_POST['pax_name'] ?? [];
+    $pax_phones = $_POST['pax_phone'] ?? [];
+    $pax_gender = $_POST['pax_gender'] ?? [];
+    $pax_state = $_POST['pax_state'] ?? [];
 
-    $payment_method = $_POST['payment_method'];
+    $payment_method = $_POST['payment_method'] ?? '';
     $bank = $_POST['bank'] ?? NULL;
 
-    $customer_name = $pax_names[0];
-    $phone = $pax_phones[0];
-    $state = $pax_state[0];
-    $address = $_POST['address'];
+    // MAIN CUSTOMER (first pax)
+    $customer_name = $pax_names[0] ?? '';
+    $phone = $pax_phones[0] ?? '';
+    $state = $pax_state[0] ?? '';
 
-    $sql = "INSERT INTO bookings 
-    (package_id, customer_name, address, phone, state, travel_date, pax, payment_method, bank, status)
-    VALUES 
-    ('$package_id', '$customer_name', '$address', '$phone', '$state', '$travel_date', '$pax', '$payment_method', '$bank', 'pending')";
+    if ($customer_name == '' || $phone == '') {
+        die("Customer details required");
+    }
 
-    mysqli_query($conn, $sql);
+    // =======================
+    // INSERT INTO BOOKINGS
+    // =======================
+    $stmt = $conn->prepare("
+        INSERT INTO bookings 
+        (package_id, customer_name, phone, state, travel_date, pax, payment_method, bank, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+    ");
 
-    $booking_id = mysqli_insert_id($conn);
+    $stmt->bind_param(
+        "issssiss",
+        $package_id,
+        $customer_name,
+        $phone,
+        $state,
+        $travel_date,
+        $pax,
+        $payment_method,
+        $bank
+    );
 
-    for ($i = 0; $i < count($pax_names); $i++) {
+    $stmt->execute();
+    $booking_id = $stmt->insert_id;
 
-        $name = $pax_names[$i];
-        $phone = $pax_phones[$i];
-        $gender = $pax_gender[$i];
-        $state = $pax_state[$i];
+    // =======================
+    // INSERT INTO BOOKINGS_PAX
+    // =======================
+    $count = min(
+        count($pax_names),
+        count($pax_phones),
+        count($pax_gender),
+        count($pax_state)
+    );
 
-        $sql_pax = "INSERT INTO booking_pax 
+    $stmt_pax = $conn->prepare("
+        INSERT INTO bookings_pax 
         (booking_id, name, phone, gender, state)
-        VALUES 
-        ('$booking_id', '$name', '$phone', '$gender', '$state')";
+        VALUES (?, ?, ?, ?, ?)
+    ");
 
-        mysqli_query($conn, $sql_pax);
+    for ($i = 0; $i < $count; $i++) {
+
+        $name = $pax_names[$i] ?? '';
+        $phone_pax = $pax_phones[$i] ?? '';
+        $gender = $pax_gender[$i] ?? '';
+        $state_pax = $pax_state[$i] ?? '';
+
+        if ($name == '') continue;
+
+        $stmt_pax->bind_param(
+            "issss",
+            $booking_id,
+            $name,
+            $phone_pax,
+            $gender,
+            $state_pax
+        );
+
+        $stmt_pax->execute();
     }
 
     echo "<script>
@@ -84,88 +130,87 @@ if (isset($_POST['book'])) {
 
 <a href="javascript:history.back()" class="back-btn">← Back</a>
 
-    <!-- PROGRESS BAR -->
-    <div class="progress-container">
-	<div class="progress-line" id="progressLine"></div>
-        <div class="step active"><div class="circle">1</div><p>Package</p></div>
-        <div class="step"><div class="circle">2</div><p>Pax</p></div>
-        <div class="step"><div class="circle">3</div><p>Details</p></div>
-        <div class="step"><div class="circle">4</div><p>Payment</p></div>
-        <div class="step"><div class="circle">5</div><p>Success</p></div>
-	</div>
+<!-- PROGRESS -->
+<div class="progress-container">
+    <div class="progress-line" id="progressLine"></div>
 
-    <!-- STEP 1 -->
-    <div class="step-content active">
-        <h3>Package Details</h3>
+    <div class="step active"><div class="circle">1</div><p>Package</p></div>
+    <div class="step"><div class="circle">2</div><p>Pax</p></div>
+    <div class="step"><div class="circle">3</div><p>Details</p></div>
+    <div class="step"><div class="circle">4</div><p>Success</p></div>
+</div>
 
-        <p><b>Package Name:</b> <?php echo $pack['title']; ?> <?php echo $pack['duration']; ?></p>
-        <p><b>Travel Date:</b> <?php echo $travel_date; ?></p>
+<!-- STEP 1 -->
+<div class="step-content active">
+    <h3>Package Details</h3>
 
-        <input type="hidden" name="package_id" value="<?php echo $package_id; ?>">
-        <input type="hidden" name="travel_date" value="<?php echo $travel_date; ?>">
+    <p><b>Package:</b> <?php echo $pack['title']; ?></p>
+    <p><b>Travel Date:</b> <?php echo date("d M Y", strtotime($travel_date)); ?></p>
 
-        <br><br>
-        <button type="button" onclick="nextStep()">Next</button>
-    </div>
+    <input type="hidden" name="package_id" value="<?php echo $package_id; ?>">
+    <input type="hidden" name="travel_date" value="<?php echo $travel_date; ?>">
 
-    <!-- STEP 2 -->
-    <div class="step-content">
-        <h3>Select Pax</h3>
+    <button type="button" onclick="nextStep()">Next</button>
+</div>
 
-        <label>Dewasa:</label>
-        <button type="button" onclick="changePax('adult', -1)">-</button>
-        <input type="number" id="adult" name="adult" value="0" min="0">
-        <button type="button" onclick="changePax('adult', 1)">+</button>
+<!-- STEP 2 -->
+<div class="step-content">
+    <h3>Select Pax</h3>
 
-        <br><br>
+    <label>Dewasa:</label>
+    <button type="button" onclick="changePax('adult', -1)">-</button>
+    <input type="number" id="adult" name="adult" value="0">
+    <button type="button" onclick="changePax('adult', 1)">+</button>
 
-        <label>Kanak-kanak:</label>
-        <button type="button" onclick="changePax('child', -1)">-</button>
-        <input type="number" id="child" name="child" value="0" min="0">
-        <button type="button" onclick="changePax('child', 1)">+</button>
+    <br><br>
 
-        <br><br>
+    <label>Kanak-kanak:</label>
+    <button type="button" onclick="changePax('child', -1)">-</button>
+    <input type="number" id="child" name="child" value="0">
+    <button type="button" onclick="changePax('child', 1)">+</button>
 
-        <button type="button" onclick="prevStep()">Back</button>
-        <button type="button" onclick="generatePaxForm(); nextStep()">Next</button>
-    </div>
+    <br><br>
 
-    <!-- STEP 3 -->
-    <div class="step-content">
-        <h3>Pax Details</h3>
+    <button type="button" onclick="prevStep()">Back</button>
+    <button type="button" onclick="generatePaxForm(); nextStep()">Next</button>
+</div>
 
-        <div id="paxForm"></div>
+<!-- STEP 3 -->
+<div class="step-content">
+    <h3>Pax Details</h3>
 
-        <label>Address:</label>
-        <textarea name="address" required></textarea>
+    <div id="paxForm"></div>
 
-        <br><br>
-        <button type="button" onclick="prevStep()">Back</button>
-        <button type="button" onclick="nextStep()">Next</button>
-    </div>
+    <label>Address:</label>
+    <textarea name="address" required></textarea>
 
-    <!-- STEP 4 -->
-    <div class="step-content">
-        <h3>Payment</h3>
+    <br><br>
 
-        <select name="payment_method" id="payment_method" onchange="showPaymentForm()" required>
-            <option value="">-- Select Payment --</option>
-            <option value="card">Card</option>
-            <option value="fpx">FPX</option>
-            <option value="cash">Cash</option>
-        </select>
+    <!-- PAYMENT -->
+    <label>Payment Method:</label>
+    <select name="payment_method" id="payment_method" onchange="showPaymentForm()" required>
+        <option value="">Select</option>
+        <option value="card">Card</option>
+        <option value="fpx">FPX</option>
+        <option value="cash">Cash</option>
+    </select>
 
-        <div id="paymentDetails"></div>
+    <div id="paymentDetails"></div>
 
-        <br><br>
-        <button type="button" onclick="prevStep()">Back</button>
-        <button type="submit" name="book">Pay Now</button>
-    </div>
+    <br><br>
 
-	<div class="step-content">
-		<h3>Success</h3>
-		<p>Booking complete!</p>
-	</div>
+    <button type="button" onclick="prevStep()">Back</button>
+    <button type="button" onclick="nextStep()">Next</button>
+</div>
+
+<!-- STEP 4 -->
+<div class="step-content">
+    <h3>Confirm Booking</h3>
+    <p>Click confirm to submit your booking.</p>
+
+    <button type="button" onclick="prevStep()">Back</button>
+    <button type="submit" name="book">Confirm Booking</button>
+</div>
 
 </div>
 
@@ -178,7 +223,6 @@ const steps = document.querySelectorAll(".progress-container .step");
 const contents = document.querySelectorAll(".step-content");
 
 function showStep(index) {
-
     contents.forEach(c => c.classList.remove("active"));
 
     steps.forEach((s, i) => {
@@ -196,17 +240,12 @@ function showStep(index) {
     contents[index].classList.add("active");
 
     currentStep = index;
-
     updateProgressLine();
 }
 
 function updateProgressLine() {
-    const progressLine = document.getElementById("progressLine");
-
-    const totalSteps = steps.length;
-    const percent = (currentStep / (totalSteps - 1)) * 100;
-
-    progressLine.style.width = percent + "%";
+    const percent = (currentStep / (steps.length - 1)) * 100;
+    document.getElementById("progressLine").style.width = percent + "%";
 }
 
 function nextStep() {
@@ -221,25 +260,21 @@ function prevStep() {
     }
 }
 
-// INIT
 showStep(0);
 
-
-// =====================
-// PAX FUNCTION
-// =====================
+// =================
+// PAX
+// =================
 function changePax(type, value) {
     let input = document.getElementById(type);
-    let current = parseInt(input.value);
+    let current = parseInt(input.value) || 0;
 
     if (current + value >= 0) {
         input.value = current + value;
     }
 }
 
-// generate pax form
 function generatePaxForm() {
-
     let adult = parseInt(document.getElementById("adult").value) || 0;
     let child = parseInt(document.getElementById("child").value) || 0;
 
@@ -272,20 +307,18 @@ function generatePaxForm() {
     document.getElementById("paxForm").innerHTML = html;
 }
 
-
-// =====================
+// =================
 // PAYMENT
-// =====================
+// =================
 function showPaymentForm() {
-
     let method = document.getElementById("payment_method").value;
     let html = "";
 
     if (method === "card") {
         html = `
-            <input type="text" name="card_number" placeholder="Card Number" required>
-            <input type="text" name="expiry" placeholder="Expiry Date" required>
-            <input type="text" name="cvv" placeholder="CVV" required>
+            <input type="text" placeholder="Card Number" required>
+            <input type="text" placeholder="Expiry Date" required>
+            <input type="text" placeholder="CVV" required>
         `;
     }
 
@@ -301,7 +334,7 @@ function showPaymentForm() {
     }
 
     else if (method === "cash") {
-        html = `<p><b>Pay at counter upon arrival.</b></p>`;
+        html = `<p><b>Pay at counter</b></p>`;
     }
 
     document.getElementById("paymentDetails").innerHTML = html;

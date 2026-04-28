@@ -57,8 +57,8 @@ body {
     content: "";
     position: absolute;
     top: 30%;
-    left: 10%;
-    right: 10%;
+    left: 13%;
+    right: 13%;
     height: 6px;
     background: #ddd;
     z-index: 0;
@@ -68,8 +68,8 @@ body {
 .progress-line {
     position: absolute;
     top: 30%;
-    left: 10%;
-	right: 10%;
+    left: 13%;
+	right: 13%;
     height: 6px;
     background: #4CAF50;
     z-index: 0;
