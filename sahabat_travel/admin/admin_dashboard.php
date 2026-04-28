@@ -191,7 +191,7 @@ $totalPackages = mysqli_fetch_assoc($packageResult)['total_packages'];
 </table>
 </div>
 
-<-- TOGGLE BUTTON -->
+<!-- TOGGLE BUTTON -->
 <script>
 const toggleBtn = document.getElementById("toggle-btn");
 const sidebar = document.getElementById("sidebar");
@@ -206,7 +206,7 @@ toggleBtn.onclick = function(){
 };
 </script>
 
-<-- LOGOUT -->
+<!-- LOGOUT -->
 <script>
 function confirmLogout() {
     if (confirm("Are you sure you want to logout?")) {
