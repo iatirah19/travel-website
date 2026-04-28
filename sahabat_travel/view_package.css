@@ -134,16 +134,13 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-
     padding: 10px;
-
     color: #fff;
     font-size: 14px;
     font-weight: 600;
     text-transform: capitalize;
-
     text-align: center;
-
+    font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
 }
 
@@ -170,6 +167,7 @@ body {
     text-align: center;
     border-bottom: 1px solid #eee;
     font-size: 16px;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .th-sit {
