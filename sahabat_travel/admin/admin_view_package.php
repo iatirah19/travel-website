@@ -174,35 +174,34 @@ if ($package_id) {
 
                 <div class="tour-row">
                     <?php if ($data) { ?>
-                        <p>💰 Price <span class="highlight-word">RM <?php echo number_format($data['price'] ?? 0, 2); ?></span></p>
-                        <p>💵 Deposit per pax <span class="highlight-word">RM <?php echo $data['deposit'] ?? '0'; ?></span></p>
+                        <p>• Price <span class="highlight-word">RM <?php echo number_format($data['price'] ?? 0, 2); ?></span></p>
+                        <p>• Deposit per pax <span class="highlight-word">RM <?php echo $data['deposit'] ?? '0'; ?></span></p>
                         <?php if (($data['package_type'] ?? '') == 'MTB'): ?>
+                            <?php if (($data['package_category'] ?? '') == 'group'): ?>
+                                <p>• Group Package</p>
 
-    <?php if (($data['package_category'] ?? '') == 'group'): ?>
-        <p>👨‍👩‍👧‍👦 Group Package</p>
+                            <?php elseif (($data['package_category'] ?? '') == 'private'): ?>
+                                <p>• Private Package</p>
 
-    <?php elseif (($data['package_category'] ?? '') == 'private'): ?>
-        <p>🚶 Private Package</p>
-
-    <?php elseif (($data['package_category'] ?? '') == 'honeymoon'): ?>
-        <p>🧑‍🤝‍🧑 Honeymoon Package</p>
-    <?php endif; ?>
-
-<?php endif; ?>
-                        <p>👥 Min <?php echo $data['min_pax'] ?? '0'; ?> Pax</p>
-                        <p>✈️ Flight: <?php echo $data['flight'] ?? 'TBA'; ?></p>
+                            <?php elseif (($data['package_category'] ?? '') == 'honeymoon'): ?>
+                                <p>• Honeymoon Package</p>
+                                
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <p>• Min <?php echo $data['min_pax'] ?? '0'; ?> Pax</p>
+                        <p>• Flight: <?php echo $data['flight'] ?? 'TBA'; ?></p>
                     <?php } else { ?>
                         <p style="text-align:center;">No package data found</p>
                     <?php } ?>
 
                     <p>
-                        📋 <a href="#" class="view-link" onclick="openPopup(); return false;">
+                        • <a href="#" class="view-link" onclick="openPopup(); return false;">
                             Tour Details
                         </a>
                     </p>
 
                     <p>
-                        📄 Download Itinerary:
+                        • Download Itinerary:
                         <a href="uploads/<?php echo $data['itinerary_file'] ?? '#'; ?>" class="view-link" download>
                             Click here
                         </a>
