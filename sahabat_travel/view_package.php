@@ -77,10 +77,9 @@ if ($package_id) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo ucwords(strtolower($data['title'] . ' ' . $data['duration'])); ?></title>
+    <link rel="icon" type="image/png" href="picture/LOGO.png">
     <link rel="stylesheet" href="view_package.css">
-    
 </head>
-
 <body>
 
 <section class="hero">
@@ -190,22 +189,20 @@ if ($package_id) {
                         <?php endif; ?>
                         <p>👥 Min <?php echo $data['min_pax'] ?? '0'; ?> Pax</p>
                         <p>✈️ Flight: <?php echo $data['flight'] ?? 'TBA'; ?></p>
+                        <p>
+                            📋 <a href="#" class="view-link" onclick="openPopup(); return false;">
+                                Tour Details
+                            </a>
+                        </p>
+                        <p>
+                            📄 Download Itinerary:
+                            <a href="uploads/<?php echo $data['itinerary_file'] ?? '#'; ?>" class="view-link" download>
+                                Click here
+                            </a>
+                        </p>
                     <?php } else { ?>
                         <p style="text-align:center;">No package data found</p>
                     <?php } ?>
-
-                    <p>
-                        📋 <a href="#" class="view-link" onclick="openPopup(); return false;">
-                            Tour Details
-                        </a>
-                    </p>
-
-                    <p>
-                        📄 Download Itinerary:
-                        <a href="uploads/<?php echo $data['itinerary_file'] ?? '#'; ?>" class="view-link" download>
-                            Click here
-                        </a>
-                    </p>
                 </div>
             </div>
 

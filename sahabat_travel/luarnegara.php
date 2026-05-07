@@ -8,6 +8,7 @@ include 'db.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pakej Luar Negara - Sahabat International Travel Sdn Bhd</title>
+    <link rel="icon" type="image/png" href="picture/LOGO.png">
     <link rel="stylesheet" href="luarnegara.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -24,15 +25,15 @@ include 'db.php';
         <div class="header-right">
         <nav class="nav-menu">
             <ul>
-                <li><a href="index.html">Utama</a></li>
-                <li><a href="tentang-kami.html">Tentang Kami</a></li>
-                <li><a href="destinasi.html">Destinasi</a></li>
-                <li><a href="testimoni.html">Testimoni</a></li>
+                <li><a href="homepage.php">Utama</a></li>
+                <li><a href="aboutus.php">Tentang Kami</a></li>
+                <li><a href="destinations.php">Destinasi</a></li>
+                <li><a href="review.php">Testimoni</a></li>
             </ul>
         </nav>
 
         <div class="header-action">
-            <a href="hubungi-kami.html" class="btn-hubungi"></i> Hubungi Kami
+            <a href="contactus.php" class="btn-hubungi"></i> Hubungi Kami
             </a>
         </div>
         </div>
