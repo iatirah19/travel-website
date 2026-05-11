@@ -46,6 +46,7 @@ if (isset($_POST['add_country'])) {
     <meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Country - Sahabat International Travel Sdn Bhd</title>
+    <link rel="icon" type="image/png" href="../picture/LOGO.png">
     <link rel="stylesheet" href="add_country.css">
 </head>
 

@@ -85,6 +85,7 @@ if (isset($_POST['update_country'])) {
     <meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Country - Sahabat International Travel Sdn Bhd</title>
+    <link rel="icon" type="image/png" href="../picture/LOGO.png">
     <link rel="stylesheet" href="edit_country.css">
 </head>
 

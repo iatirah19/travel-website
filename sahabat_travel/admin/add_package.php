@@ -8,6 +8,7 @@ require '../db.php';
     <meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Package - Sahabat International Travel Sdn Bhd</title>
+    <link rel="icon" type="image/png" href="../picture/LOGO.png">
     <link rel="stylesheet" href="add_package.css">
 </head>
 
@@ -27,7 +28,7 @@ require '../db.php';
 <!-- PACKAGE NAME -->
 <div class="form-group">
     <label>Package Name</label>
-    <input type="text" name="package_name" required>
+    <input type="text" name="title" required>
 </div>
 
 <!-- CATEGORY -->
@@ -36,10 +37,10 @@ require '../db.php';
     <select name="category_id" id="categorySelect" required>
         <option value="">-- Select Category --</option>
         <?php
-        $cat = mysqli_query($conn, "SELECT * FROM categories");
+        $cat = mysqli_query($conn, "SELECT * FROM tour_categories");
         while ($c = mysqli_fetch_assoc($cat)) {
         ?>
-        <option value="<?php echo $c['category_id']; ?>">
+        <option value="<?php echo $c['tour_category_id']; ?>">
             <?php echo htmlspecialchars($c['category_name']); ?>
         </option>
         <?php } ?>
@@ -65,7 +66,7 @@ require '../db.php';
 <!-- PACKAGE TYPE -->
 <div class="form-group">
     <label>Package Type</label>
-    <select name="package_type" required>
+    <select name="agencies" required>
         <option value="">-- Select Type --</option>
         <option value="SIT">SIT</option>
         <option value="MTB">MTB</option>
@@ -77,7 +78,7 @@ require '../db.php';
 <!-- PACKAGE CATEGORY (MTB ONLY) -->
 <div class="form-group" id="packageCategoryBox" style="display:none;">
     <label>Package Category</label>
-    <select name="package_category">
+    <select name="package_categories">
         <option value="">-- Select Category --</option>
         <option value="group">Group Package</option>
         <option value="private">Private Package</option>
