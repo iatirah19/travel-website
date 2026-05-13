@@ -19,10 +19,10 @@ if (isset($_POST['add_review'])) {
 
     $name = $_POST['name'];
     $rating = $_POST['rating'];
-    $comment = $_POST['comment'];
+    $comment = $_POST['review_text'];
 
     mysqli_query($conn, "
-        INSERT INTO reviews (name, star, message, created_at)
+        INSERT INTO reviews (name, rating, review_text, created_at)
         VALUES ('$name', '$rating', '$comment', NOW())
     ");
 
@@ -56,7 +56,7 @@ if (isset($_POST['add_review'])) {
             <option value="1">⭐</option>
         </select>
 
-        <textarea name="comment" placeholder="Tulis komen anda di sini..." required></textarea>
+        <textarea name="review_text" placeholder="Tulis komen anda di sini..." required></textarea>
 
         <button type="submit" name="add_review">Hantar Komen</button>
     </form>
@@ -70,7 +70,7 @@ if (isset($_POST['add_review'])) {
 			<thead>
 				<tr>
 					<th>Name</th>
-					<th>Star</th>
+					<th>Rating</th>
 					<th>Message</th>
                     <th>Action</th>
 				</tr>
@@ -86,10 +86,10 @@ if (isset($_POST['add_review'])) {
 					<td><?php echo htmlspecialchars($row['name']); ?></td>
 
 					<td class="stars">
-						<?php echo str_repeat("⭐", (int)$row['star']); ?>
+						<?php echo str_repeat("⭐", (int)$row['rating']); ?>
 					</td>
 
-					<td><?php echo nl2br(htmlspecialchars($row['message'])); ?></td>
+					<td><?php echo nl2br(htmlspecialchars($row['review_text'])); ?></td>
 
                     <td>
                         <a href="?delete_id=<?php echo $row['review_id']; ?>"

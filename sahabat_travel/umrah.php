@@ -13,30 +13,69 @@ require 'db.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <header class="main-header">
-    <div class="header-container">
-        <div class="logo">
-            <img src="picture/LOGO-SAHABAT.png" alt="Logo Sahabat International Travel">
-        </div>
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar">
+            
+            <!-- LOGO -->
+            <div class="logo">
+                <img src="picture/LOGO-SAHABAT.png" alt="Logo">
+            </div>
 
-        <div class="menu-toggle">☰</div>
-
-        <div class="header-right">
-        <nav class="nav-menu">
-            <ul>
-                <li><a href="homepage.php">Utama</a></li>
-                <li><a href="aboutus.php">Tentang Kami</a></li>
-                <li><a href="destinations.php">Destinasi</a></li>
-                <li><a href="review.php">Testimoni</a></li>
+            <!-- MENU -->
+            <ul class="nav-links" id="navLinks">
+                <li><a href="homepage.php">Home</a></li>
+                <li><a href="about.php">About Us</a></li>
+                
+                <!-- DROPDOWN PACKAGE -->
+                <li class="dropdown">
+                    <button class="dropdown-btn">
+                        Packages <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    
+                    <ul class="dropdown-menu">
+                        <li><a href="domestic.php">Domestic Package</a></li>
+                        <li><a href="international.php">International Package</a></li>
+                        <li><a href="umrah.php">Umrah Package</a></li>
+                    </ul>
+                </li>
+                
+                <li><a href="review.php">Review</a></li>
+                <li><a href="contact.php">Contact</a></li>
             </ul>
-        </nav>
 
-        <div class="header-action">
-            <a href="contactus.php" class="btn-hubungi"></i> Hubungi Kami
-            </a>
-        </div>
-        </div>
-    </div>
+            <div class="nav-btn">
+                <?php if(isset($_SESSION['user_id'])): ?>
+                    <!-- PROFILE DROPDOWN -->
+                    <div class="profile-menu">
+                        <i class="fa-solid fa-user"></i>
+                        <span><?php echo $_SESSION['username']; ?></span>
+                        
+                        <!-- Dropdown -->
+                        <div class="dropdown">
+                            <a href="profile.php">My Profile</a>
+                            <a href="logout.php">Logout</a>
+                        </div>
+                    </div>
+
+                <?php else: ?>
+
+                    <!-- LOGIN & REGISTER -->
+                    <div class="auth-btn">
+                        <a href="login.php" class="btn login-btn">Login</a>
+                        <a href="register.php" class="btn register-btn">Register</a>
+                    </div>
+
+                <?php endif; ?>
+
+            </div>
+
+            <!-- MOBILE MENU ICON -->
+            <div class="menu-toggle" id="menuToggle">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+
+        </nav>
     </header>
 
     <h2 class="section-title">Senarai Pakej Umrah Eksklusif</h2>

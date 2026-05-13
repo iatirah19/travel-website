@@ -28,7 +28,7 @@ require '../db.php';
 <!-- PACKAGE NAME -->
 <div class="form-group">
     <label>Package Name</label>
-    <input type="text" name="title" required>
+    <input type="text" name="packname" required>
 </div>
 
 <!-- CATEGORY -->

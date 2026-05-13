@@ -1,0 +1,869 @@
+/* Reset asas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ================= HEADER ================= */
+header{
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+/* NAVBAR */
+.navbar{
+    width: 90%;
+    margin: auto;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* LOGO */
+.logo img{
+    width: 150px;
+}
+
+/* ================= DESKTOP MENU ================= */
+.nav-links{
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+.nav-links li a{
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+    position: relative;
+    transition: 0.3s;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* hover underline animation */
+.nav-links li a::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0%;
+    height: 2px;
+    background: #000;
+    transition: 0.3s;
+}
+
+.nav-links li a:hover::after{
+    width: 100%;
+}
+
+/* ================= DROPDOWN ================= */
+.dropdown{
+    position: relative;
+}
+
+/* MAIN BUTTON */
+.dropdown-btn{
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s ease;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* smoother dropdown */
+.dropdown-menu{
+    position: absolute;
+    top: 130%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    min-width: 220px;
+    border-radius: 14px;
+    padding: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.25s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* hover show */
+.dropdown:hover .dropdown-menu{
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* dropdown items */
+.dropdown-menu li {
+    padding: 10px;
+    border-radius: 8px;
+    transition: 0.2s;
+    list-style: none;
+}
+
+.dropdown-menu li a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    width: 100%;
+}
+
+.dropdown-menu li:hover{
+    background: rgba(255,90,95,0.08);
+}
+
+/* ================= SUB DROPDOWN ================= */
+.sub-dropdown{
+    position: relative;
+}
+
+.sub-dropdown-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s ease;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.sub-dropdown-menu{
+    position: absolute;
+    left: 105%;
+    top: 0;
+
+    background: rgba(255,255,255,0.95);
+    min-width: 190px;
+    border-radius: 12px;
+    padding: 10px;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(10px);
+    transition: 0.25s ease;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.sub-dropdown:hover .sub-dropdown-menu{
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+/* ================= MOBILE ================= */
+.menu-toggle{
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.mobile-sidebar{
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 320px;
+    height: 100vh;
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 28px;
+    z-index: 2000;
+    box-shadow: 15px 0 40px rgba(0,0,0,0.12);
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.mobile-sidebar.active{
+    left: 0;
+}
+
+.mobile-dropdown-btn,
+.mobile-sub-btn{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    margin: 6px 0;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #222;
+    transition: 0.25s;
+    list-style: none;
+}
+
+.mobile-dropdown-btn:hover,
+.mobile-sub-btn:hover{
+    background: rgba(255, 90, 95, 0.08);
+    transform: translateX(4px);
+}
+
+.mobile-sidebar a,
+.mobile-sidebar button{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    margin: 6px 0;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #222;
+    font-weight: 500;
+    transition: 0.25s;
+    list-style: none;
+}
+
+.mobile-sidebar a:hover,
+.mobile-sidebar button:hover{
+    background: rgba(255, 90, 95, 0.08);
+    transform: translateX(4px);
+}
+
+.mobile-sidebar ul{
+    list-style: none;
+}
+
+/* MOBILE DROPDOWN */
+.mobile-dropdown-menu,
+.mobile-sub-menu{
+    display: none;
+    margin-left: 12px;
+    padding-left: 10px;
+    border-left: 2px solid rgba(255, 90, 95, 0.2);
+    list-style: none;
+}
+
+.mobile-dropdown.active .mobile-dropdown-menu,
+.mobile-sub-dropdown.active .mobile-sub-menu{
+    display: block;
+    animation: slideFade 0.3s ease;
+}
+
+.mobile-dropdown.active i,
+.mobile-sub-dropdown.active i{
+    transform: rotate(90deg);
+    transition: 0.3s;
+}
+
+/* animation */
+@keyframes slideFade{
+    from{
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-btn {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.btn {
+    padding: 8px 18px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+/* Login Button */
+.login-btn {
+    background: transparent;
+    border: 2px solid #000;
+    color: #000;
+}
+
+/* Register Button */
+.register-btn {
+    background: #9E1F25;
+    color: #fff;
+}
+
+.profile-menu{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #0088d1;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.about-card {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+.about-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.4s ease;
+}
+
+/* overlay */
+.overlay-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6));
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    opacity: 0;
+    transition: 0.5s ease;
+    backdrop-filter: blur(2px);
+}
+
+.about-card:hover img {
+    transform: scale(1.1);
+}
+
+.overlay-card h2 {
+    color: #D4AF37;
+}
+
+.overlay-card h1,
+.overlay-card h2 {
+    transform: translateY(20px);
+    transition: 0.4s;
+}
+
+.about-card:hover .overlay-card h1,
+.about-card:hover .overlay-card h2 {
+    transform: translateY(0);
+}
+
+/* hover effect */
+.about-card:hover .overlay-card {
+    opacity: 1;
+}
+
+.highlight {
+    font-weight: 700;
+    color: black;
+}
+
+.about-section {
+    background-color: whitesmoke;
+    padding: 50px 15px;
+    /* text-align:center; */ /* jangan center semua perenggan */
+}
+
+.about-section .container {
+    max-width: 900px;
+    margin: auto;
+    display: block;  /* pastikan container block, bukan flex */
+}
+
+.about-section h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 25px;
+    text-align: center; /* hanya tajuk center */
+}
+
+.about-section p {
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.8;
+    margin-bottom: 20px; /* jarak antara perenggan */
+    text-align: justify; /* perenggan kebawah, selari kiri-kanan */
+    display: block; /* pastikan block */
+}
+
+.who-we-are-section {
+    padding: 50px 15px;
+    background-color: white;
+    text-align: center;
+}
+
+.who-we-are-section h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 25px;
+    text-align: center; /* hanya tajuk center */
+}
+
+.intro-box {
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+.motto-text {
+    font-style: italic;
+    font-weight: bold;
+    color: #b38b59; /* Warna tema utama */
+}
+
+/* Split Layout */
+.split-layout {
+    display: flex;
+    align-items: stretch; /* Supaya tinggi kiri & kanan sama */
+    max-width: 1000px;
+    margin: 40px auto;
+    background: white;
+    padding: 10px;
+}
+
+.split-column {
+    flex: 1;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+/* Tajuk (H3) */
+.split-column h3 {
+    font-family: 'Playfair Display', serif; /* Font klasik jika ada */
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Perenggan (P) */
+.split-column p {
+    color: #333;
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+/* Warna Spesifik Anda */
+.gold-text { color: #d4af37; font-size: 1.8rem; margin-bottom: 15px; } /* Emas */
+.red-text { color: #a93226; font-size: 1.8rem; margin-bottom: 15px; }  /* Merah */
+
+.tag-gold { color: #d4af37; font-weight: bold; }
+.tag-blue { color: #2e86c1; font-weight: bold; }
+.tag-red { color: #a93226; font-weight: bold; }
+
+.split-divider {
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, #e2d1b9, transparent);
+    margin: 20px 0;
+}
+
+/* Closing */
+.closing-box {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #333;
+    border-top: 1px solid #eee;
+    padding-top: 30px;
+    display: inline-block;
+}
+
+.vision-mission-section {
+    background-color: whitesmoke;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.vision-mission-section h2 {
+    font-size: 30px;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 40px;
+}
+
+/* Container untuk cards */
+.cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap; /* responsive */
+}
+
+/* Card styling */
+.vm-card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 40px;
+    flex: 1 1 45%; /* responsive card min 300px */
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Icon di atas */
+.vm-icon {
+    font-size: 3rem;
+    color: #9E1F25;
+    margin-bottom: 20px;
+}
+
+/* Card title */
+.vm-card h3 {
+    font-size: 1.5rem;
+    color: #19516B;
+    margin-bottom: 15px;
+}
+
+/* Card paragraph */
+.vm-card li {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #333;
+    text-align: justify;
+}
+
+.vm-card p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #333;
+    text-align: justify;
+}
+
+.main-footer {
+    background-color: #9E1F25; /* Warna gelap */
+    padding: 20px;
+    color: #ffffff;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px; /* Jarak antara column */
+    padding: 40px;
+}
+
+.footer-column {
+    flex: 1; /* INI KUNCINYA: Memberi ruang seimbang kepada setiap column */
+    text-align: left;
+}
+
+.footer-column h3 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.footer-column p, .footer-column li {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    font-family: 'Open Sans', sans-serif;
+}
+
+/* Copyright Section */
+.footer-bottom {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.footer-bottom p {
+    font-size: 13px;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.contact-list li {
+    display: flex;
+    gap: 12px;           /* Jarak antara ikon dan teks */
+    margin-bottom: 15px;
+    align-items: flex-start; /* Kunci utama: Ikon akan sentiasa selari dengan baris pertama teks */
+}
+
+.contact-list li i {
+    margin-top: 4px;     /* Laraskan sikit ke bawah supaya betul-betul center dengan baris pertama */
+    color: #bdc3c7;      /* Warna emas mengikut tema Hubungi Kami anda */
+    font-size: 1.1rem;   /* Saiz ikon yang seimbang */
+    width: 20px;         /* Lebar tetap supaya teks di sebelah kiri selari secara menegak */
+    text-align: center;
+}
+
+.contact-list li span {
+    flex: 1;             /* Supaya teks mengambil baki ruang yang ada */
+    line-height: 1.5;    /* Memberi ruang antara baris teks yang lebih selesa dibaca */
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons a {
+    color: #bdc3c7;
+    font-size: 1.2rem; /* Kecilkan sedikit saiz ikon supaya muat cantik dalam kotak */
+    transition: all 0.3s ease;
+    
+    /* Tambahan untuk kotak */
+    width: 45px;
+    height: 45px;
+    border: 1px solid #bdc3c7; /* Garisan kotak */
+    display: flex;
+    align-items: center;     /* Letak ikon di tengah (menegak) */
+    justify-content: center;  /* Letak ikon di tengah (mendatar) */
+    border-radius: 50%;      /* Lengkungan di bucu kotak (buang baris ini jika nak kotak tajam) */
+    text-decoration: none;
+}
+
+/* 1. Facebook (Biru) */
+.social-icons a:nth-child(1):hover {
+    background-color: #1877F2;
+    border-color: #1877F2;
+    color: white;
+    transform: translateY(-5px);
+}
+
+/* 2. Instagram (Gradient Purple/Pink) */
+.social-icons a:nth-child(2):hover {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    border-color: transparent;
+    color: white;
+    transform: translateY(-5px);
+}
+
+/* 3. TikTok (Hitam) */
+.social-icons a:nth-child(3):hover {
+    background-color: #000000;
+    border-color: #000000;
+    color: white;
+    /* Efek shadow sikit untuk vibe TikTok */
+    box-shadow: 2px 2px #ee1d52, -2px -2px #69c9d0;
+    transform: translateY(-5px);
+}
+
+/* 4. WhatsApp (Hijau) */
+.social-icons a:nth-child(4):hover {
+    background-color: #25D366;
+    border-color: #25D366;
+    color: white;
+    transform: translateY(-5px);
+}
+
+/* =========================
+   TABLET (max 1024px)
+========================= */
+@media (max-width: 1024px) {
+
+    .navbar {
+        width: 95%;
+    }
+
+    .footer-container {
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .footer-column {
+        flex: 1 1 45%;
+    }
+}
+
+/* Responsif: Kalau buka di phone, dia akan susun menegak */
+@media (max-width: 768px) {
+
+    .footer-column {
+        text-align: left;   /* Semua content dalam kolom ikut kanan */
+        margin-bottom: 20px; /* Supaya jarak bawah antar kolom mobile */
+    }
+
+    .footer-column h3 {
+        text-align: left;   /* Tajuk ikut kanan */
+    }
+
+    .footer-column p,
+    .footer-column li {
+        text-align: left;   /* Semua teks ikut kanan */
+    }
+
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .social-icons {
+        justify-content: center;
+    }
+    
+    .dropdown:hover .dropdown-menu,
+    .sub-dropdown:hover .sub-dropdown-menu{
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+
+    .nav-links{
+        display: none;
+    }
+
+    .menu-toggle{
+        display: block;
+    }
+
+    .cards-container {
+        gap: 20px;
+    }
+
+    .about-section h2{
+        font-size: clamp(1.4rem, 4vw, 2rem);
+    }
+
+    .about-section p{
+        font-size:1rem;
+    }
+
+    .about-card {
+        height: 220px; /* kecilkan dari 300px */
+    }
+
+    .overlay-card {
+        opacity: 1; /* mobile tak ada hover, jadi terus nampak */
+        backdrop-filter: blur(1px);
+        padding: 15px;
+    }
+
+    .overlay-card h1 {
+        font-size: 20px;
+    }
+
+    .overlay-card h2 {
+        font-size: 18px;
+    }
+
+    /* disable hover zoom (optional untuk elak glitch mobile) */
+    .about-card:hover img {
+        transform: none;
+    }
+
+    .overlay-card h1,
+    .overlay-card h2 {
+        transform: translateY(0);
+    }
+
+    /* Section spacing */
+    .who-we-are-section {
+        padding: 40px 15px;
+    }
+
+    .who-we-are-section h2 {
+        font-size: clamp(1.4rem, 4vw, 2rem);
+        margin-bottom: 20px;
+    }
+
+    /* Intro text */
+    .intro-box {
+        font-size: 1rem;
+        margin-bottom: 30px;
+        padding: 0 10px;
+    }
+
+    /* Split jadi column (penting!) */
+    .split-layout {
+        flex-direction: column;
+        margin: 20px auto;
+    }
+
+    .split-column {
+        padding: 20px;
+        border-radius: 10px;
+        background: #fafafa;
+    }
+
+    /* Divider jadi horizontal */
+    .split-divider {
+        width: 80%;
+        height: 1px;
+        margin: 20px auto;
+        background: linear-gradient(to right, transparent, #e2d1b9, transparent);
+    }
+
+    /* Heading kecil sikit */
+    .split-column h3 {
+        font-size: 1.3rem;
+    }
+
+    /* Text lebih readable */
+    .split-column p {
+        font-size: 1rem;
+        text-align: center; /* better readability mobile */
+    }
+
+    /* Closing box */
+    .closing-box {
+        font-size: 1rem;
+        padding-top: 20px;
+        margin-top: 20px;
+    }
+
+    /* Vision Mission Card text */
+    .vm-card {
+        flex: 1 1 100%; /* 2 cards in a row */
+    }
+	
+    .vm-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .vm-card p {
+        font-size: 1rem;
+        text-align: left;
+    }
+
+    .vm-card li {
+        font-size: 1rem;
+        text-align: left;
+    }
+}
+
+/* =========================
+   SMALL MOBILE (max 480px)
+========================= */
+@media (max-width: 480px) {
+
+    .logo img {
+        width: 120px;
+        height: auto;
+    }
+}

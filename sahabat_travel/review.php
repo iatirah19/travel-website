@@ -6,14 +6,14 @@ if ($conn->connect_error) {
 }
 
 // 2. Ambil data dari table 'reviews'
-$sql = "SELECT message, star, name, image FROM reviews";
+$sql = "SELECT review_text, rating, name FROM reviews";
 $result = $conn->query($sql);
 
 $reviews_data = [];
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         // Tukar angka 5 kepada string "★★★★★"
-        $row['stars_html'] = str_repeat("★", $row['star']);
+        $row['stars_html'] = str_repeat("★", $row['rating']);
         $reviews_data[] = $row;
     }
 }
@@ -34,31 +34,151 @@ $json_reviews = json_encode($reviews_data);
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="main-header">
-        <div class="header-container">
-            
-			<div class="logo">
-                <img src="picture/LOGO-SAHABAT.png" alt="Logo Sahabat International Travel">
-            </div>
-            
-			<div class="menu-toggle">☰</div>
-            
-			<div class="header-right">
-				<nav class="nav-menu">
-					<ul>
-						<li><a href="homepage.php">Utama</a></li>
-						<li><a href="aboutus.php">Tentang Kami</a></li>
-						<li><a href="destinations.php">Destinasi</a></li>
-						<li><a href="review.php" class="active">Testimoni</a></li>
-					</ul>
-				</nav>
+    <!-- NAVBAR -->
+<header>
+    <nav class="navbar">
 
-				<div class="header-action">
-					<a href="contactus.php" class="btn-hubungi"></i> Hubungi Kami</a>
-				</div>
-			</div>
+        <!-- LOGO -->
+        <div class="logo">
+            <img src="picture/LOGO-SAHABAT.png" alt="Logo">
         </div>
-    </header>
+
+        <!-- MENU (DESKTOP) -->
+        <ul class="nav-links" id="navLinks">
+
+            <li><a href="homepage.php">Home</a></li>
+            <li><a href="about.php">About Us</a></li>
+
+            <!-- DROPDOWN (DESKTOP ONLY) -->
+            <li class="dropdown">
+
+                <button class="dropdown-btn">
+                    Packages <i class="fa-solid fa-chevron-down"></i>
+                </button>
+
+                <ul class="dropdown-menu">
+
+                    <li><a href="domestic.php">Domestic Package</a></li>
+
+                    <li class="sub-dropdown">
+
+                        <button class="sub-dropdown-btn">
+                            International Package
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                        <ul class="sub-dropdown-menu">
+                            <?php
+                            $result = mysqli_query($conn, "SELECT * FROM countries ORDER BY country_name ASC");
+                            while($row = mysqli_fetch_assoc($result)) {
+                            ?>
+                            
+                                <li>
+                                    <a href="country.php?slug=<?= $row['country_slug'] ?>">
+                                        <?= $row['country_name'] ?>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+
+                    <li><a href="umrah.php">Umrah Package</a></li>
+
+                </ul>
+            </li>
+
+            <li><a href="review.php">Review</a></li>
+            <li><a href="contact.php">Contact</a></li>
+
+        </ul>
+
+        <!-- AUTH -->
+        <div class="nav-btn">
+            <?php if(isset($_SESSION['user_id'])): ?>
+
+                <div class="profile-menu">
+                    <i class="fa-solid fa-user"></i>
+                    <span><?php echo $_SESSION['username']; ?></span>
+                </div>
+
+            <?php else: ?>
+
+                <div class="auth-btn">
+                    <a href="login.php" class="btn login-btn">Login</a>
+                    <a href="register.php" class="btn register-btn">Register</a>
+                </div>
+
+            <?php endif; ?>
+        </div>
+
+        <!-- MOBILE BUTTON -->
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+    </nav>
+</header>
+
+<!-- MOBILE SIDEBAR -->
+<div class="mobile-sidebar" id="mobileSidebar">
+
+    <div class="close-btn" id="closeMenu">
+        <i class="fa-solid fa-xmark"></i>
+    </div>
+
+    <ul>
+        <li><a href="homepage.php">Home</a></li>
+        <li><a href="about.php">About Us</a></li>
+
+        <!-- MOBILE DROPDOWN -->
+        <li class="mobile-dropdown">
+
+            <div class="mobile-dropdown-btn">
+                Packages
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+
+            <ul class="mobile-dropdown-menu">
+
+                <li><a href="domestic.php">Domestic Package</a></li>
+
+                <!-- MOBILE SUB -->
+                <li class="mobile-sub-dropdown">
+
+                    <div class="mobile-sub-btn">
+                        International Package
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+
+                    <ul class="mobile-sub-menu">
+                        <?php
+                        $result = mysqli_query($conn, "SELECT * FROM countries ORDER BY country_name ASC");
+                        while($row = mysqli_fetch_assoc($result)) {
+                        ?>
+                            <li>
+                                <a href="country.php?slug=<?= $row['country_slug'] ?>">
+                                    <?= $row['country_name'] ?>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+
+                </li>
+
+                <li><a href="umrah.php">Umrah Package</a></li>
+
+            </ul>
+
+        </li>
+
+        <li><a href="review.php">Review</a></li>
+        <li><a href="contact.php">Contact</a></li>
+
+    </ul>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay"></div>
 
     <section class="testimonial-section">
       <div class="overlay"></div>
@@ -113,8 +233,6 @@ $json_reviews = json_encode($reviews_data);
     </div>
 </footer>
 
-
-
     <script>
         // Data dari PHP
         const testimonials = <?php echo $json_reviews; ?>;
@@ -134,7 +252,7 @@ $json_reviews = json_encode($reviews_data);
             // Render Card Content
             display.innerHTML = `
                 <div class="quote-content">
-                    <p class="message">"${data.message}"</p>
+                    <p class="message">"${data.review_text}"</p>
                     <div class="stars">${data.stars_html}</div>
                 </div>
                 <div class="client-info">
@@ -160,11 +278,6 @@ $json_reviews = json_encode($reviews_data);
             renderTestimonial(currentIndex);
         }
 
-        // Mobile Menu Logic
-        const menuToggle = document.querySelector(".menu-toggle");
-        const headerRight = document.querySelector(".header-right");
-        menuToggle.addEventListener("click", () => headerRight.classList.toggle("active"));
-
         // Autoplay
         setInterval(() => changeSlide(1), 5000);
 
@@ -172,14 +285,44 @@ $json_reviews = json_encode($reviews_data);
         document.addEventListener('DOMContentLoaded', () => renderTestimonial(0));
     </script>
 	
-	<!-- JS FOR TOGGLE -->
 <script>
-    const menuToggle = document.querySelector(".menu-toggle");
-    const headerRight = document.querySelector(".header-right");
-    
-    menuToggle.addEventListener("click", function(){
-        headerRight.classList.toggle("active");
-        });
+
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("mobileSidebar");
+const closeMenu = document.getElementById("closeMenu");
+const overlay = document.getElementById("overlay");
+
+menuToggle.onclick = () => {
+    sidebar.classList.add("active");
+    overlay.classList.add("active");
+}
+
+closeMenu.onclick = () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+}
+
+overlay.onclick = () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+}
+
+/* MOBILE DROPDOWN */
+document.querySelectorAll(".mobile-dropdown-btn")
+.forEach(btn => {
+    btn.addEventListener("click", () => {
+        btn.parentElement.classList.toggle("active");
+    });
+});
+
+/* MOBILE SUB DROPDOWN */
+document.querySelectorAll(".mobile-sub-btn")
+.forEach(btn => {
+    btn.addEventListener("click", () => {
+        btn.parentElement.classList.toggle("active");
+    });
+});
+
 </script>
 </body>
 </html>

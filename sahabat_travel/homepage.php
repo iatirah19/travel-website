@@ -101,7 +101,7 @@ require 'db.php';
     <div class="card-container">
 
 <?php
-$sql = "SELECT * FROM packages WHERE status='active' LIMIT 4";
+$sql = "SELECT * FROM packages WHERE is_active='active' LIMIT 4";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0):

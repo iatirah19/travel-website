@@ -555,7 +555,6 @@ background: linear-gradient(
 
 /* Responsif: Kalau buka di phone, dia akan susun menegak */
 @media (max-width: 768px) {
-	<-- footer -->
     .footer-column {
         text-align: left;   /* Semua content dalam kolom ikut kanan */
         margin-bottom: 20px; /* Supaya jarak bawah antar kolom mobile */
@@ -579,7 +578,6 @@ background: linear-gradient(
         justify-content: center;
     }
     
-	<-- navigation -->
     .main-header{
         padding:10px 0;
     }
@@ -622,7 +620,6 @@ background: linear-gradient(
         margin-top:10px;
     }
 	
-	<-- hero banner -->
     .hero-banner {
         height: 350px;
     }
@@ -645,8 +642,7 @@ background: linear-gradient(
         padding: 10px;
         font-size: 14px;
     }
-	
-	<-- popular pakej -->
+
 	.section {
         padding: 40px 15px;
     }
@@ -685,7 +681,6 @@ background: linear-gradient(
         font-size: 0.8rem;
     }
 	
-	<-- why choose us -->
 	.kenapa-pilih-section {
         padding: 50px 15px;
     }
