@@ -19,7 +19,7 @@ require 'db.php';
 
         <!-- LOGO -->
         <div class="logo">
-            <img src="picture/LOGO-SAHABAT.png" alt="Logo">
+            <img src="picture/LOGO-SAHABAT-BACKGROUND-WHITE.png" alt="Logo">
         </div>
 
         <!-- MENU (DESKTOP) -->
