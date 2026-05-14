@@ -5,6 +5,11 @@ if (isset($_POST['add_country'])) {
 
     $name = mysqli_real_escape_string($conn, $_POST['country_name']);
 
+    // generate slug
+    $slug = strtolower(trim($name));
+    $slug = preg_replace('/[^a-z0-9-]+/', '-', $slug);
+    $slug = trim($slug, '-');
+
     // file info
     $image = $_FILES['image']['name'];
     $tmp = $_FILES['image']['tmp_name'];
@@ -24,8 +29,10 @@ if (isset($_POST['add_country'])) {
 
     if (move_uploaded_file($tmp, $folder)) {
 
-        $sql = "INSERT INTO countries (country_name, country_image)
-                VALUES ('$name', '$newImageName')";
+        $sql = "INSERT INTO countries 
+                (country_name, country_slug, country_image)
+                VALUES 
+                ('$name', '$slug', '$newImageName')";
 
         mysqli_query($conn, $sql);
 

@@ -160,7 +160,6 @@ require 'db.php';
 <!-- OVERLAY -->
 <div class="overlay" id="overlay"></div>
 
-
 <div class="about-card">
     <img src="picture/wallpaper6.jpg" alt="About Image">
     

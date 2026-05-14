@@ -14,69 +14,150 @@ require 'db.php';
 </head>
 <body>
     <!-- NAVBAR -->
-    <header>
-        <nav class="navbar">
-            
-            <!-- LOGO -->
-            <div class="logo">
-                <img src="picture/LOGO-SAHABAT.png" alt="Logo">
+<header>
+    <nav class="navbar">
+
+        <!-- LOGO -->
+        <div class="logo">
+            <img src="picture/LOGO-SAHABAT.png" alt="Logo">
+        </div>
+
+        <!-- MENU (DESKTOP) -->
+        <ul class="nav-links" id="navLinks">
+
+            <li><a href="homepage.php">Home</a></li>
+            <li><a href="about.php">About Us</a></li>
+
+            <!-- DROPDOWN (DESKTOP ONLY) -->
+            <li class="dropdown">
+
+                <button class="dropdown-btn">
+                    Packages <i class="fa-solid fa-chevron-down"></i>
+                </button>
+
+                <ul class="dropdown-menu">
+
+                    <li><a href="domestic.php">Domestic Package</a></li>
+
+                    <li class="sub-dropdown">
+
+                        <button class="sub-dropdown-btn">
+                            International Package
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                        <ul class="sub-dropdown-menu">
+                            <?php
+                            $result = mysqli_query($conn, "SELECT * FROM countries ORDER BY country_name ASC");
+                            while($row = mysqli_fetch_assoc($result)) {
+                            ?>
+                            
+                                <li>
+                                    <a href="country.php?slug=<?= $row['country_slug'] ?>">
+                                        <?= $row['country_name'] ?>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+
+                    <li><a href="umrah.php">Umrah Package</a></li>
+
+                </ul>
+            </li>
+
+            <li><a href="review.php">Review</a></li>
+            <li><a href="contact.php">Contact</a></li>
+
+        </ul>
+
+        <!-- AUTH -->
+        <div class="nav-btn">
+            <?php if(isset($_SESSION['user_id'])): ?>
+
+                <div class="profile-menu">
+                    <i class="fa-solid fa-user"></i>
+                    <span><?php echo $_SESSION['username']; ?></span>
+                </div>
+
+            <?php else: ?>
+
+                <div class="auth-btn">
+                    <a href="login.php" class="btn login-btn">Login</a>
+                    <a href="register.php" class="btn register-btn">Register</a>
+                </div>
+
+            <?php endif; ?>
+        </div>
+
+        <!-- MOBILE BUTTON -->
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+    </nav>
+</header>
+
+<!-- MOBILE SIDEBAR -->
+<div class="mobile-sidebar" id="mobileSidebar">
+
+    <div class="close-btn" id="closeMenu">
+        <i class="fa-solid fa-xmark"></i>
+    </div>
+
+    <ul>
+        <li><a href="homepage.php">Home</a></li>
+        <li><a href="about.php">About Us</a></li>
+
+        <!-- MOBILE DROPDOWN -->
+        <li class="mobile-dropdown">
+
+            <div class="mobile-dropdown-btn">
+                Packages
+                <i class="fa-solid fa-chevron-down"></i>
             </div>
 
-            <!-- MENU -->
-            <ul class="nav-links" id="navLinks">
-                <li><a href="homepage.php">Home</a></li>
-                <li><a href="about.php">About Us</a></li>
-                
-                <!-- DROPDOWN PACKAGE -->
-                <li class="dropdown">
-                    <button class="dropdown-btn">
-                        Packages <i class="fa-solid fa-chevron-down"></i>
-                    </button>
-                    
-                    <ul class="dropdown-menu">
-                        <li><a href="domestic.php">Domestic Package</a></li>
-                        <li><a href="international.php">International Package</a></li>
-                        <li><a href="umrah.php">Umrah Package</a></li>
+            <ul class="mobile-dropdown-menu">
+
+                <li><a href="domestic.php">Domestic Package</a></li>
+
+                <!-- MOBILE SUB -->
+                <li class="mobile-sub-dropdown">
+
+                    <div class="mobile-sub-btn">
+                        International Package
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+
+                    <ul class="mobile-sub-menu">
+                        <?php
+                        $result = mysqli_query($conn, "SELECT * FROM countries ORDER BY country_name ASC");
+                        while($row = mysqli_fetch_assoc($result)) {
+                        ?>
+                            <li>
+                                <a href="country.php?slug=<?= $row['country_slug'] ?>">
+                                    <?= $row['country_name'] ?>
+                                </a>
+                            </li>
+                        <?php } ?>
                     </ul>
+
                 </li>
-                
-                <li><a href="review.php">Review</a></li>
-                <li><a href="contact.php">Contact</a></li>
+
+                <li><a href="umrah.php">Umrah Package</a></li>
+
             </ul>
 
-            <div class="nav-btn">
-                <?php if(isset($_SESSION['user_id'])): ?>
-                    <!-- PROFILE DROPDOWN -->
-                    <div class="profile-menu">
-                        <i class="fa-solid fa-user"></i>
-                        <span><?php echo $_SESSION['username']; ?></span>
-                        
-                        <!-- Dropdown -->
-                        <div class="dropdown">
-                            <a href="profile.php">My Profile</a>
-                            <a href="logout.php">Logout</a>
-                        </div>
-                    </div>
+        </li>
 
-                <?php else: ?>
+        <li><a href="review.php">Review</a></li>
+        <li><a href="contact.php">Contact</a></li>
 
-                    <!-- LOGIN & REGISTER -->
-                    <div class="auth-btn">
-                        <a href="login.php" class="btn login-btn">Login</a>
-                        <a href="register.php" class="btn register-btn">Register</a>
-                    </div>
+    </ul>
+</div>
 
-                <?php endif; ?>
-
-            </div>
-
-            <!-- MOBILE MENU ICON -->
-            <div class="menu-toggle" id="menuToggle">
-                <i class="fa-solid fa-bars"></i>
-            </div>
-
-        </nav>
-    </header>
+<!-- OVERLAY -->
+<div class="overlay" id="overlay"></div>
 
     <h2 class="section-title">Senarai Pakej Umrah Eksklusif</h2>
 
@@ -163,20 +244,44 @@ require 'db.php';
     </div>
 </footer>
 
-<!-- JS FOR TOGGLE -->
 <script>
 
-	// Opsional: Autoplay setiap 5 saat
-	setInterval(() => {
-        changeSlide(1);
-    }, 5000);
-	
-    const menuToggle = document.querySelector(".menu-toggle");
-    const headerRight = document.querySelector(".header-right");
-    
-    menuToggle.addEventListener("click", function(){
-        headerRight.classList.toggle("active");
-        });
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("mobileSidebar");
+const closeMenu = document.getElementById("closeMenu");
+const overlay = document.getElementById("overlay");
+
+menuToggle.onclick = () => {
+    sidebar.classList.add("active");
+    overlay.classList.add("active");
+}
+
+closeMenu.onclick = () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+}
+
+overlay.onclick = () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+}
+
+/* MOBILE DROPDOWN */
+document.querySelectorAll(".mobile-dropdown-btn")
+.forEach(btn => {
+    btn.addEventListener("click", () => {
+        btn.parentElement.classList.toggle("active");
+    });
+});
+
+/* MOBILE SUB DROPDOWN */
+document.querySelectorAll(".mobile-sub-btn")
+.forEach(btn => {
+    btn.addEventListener("click", () => {
+        btn.parentElement.classList.toggle("active");
+    });
+});
+
 </script>
 
 </body>

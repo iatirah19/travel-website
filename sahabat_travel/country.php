@@ -1,20 +1,34 @@
 <?php
+session_start();
 require 'db.php';
 
-$country_id = isset($_GET['country_id']) ? intval($_GET['country_id']) : 0;
+// ambil slug dari URL
+$slug = isset($_GET['slug']) ? $_GET['slug'] : '';
 
-if ($country_id == 0) {
-    die("Country ID not valid");
+if (empty($slug)) {
+    die("Slug not valid");
 }
 
-$country = $conn->query("SELECT * FROM countries WHERE country_id=$country_id")->fetch_assoc();
+// cari country berdasarkan country_slug
+$stmt = $conn->prepare("SELECT * FROM countries WHERE country_slug = ?");
+$stmt->bind_param("s", $slug);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$country = $result->fetch_assoc();
 
 if (!$country) {
     die("Country not found in database");
 }
 
-// get packages
-$packages = $conn->query("SELECT * FROM packages WHERE country_id=$country_id");
+// get packages ikut country_id
+$country_id = $country['country_id'];
+
+$stmt2 = $conn->prepare("SELECT * FROM packages WHERE country_id = ?");
+$stmt2->bind_param("i", $country_id);
+$stmt2->execute();
+
+$packages = $stmt2->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -29,48 +43,172 @@ $packages = $conn->query("SELECT * FROM packages WHERE country_id=$country_id");
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="main-header">
-    <div class="header-container">
+    <!-- NAVBAR -->
+<header>
+    <nav class="navbar">
+
+        <!-- LOGO -->
         <div class="logo">
-            <img src="picture/LOGO-SAHABAT.png" alt="Logo Sahabat International Travel">
+            <img src="picture/LOGO-SAHABAT.png" alt="Logo">
         </div>
 
-        <div class="menu-toggle">☰</div>
+        <!-- MENU (DESKTOP) -->
+        <ul class="nav-links" id="navLinks">
 
-        <div class="header-right">
-        <nav class="nav-menu">
-            <ul>
-                <li><a href="homepage.php">Utama</a></li>
-                <li><a href="aboutus.php">Tentang Kami</a></li>
-                <li><a href="destinations.php">Destinasi</a></li>
-                <li><a href="review.php">Testimoni</a></li>
-            </ul>
-        </nav>
+            <li><a href="homepage.php">Home</a></li>
+            <li><a href="about.php">About Us</a></li>
 
-        <div class="header-action">
-            <a href="contactus.php" class="btn-hubungi"></i> Hubungi Kami</a>
+            <!-- DROPDOWN (DESKTOP ONLY) -->
+            <li class="dropdown">
+
+                <button class="dropdown-btn">
+                    Packages <i class="fa-solid fa-chevron-down"></i>
+                </button>
+
+                <ul class="dropdown-menu">
+
+                    <li><a href="domestic.php">Domestic Package</a></li>
+
+                    <li class="sub-dropdown">
+
+                        <button class="sub-dropdown-btn">
+                            International Package
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                        <ul class="sub-dropdown-menu">
+                            <?php
+                            $result = mysqli_query($conn, "SELECT * FROM countries ORDER BY country_name ASC");
+                            while($row = mysqli_fetch_assoc($result)) {
+                            ?>
+                            
+                                <li>
+                                    <a href="country.php?slug=<?= $row['country_slug'] ?>">
+                                        <?= $row['country_name'] ?>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+
+                    <li><a href="umrah.php">Umrah Package</a></li>
+
+                </ul>
+            </li>
+
+            <li><a href="review.php">Review</a></li>
+            <li><a href="contact.php">Contact</a></li>
+
+        </ul>
+
+        <!-- AUTH -->
+        <div class="nav-btn">
+            <?php if(isset($_SESSION['user_id'])): ?>
+
+                <div class="profile-menu">
+                    <i class="fa-solid fa-user"></i>
+                    <span><?php echo $_SESSION['username']; ?></span>
+                </div>
+
+            <?php else: ?>
+
+                <div class="auth-btn">
+                    <a href="login.php" class="btn login-btn">Login</a>
+                    <a href="register.php" class="btn register-btn">Register</a>
+                </div>
+
+            <?php endif; ?>
         </div>
+
+        <!-- MOBILE BUTTON -->
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fa-solid fa-bars"></i>
         </div>
+
+    </nav>
+</header>
+
+<!-- MOBILE SIDEBAR -->
+<div class="mobile-sidebar" id="mobileSidebar">
+
+    <div class="close-btn" id="closeMenu">
+        <i class="fa-solid fa-xmark"></i>
     </div>
-    </header>
 
-<header class="hero-banner" style="background: url('uploads/<?php echo $country['country_image']; ?>') center/cover no-repeat;">
-    
+    <ul>
+        <li><a href="homepage.php">Home</a></li>
+        <li><a href="about.php">About Us</a></li>
+
+        <!-- MOBILE DROPDOWN -->
+        <li class="mobile-dropdown">
+
+            <div class="mobile-dropdown-btn">
+                Packages
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+
+            <ul class="mobile-dropdown-menu">
+
+                <li><a href="domestic.php">Domestic Package</a></li>
+
+                <!-- MOBILE SUB -->
+                <li class="mobile-sub-dropdown">
+
+                    <div class="mobile-sub-btn">
+                        International Package
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+
+                    <ul class="mobile-sub-menu">
+                        <?php
+                        $result = mysqli_query($conn, "SELECT * FROM countries ORDER BY country_name ASC");
+                        while($row = mysqli_fetch_assoc($result)) {
+                        ?>
+                            <li>
+                                <a href="country.php?slug=<?= $row['country_slug'] ?>">
+                                    <?= $row['country_name'] ?>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+
+                </li>
+
+                <li><a href="umrah.php">Umrah Package</a></li>
+
+            </ul>
+
+        </li>
+
+        <li><a href="review.php">Review</a></li>
+        <li><a href="contact.php">Contact</a></li>
+
+    </ul>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay"></div>
+
+<!-- HERO SECTION -->
+<section class="hero" style="background: url('uploads/<?php echo $country['country_image']; ?>') center/cover no-repeat;">
+
     <div class="hero-overlay"></div>
 
     <div class="hero-content">
         <h1><?php echo $country['country_name']; ?></h1>
     </div>
-</header>
 
+</section>
 
-    <h2 class="section-title">Senarai Pakej Eksklusif</h2>
+<!-- TITLE -->
+<h2 class="section-title">Senarai Pakej Eksklusif</h2>
 
+<!-- PACKAGE CONTAINER -->
 <div class="pakej-table-container">
 
-<?php if($packages->num_rows > 0) { ?>
+<?php if ($packages->num_rows > 0): ?>
 
-    <?php while($row = $packages->fetch_assoc()) { ?>
+    <?php while ($row = $packages->fetch_assoc()): ?>
 
         <div class="pakej-row">
 
@@ -90,17 +228,18 @@ $packages = $conn->query("SELECT * FROM packages WHERE country_id=$country_id");
 
         </div>
 
-    <?php } ?>
+    <?php endwhile; ?>
 
-<?php } else { ?>
+<?php else: ?>
 
-    <!-- EMPTY STATE -->
-    <div class="empty-state">
-        <h3>Tiada Pakej Setakat Ini.</h3>
-        <p>Pakej akan dikemaskini tidak lama lagi.</p>
-    </div>
+    <?php
+        echo "<p style='text-align:center; grid-column:1/-1;'>
+                No package available.
+              </p>";
+    ?>
 
-<?php } ?>
+<?php endif; ?>
+
 </div>
 
 <!-- FOOTER SECTION -->
@@ -137,14 +276,44 @@ $packages = $conn->query("SELECT * FROM packages WHERE country_id=$country_id");
     </div>
 </footer>
 
-<!-- JS FOR TOGGLE -->
 <script>
-    const menuToggle = document.querySelector(".menu-toggle");
-    const headerRight = document.querySelector(".header-right");
-    
-    menuToggle.addEventListener("click", function(){
-        headerRight.classList.toggle("active");
-        });
+
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("mobileSidebar");
+const closeMenu = document.getElementById("closeMenu");
+const overlay = document.getElementById("overlay");
+
+menuToggle.onclick = () => {
+    sidebar.classList.add("active");
+    overlay.classList.add("active");
+}
+
+closeMenu.onclick = () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+}
+
+overlay.onclick = () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+}
+
+/* MOBILE DROPDOWN */
+document.querySelectorAll(".mobile-dropdown-btn")
+.forEach(btn => {
+    btn.addEventListener("click", () => {
+        btn.parentElement.classList.toggle("active");
+    });
+});
+
+/* MOBILE SUB DROPDOWN */
+document.querySelectorAll(".mobile-sub-btn")
+.forEach(btn => {
+    btn.addEventListener("click", () => {
+        btn.parentElement.classList.toggle("active");
+    });
+});
+
 </script>
 
 </body>

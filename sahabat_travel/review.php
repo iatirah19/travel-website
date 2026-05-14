@@ -181,7 +181,7 @@ $json_reviews = json_encode($reviews_data);
 <div class="overlay" id="overlay"></div>
 
     <section class="testimonial-section">
-      <div class="overlay"></div>
+      <div class="overlay-testimonial"></div>
       <div class="content-wrapper">
         <div class="header-text">
           <h2>APA KATA PELANGGAN SAHABAT TRAVEL</h2>
