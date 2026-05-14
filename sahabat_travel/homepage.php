@@ -6,131 +6,208 @@ require 'db.php';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sahabat International Travel Sdn Bhd</title>
     <link rel="icon" type="image/png" href="picture/LOGO.png">
     <link rel="stylesheet" href="homepage.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-
 <!-- NAVBAR -->
-<header class="main-header">
-    <div class="header-container">
+<header>
+    <nav class="navbar">
+
+        <!-- LOGO -->
         <div class="logo">
-            <img src="picture/LOGO-SAHABAT.png" alt="Logo Sahabat International Travel">
+            <img src="picture/LOGO-SAHABAT-BACKGROUND-WHITE.PNG" alt="Logo">
         </div>
 
-        <div class="menu-toggle">☰</div>
+        <!-- MENU (DESKTOP) -->
+        <ul class="nav-links" id="navLinks">
 
-        <div class="header-right">
-			<nav class="nav-menu">
-				<ul>
-					<li><a href="homepage.php" class="active">Utama</a></li>
-					<li><a href="aboutus.php">Tentang Kami</a></li>
-					<li><a href="destinations.php">Destinasi</a></li>
-					<li><a href="review.php">Testimoni</a></li>
-				</ul>
-			</nav>
+            <li><a href="homepage.php">Home</a></li>
+            <li><a href="about.php">About Us</a></li>
 
-			<div class="header-action">
-				<a href="contactus.php" class="btn-hubungi"></i> Hubungi Kami</a>
-			</div>
+            <!-- DROPDOWN (DESKTOP ONLY) -->
+            <li class="dropdown">
+
+                <button class="dropdown-btn">
+                    Packages <i class="fa-solid fa-chevron-down"></i>
+                </button>
+
+                <ul class="dropdown-menu">
+
+                    <li><a href="domestic.php">Domestic Package</a></li>
+
+                    <li class="sub-dropdown">
+
+                        <button class="sub-dropdown-btn">
+                            International Package
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                        <ul class="sub-dropdown-menu">
+                            <?php
+                            $result = mysqli_query($conn, "SELECT * FROM countries ORDER BY country_name ASC");
+                            while($row = mysqli_fetch_assoc($result)) {
+                            ?>
+                            
+                                <li>
+                                    <a href="country.php?slug=<?= $row['country_slug'] ?>">
+                                        <?= $row['country_name'] ?>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+
+                    <li><a href="umrah.php">Umrah Package</a></li>
+
+                </ul>
+            </li>
+
+            <li><a href="review.php">Review</a></li>
+            <li><a href="contact.php">Contact</a></li>
+
+        </ul>
+
+        <!-- AUTH -->
+        <div class="nav-btn">
+            <?php if(isset($_SESSION['user_id'])): ?>
+
+                <div class="profile-menu">
+                    <i class="fa-solid fa-user"></i>
+                    <span><?php echo $_SESSION['username']; ?></span>
+                </div>
+
+            <?php else: ?>
+
+                <div class="auth-btn">
+                    <a href="login.php" class="btn login-btn">Login</a>
+                    <a href="register.php" class="btn register-btn">Register</a>
+                </div>
+
+            <?php endif; ?>
         </div>
-    </div>
+
+        <!-- MOBILE BUTTON -->
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+    </nav>
 </header>
 
-<!-- HERO SECTION -->
-<div class="hero-banner">
-    <div class="slides-container">
-        <div class="slide active">
-            <img src="picture/Wallpaper1.jpg.jpeg" alt="Destinasi Percutian 1" class="slide-img">
-            <div class="overlay"></div>
-            <div class="overlay-content">
-                <h2>Selamat Datang ke Sahabat International Travel</h2>
-                <h4>Rakan perjalanan anda untuk menerokai dunia tanpa batasan.</h4>
-                <div class="btn-group">
-                    <a href="destinations.php" class="hero-btn primary-btn">Terokai Sekarang</a>
-                </div>
-            </div>
-        </div>
+<!-- MOBILE SIDEBAR -->
+<div class="mobile-sidebar" id="mobileSidebar">
 
-        <div class="slide">
-            <img src="picture/wallpaper3.jpg" alt="Destinasi Percutian 2" class="slide-img">
-            <div class="overlay"></div>
-            <div class="overlay-content">
-                <h2>Percutian Impian Bermula Di Sini</h2>
-                <h4>Nikmati pakej pelancongan ke seluruh dunia dengan harga berpatutan dan perkhidmatan terbaik.</h4>
-            </div>
-        </div>
-
-        <div class="slide">
-            <img src="picture/wallpaper4.jpg" alt="Destinasi Percutian 3" class="slide-img">
-            <div class="overlay"></div>
-            <div class="overlay-content">
-                <h2>Destinasi Global, Pengalaman Eksklusif</h2>
-                <h4>Dari Asia ke Eropah, kami uruskan setiap perjalanan anda dengan profesional dan teliti.</h4>
-            </div>
-        </div>
-
-        <div class="slide">
-            <img src="picture/wallpaper5.jpg" alt="Destinasi Percutian 4" class="slide-img">
-            <div class="overlay"></div>
-            <div class="overlay-content">
-                <h2>Perjalanan Selesa & Selamat Untuk Semua</h2>
-                <h4>Sama ada percutian keluarga, bulan madu atau trip berkumpulan - kami sedia membantu.</h4>
-                <div class="btn-group">
-                    <a href="contactus.php" class="hero-btn primary-btn">Hubungi Kami</a>
-                </div>
-            </div>
-        </div>
-
-        <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
-        <button class="next" onclick="changeSlide(1)">&#10095;</button>
+    <div class="close-btn" id="closeMenu">
+        <i class="fa-solid fa-xmark"></i>
     </div>
+
+    <ul>
+        <li><a href="homepage.php">Home</a></li>
+        <li><a href="about.php">About Us</a></li>
+
+        <!-- MOBILE DROPDOWN -->
+        <li class="mobile-dropdown">
+
+            <div class="mobile-dropdown-btn">
+                Packages
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+
+            <ul class="mobile-dropdown-menu">
+
+                <li><a href="domestic.php">Domestic Package</a></li>
+
+                <!-- MOBILE SUB -->
+                <li class="mobile-sub-dropdown">
+
+                    <div class="mobile-sub-btn">
+                        International Package
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+
+                    <ul class="mobile-sub-menu">
+                        <?php
+                        $result = mysqli_query($conn, "SELECT * FROM countries ORDER BY country_name ASC");
+                        while($row = mysqli_fetch_assoc($result)) {
+                        ?>
+                            <li>
+                                <a href="country.php?slug=<?= $row['country_slug'] ?>">
+                                    <?= $row['country_name'] ?>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+
+                </li>
+
+                <li><a href="umrah.php">Umrah Package</a></li>
+
+            </ul>
+
+        </li>
+
+        <li><a href="review.php">Review</a></li>
+        <li><a href="contact.php">Contact</a></li>
+
+    </ul>
 </div>
 
-<script src="homepage.js"></script>
+<!-- OVERLAY -->
+<div class="overlay" id="overlay"></div>
 
-<!-- POPULAR PACKAGES -->
-<section class="section">
-    <h2 class="pakej-title">Koleksi Pakej Terbaik</h2>
-    <h3 class="pakej-subtitle">Kembara ke destinasi impian anda dengan pakej terbaik kami.</h3>
+    <!-- HERO SECTION -->
+    <section class="hero">
 
-    <div class="card-container">
-
-<?php
-$sql = "SELECT * FROM packages WHERE is_active='active' LIMIT 4";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0):
-    while($row = $result->fetch_assoc()):
-?>
-
-    <div class="card">
-        <img src="uploads/<?= $row['image'] ?>" alt="<?= $row['title'] ?>">
-
-        <div class="card-overlay">
-            <h3><?= $row['title'] ?></h3>
-            <p class="details"><?= $row['duration'] ?></p>
-
-            <a href="package.php?id=<?= $row['package_id'] ?>" class="btn-details">
-                Lihat Detail
-            </a>
+    <div class="hero-content">
+        <h1>Selamat Datang ke Sahabat International Travel</h1>
+        <p>Rakan perjalanan anda untuk menerokai dunia tanpa batasan.</p>
+        <div class="hero-btns">
+            <a href="contact.php" class="btn-primary">Contact Us</a>
         </div>
     </div>
 
-<?php 
-    endwhile;
-else:
-?>
+</section>
 
-    <p class="no-data">Tiada pakej tersedia buat masa ini.</p>
+<section class="popular-package">
+    <h2>Popular Packages</h2>
 
-<?php endif; ?>
+    <div class="package-container">
 
-</div>
+        <?php
+        include 'db.php';
+
+        $sql = "SELECT * FROM packages WHERE is_active='popular' LIMIT 4";
+        $result = $conn->query($sql);
+
+        if($result->num_rows > 0):
+            while($row = $result->fetch_assoc()):
+        ?>
+
+        <div class="package-card">
+            <img src="uploads/<?php echo $row['packimage']; ?>" alt="Package Image">
+
+            <div class="package-info">
+                <h3><?php echo $row['packname']; ?></h3>
+                <p class="details"><?= $row['duration'] ?></p>
+
+                <a href="package_detail.php?id=<?php echo $row['package_id']; ?>" class="view-btn">
+                    View Details
+                </a>
+            </div>
+        </div>
+
+        <?php
+            endwhile;
+        else:
+            echo "<p>No popular package available.</p>";
+        endif;
+        ?>
+
+    </div>
 </section>
 
 <!-- WHY CHOOSE US SECTION -->
@@ -196,21 +273,44 @@ else:
     </div>
 </footer>
 
-<!-- JS FOR TOGGLE -->
 <script>
 
-	// Opsional: Autoplay setiap 5 saat
-	setInterval(() => {
-        changeSlide(1);
-    }, 5000);
-	
-    const menuToggle = document.querySelector(".menu-toggle");
-    const headerRight = document.querySelector(".header-right");
-    
-    menuToggle.addEventListener("click", function(){
-        headerRight.classList.toggle("active");
-        });
-</script>
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("mobileSidebar");
+const closeMenu = document.getElementById("closeMenu");
+const overlay = document.getElementById("overlay");
 
+menuToggle.onclick = () => {
+    sidebar.classList.add("active");
+    overlay.classList.add("active");
+}
+
+closeMenu.onclick = () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+}
+
+overlay.onclick = () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+}
+
+/* MOBILE DROPDOWN */
+document.querySelectorAll(".mobile-dropdown-btn")
+.forEach(btn => {
+    btn.addEventListener("click", () => {
+        btn.parentElement.classList.toggle("active");
+    });
+});
+
+/* MOBILE SUB DROPDOWN */
+document.querySelectorAll(".mobile-sub-btn")
+.forEach(btn => {
+    btn.addEventListener("click", () => {
+        btn.parentElement.classList.toggle("active");
+    });
+});
+
+</script>
 </body>
 </html>
