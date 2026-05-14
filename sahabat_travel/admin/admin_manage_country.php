@@ -1,123 +1,204 @@
-<?php
-require '../db.php';
-
-/* =========================
-   ADD COUNTRY
-========================= */
-if (isset($_POST['add_country'])) {
-    $name = $_POST['country_name'];
-
-    $image = time() . "_" . basename($_FILES['image']['name']);
-    $target = "../uploads/" . $image;
-
-    if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
-
-        $sql = "INSERT INTO countries (country_name, country_image)
-                VALUES ('$name', '$image')";
-
-        mysqli_query($conn, $sql);
-
-        header("Location: admin_manage_country.php");
-        exit();
-
-    } else {
-        echo "<script>alert('Upload image gagal!');</script>";
-    }
-}
-
-/* =========================
-   DELETE COUNTRY
-========================= */
-if (isset($_GET['delete'])) {
-    $id = (int) $_GET['delete'];
-
-    // ambil image dulu
-    $get = mysqli_query($conn, "SELECT country_image FROM countries WHERE country_id=$id");
-    $data = mysqli_fetch_assoc($get);
-
-    // delete image file
-    if ($data && !empty($data['country_image'])) {
-        $file = "../uploads/" . $data['country_image'];
-        if (file_exists($file)) {
-            unlink($file);
-        }
-    }
-
-    // delete database
-    mysqli_query($conn, "DELETE FROM countries WHERE country_id=$id");
-
-    header("Location: admin_manage_country.php");
-    exit();
-}
-
-/* =========================
-   GET DATA
-========================= */
-$result = mysqli_query($conn, "SELECT * FROM countries");
-?>
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Manage Country - Sahabat International Travel Sdn Bhd</title>
     <link rel="icon" type="image/png" href="../picture/LOGO.png">
     <link rel="stylesheet" href="admin_manage_country.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-
 <body>
+    <!-- TOGGLE BUTTON -->
+<div class="menu-toggle" id="menuToggle">
+    <i class="fa-solid fa-bars"></i>
+</div>
 
-<div class="page-header">
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
 
-    <a href="admin_dashboard.php" class="btn-back">← Back</a>
+    <!-- CLOSE BUTTON -->
+    <div class="close-btn" id="closeBtn">
+        <i class="fa-solid fa-xmark"></i>
+    </div>
 
-    <h2>Manage Country</h2>
+    <h2 class="logo">Admin Panel</h2>
 
-    <a href="add_country.php" class="btn-add">+ Add Country</a>
+    <ul>
+        <li><a href="#"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+        <li><a href="#"><i class="fa-solid fa-earth-asia"></i> Manage Country</a></li>
+        <li><a href="#"><i class="fa-solid fa-box"></i> Manage Package</a></li>
+        <li><a href="#"><i class="fa-solid fa-star"></i> Manage Review</a></li>
+        <li><a href="#"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+    </ul>
 
 </div>
 
-<!-- TABLE DISPLAY -->
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Image</th>
-        <th>Country</th>
-        <th>Action</th>
-    </tr>
+<!-- OVERLAY -->
+<div class="overlay" id="overlay"></div>
 
-    <?php if (mysqli_num_rows($result) > 0) { ?>
+<!-- PAGE HEADER -->
+<div class="page-header">
+    <div>
+        <h1>Manage Countries</h1>
+        <p>Dashboard > Countries</p>
+    </div>
+</div>
 
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-        <tr>
-            <td><?php echo $row['country_id']; ?></td>
+<!-- TOP BAR -->
+<div class="top-bar">
 
-            <td>
-                <img src="../uploads/<?php echo htmlspecialchars($row['country_image']); ?>" class="img-preview">
-            </td>
+    <!-- SEARCH -->
+    <form method="GET" class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" name="search" placeholder="Search countries..."
+               value="<?php echo $_GET['search'] ?? ''; ?>">
+    </form>
 
-            <td>
-                <?php echo htmlspecialchars($row['country_name']); ?>
-            </td>
+    <!-- ADD BUTTON -->
+    <a href="add_country.php" class="add-btn">
+        + Add Country
+    </a>
 
-            <td>
-                <a href="edit_country.php?id=<?php echo $row['country_id']; ?>">Edit</a> |
-				<a href="admin_manage_country.php?delete=<?php echo $row['country_id']; ?>" 
-                   onclick="return confirm('Are you sure want to delete this country?')">Delete</a>
-            </td>
-        </tr>
-        <?php } ?>
+</div>
 
-    <?php } else { ?>
+<?php
+require '../db.php';
 
-        <tr>
-            <td colspan="4">No country found</td>
-        </tr>
+/* GET ALL COUNTRIES */
+$search = $_GET['search'] ?? '';
 
-    <?php } ?>
+if (!empty($search)) {
+    $sql = "SELECT * FROM countries 
+            WHERE country_name LIKE '%$search%' 
+            ORDER BY country_id DESC";
+} else {
+    $sql = "SELECT * FROM countries 
+            ORDER BY country_id DESC";
+}
+$result = mysqli_query($conn, $sql);
+?>
 
-</table>
+<!-- TABLE -->
+<div class="table-container">
 
+    <table>
+
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Country Name</th>
+                <th>Packages</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <?php
+            if(mysqli_num_rows($result) > 0){
+
+                while($row = mysqli_fetch_assoc($result)){
+
+                    $country_id = $row['country_id'];
+                    $country_name = $row['country_name'];
+                    $country_image = $row['country_image'];
+
+                    /* COUNT PACKAGES */
+                    $package_sql = "SELECT c.country_id, c.country_name, c.country_image,
+                                    COUNT(p.package_id) AS total_packages
+                                    FROM countries c
+                                    LEFT JOIN packages p ON c.country_id = p.country_id
+                                    GROUP BY c.country_id
+                                    ORDER BY c.country_id DESC";
+
+                    $package_result = mysqli_query($conn, $package_sql);
+                    $package_data = mysqli_fetch_assoc($package_result);
+
+                    $total_packages = $package_data['total_packages'];
+            ?>
+
+            <tr>
+
+                <!-- IMAGE -->
+                <td>
+                    <img src="../uploads/<?php echo $country_image; ?>" class="country-img">
+                </td>
+
+                <!-- COUNTRY NAME -->
+                <td>
+                    <?php echo htmlspecialchars($country_name); ?>
+                </td>
+
+                <!-- TOTAL PACKAGES -->
+                <td>
+                    <?php echo $total_packages; ?>
+                </td>
+
+                <!-- ACTION -->
+                <td class="action-btns">
+
+                    <!-- EDIT -->
+                    <a href="edit_country.php?id=<?php echo $country_id; ?>">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <!-- DELETE -->
+                    <a href="delete_country.php?id=<?php echo $country_id; ?>" 
+                       onclick="return confirm('Are you sure want to delete this country?')">
+
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <?php
+                }
+            }else{
+            ?>
+
+            <tr>
+                <td colspan="4" style="text-align:center;">
+                    No countries found
+                </td>
+            </tr>
+
+            <?php } ?>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<script>
+
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+const closeBtn = document.getElementById("closeBtn");
+const overlay = document.getElementById("overlay");
+
+/* OPEN SIDEBAR */
+menuToggle.addEventListener("click", () => {
+    sidebar.classList.add("active");
+    overlay.classList.add("active");
+});
+
+/* CLOSE SIDEBAR */
+closeBtn.addEventListener("click", () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+});
+
+/* CLOSE WHEN CLICK OVERLAY */
+overlay.addEventListener("click", () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+});
+
+</script>
 </body>
 </html>
