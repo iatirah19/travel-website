@@ -1,0 +1,89 @@
+body{
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #e8f5e9);
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding-top: 25px;   /* adjust sini */
+    height:100vh;
+    margin:0;
+}
+
+/* CARD BOX */
+.box{
+    background:white;
+    padding:25px;
+    width:380px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    transition:0.3s ease;
+    margin: 20px 0; /* atas & bawah sama */
+}
+
+.box:hover{
+    transform: translateY(-3px);
+}
+
+/* INPUT FIELDS */
+input, select, textarea{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    box-sizing:border-box;
+    border:1px solid #ddd;
+    border-radius:8px;
+    outline:none;
+    transition:0.3s;
+    font-size:14px;
+}
+
+/* FOCUS EFFECT */
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#28a745;
+    box-shadow:0 0 8px rgba(40,167,69,0.2);
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    padding:12px;
+    background:linear-gradient(135deg, #28a745, #20c997);
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+button:hover{
+    transform: translateY(-2px);
+    box-shadow:0 8px 15px rgba(0,0,0,0.15);
+}
+
+/* MESSAGE */
+.error{
+    color:#e74c3c;
+    background:#ffe6e6;
+    padding:8px;
+    border-radius:6px;
+    font-size:13px;
+}
+
+.success{
+    color:#27ae60;
+    background:#eaffea;
+    padding:8px;
+    border-radius:6px;
+    font-size:13px;
+}
+
+/* TITLE (optional if you want nicer heading) */
+h2{
+    text-align:center;
+    margin-bottom:20px;
+    color:#333;
+}
