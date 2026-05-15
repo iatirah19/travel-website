@@ -18,40 +18,40 @@ $totalPackages = mysqli_fetch_assoc($packageResult)['total_packages'];
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Sahabat International Travel Sdn Bhd</title>
+    <link rel="icon" type="image/png" href="../picture/LOGO.png">
     <link rel="stylesheet" href="admin_dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
-
-<div class="topbar">
-    <button id="toggle-btn">☰</button>
-    <h1>Admin Dashboard</h1>
+<!-- TOGGLE BUTTON -->
+<div class="menu-toggle" id="menuToggle">
+    <i class="fa-solid fa-bars"></i>
 </div>
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <h2>🌍 Admin Panel</h2>
-        <p>Sahabat International Travel Sdn Bhd</p>
+
+    <!-- CLOSE BUTTON -->
+    <div class="close-btn" id="closeBtn">
+        <i class="fa-solid fa-xmark"></i>
     </div>
 
-    <div class="sidebar-menu">
-        <a href="admin_dashboard.php">Dashboard</a>
-        <a href="manage_users.php">Manage Users</a>
-        <a href="admin_manage_country.php">Manage Countries</a>
-        <a href="admin_manage_package.php">Manage Packages</a>
-		<a href="admin_manage_review.php">Manage Reviews</a>
-		<a href="register.php">Add New Admin</a>
-    </div>
+    <h2 class="logo">Admin Panel</h2>
 
-    <div class="sidebar-footer">
-		<a href="#" class="logout" onclick="confirmLogout()">🚪 Logout</a>
-	</div>
+    <ul>
+        <li><a href="#"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+        <li><a href="#"><i class="fa-solid fa-earth-asia"></i> Manage Country</a></li>
+        <li><a href="#"><i class="fa-solid fa-box"></i> Manage Package</a></li>
+        <li><a href="#"><i class="fa-solid fa-star"></i> Manage Review</a></li>
+        <li><a href="#"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+    </ul>
+
 </div>
 
 <!-- MAIN CONTENT -->
