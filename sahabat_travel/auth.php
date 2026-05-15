@@ -11,7 +11,7 @@ $success = "";
 if (isset($_POST['register'])) {
 
     $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $email = mysqli_real_escape_string($conn, $_POST['register_email']);
     $gender = mysqli_real_escape_string($conn, $_POST['gender']);
     $address = mysqli_real_escape_string($conn, $_POST['address']);
     $phone = mysqli_real_escape_string($conn, $_POST['phone']);
@@ -119,7 +119,7 @@ LIMIT 1";
 
         <form method="POST">
 
-            <h1>Create Account</h1>
+            <h1 class="title-h1">Create Account</h1>
 
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="register_email" placeholder="Email" required>
@@ -149,7 +149,7 @@ LIMIT 1";
 
         <form method="POST">
 
-            <h1>Login</h1>
+            <h1 class="title-h1">Login</h1>
 
             <input type="email" name="login_email" placeholder="Email" required>
 
@@ -168,7 +168,7 @@ LIMIT 1";
 
             <div class="toggle-panel toggle-left">
 
-                <h1>Welcome Back!</h1>
+                <h1 class="toggle-left-h1">Welcome Back!</h1>
 
                 <p>Already have an account?</p>
 
@@ -178,7 +178,7 @@ LIMIT 1";
 
             <div class="toggle-panel toggle-right">
 
-                <h1>Hello Friend!</h1>
+                <h1 class="toggle-left-h1">Hello Friend!</h1>
 
                 <p>Don't have an account?</p>
 

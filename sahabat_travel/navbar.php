@@ -7,7 +7,7 @@ require 'db.php';
 ?>
 
 <!-- =========================
-     NAVBAR
+     NAVBAR DESKTOP
 ========================= -->
 <header>
 
@@ -15,7 +15,13 @@ require 'db.php';
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 
-<nav class="navbar <?php echo ($currentPage == 'homepage.php') ? 'navbar-light' : 'navbar-dark'; ?>">
+<?php
+$lightPages = ['homepage.php', 'country.php'];
+
+$navbarClass = in_array($currentPage, $lightPages) ? 'navbar-light' : 'navbar-dark';
+?>
+
+<nav class="navbar <?php echo $navbarClass; ?>">
 
         <!-- LOGO -->
         <div class="logo">
@@ -60,100 +66,63 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
                             while($row = mysqli_fetch_assoc($result)){
                             ?>
-
                                 <li>
                                     <a href="country.php?slug=<?= $row['country_slug']; ?>">
                                         <?= $row['country_name']; ?>
                                     </a>
                                 </li>
-
                             <?php } ?>
-
                         </ul>
-
                     </li>
-
                     <li>
                         <a href="umrah.php">Umrah Package</a>
                     </li>
-
                 </ul>
-
             </li>
-
             <li><a href="review.php">Review</a></li>
-
-            <li><a href="contact.php">Contact</a></li>
-
+            <li><a href="contact.php">Contact Us</a></li>
         </ul>
-
         <!-- AUTH -->
         <div class="nav-btn">
-
             <?php if(isset($_SESSION['user_id'])): ?>
-
                 <!-- PROFILE MENU -->
                 <div class="profile-dropdown">
-
                     <button class="profile-btn">
-
                         <i class="fa-solid fa-user"></i>
-
                         <span>
                             <?php echo $_SESSION['username']; ?>
                         </span>
-
                         <i class="fa-solid fa-chevron-down"></i>
-
                     </button>
-
                     <div class="profile-dropdown-menu">
-
                         <a href="profile.php">
                             <i class="fa-solid fa-user"></i>
                             Profile
                         </a>
-
                         <a href="mybooking.php">
                             <i class="fa-solid fa-suitcase"></i>
                             My Booking
                         </a>
-
-                        <a href="logout.php">
+                        <a href="?logout=1">
                             <i class="fa-solid fa-right-from-bracket"></i>
                             Logout
                         </a>
-
                     </div>
-
                 </div>
-
             <?php else: ?>
-
                 <!-- LOGIN / REGISTER -->
                 <div class="auth-btn">
-
-                    <a href="login.php" class="btn login-btn">
+                    <a href="auth.php" class="btn login-btn">
                         Login
                     </a>
-
-                    <a href="register.php" class="btn register-btn">
-                        Register
-                    </a>
-
                 </div>
-
             <?php endif; ?>
-
         </div>
-
         <!-- MOBILE TOGGLE -->
         <div class="menu-toggle" id="menuToggle">
             <i class="fa-solid fa-bars"></i>
         </div>
-
     </nav>
-
 </header>
 
 <!-- =========================
@@ -166,8 +135,31 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <i class="fa-solid fa-xmark"></i>
     </div>
 
+    <!-- PROFILE AT TOP -->
+    <?php if(isset($_SESSION['user_id'])): ?>
+        <li class="sidebar-profile-top">
+            <a href="profile.php" class="profile-link">
+                <div class="avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                
+                <div class="profile-text">
+                    <div class="name"><?= $_SESSION['username']; ?></div>
+                    <small>View profile</small>
+                </div>
+            </a>
+        </li>
+        
+    <?php else: ?>
+        <li class="sidebar-profile-top">
+            <a href="auth.php">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Login
+            </a>
+        </li>
+    <?php endif; ?>
+    
     <ul>
-
         <li>
             <a href="homepage.php">Home</a>
         </li>
@@ -237,17 +229,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         </li>
 
         <li>
-            <a href="contact.php">Contact</a>
+            <a href="contact.php">Contact Us</a>
         </li>
 
         <!-- MOBILE AUTH -->
         <?php if(isset($_SESSION['user_id'])): ?>
-
-            <li>
-                <a href="profile.php">
-                    Profile
-                </a>
-            </li>
 
             <li>
                 <a href="mybooking.php">
@@ -260,23 +246,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                     Logout
                 </a>
             </li>
-
-        <?php else: ?>
-
-            <li>
-                <a href="login.php">
-                    Login
-                </a>
-            </li>
-
-            <li>
-                <a href="register.php">
-                    Register
-                </a>
-            </li>
-
         <?php endif; ?>
-
     </ul>
 </div>
 

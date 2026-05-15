@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+body {
+    overflow-y: auto;
+    pointer-events: auto;
+}
+
 /* HERO SECTION */
 .hero{
     width: 100%;
@@ -380,10 +385,6 @@
    TABLET (max 1024px)
 ========================= */
 @media (max-width: 1024px) {
-
-    .navbar {
-        width: 95%;
-    }
 
     .hero-content h1 {
         font-size: 2rem;
