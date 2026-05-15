@@ -175,7 +175,6 @@ $result = mysqli_query($conn, $sql);
 
 
 <script>
-
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
 const closeBtn = document.getElementById("closeBtn");
@@ -199,6 +198,11 @@ overlay.addEventListener("click", () => {
     overlay.classList.remove("active");
 });
 
+function confirmLogout() {
+    if (confirm("Are you sure you want to logout?")) {
+        window.location.href = "login.php";
+    }
+}
 </script>
 </body>
 </html>
