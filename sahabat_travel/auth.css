@@ -97,6 +97,7 @@ textarea:focus{
 textarea{
     resize:none;
     height:80px;
+    text-transform: capitalize;
 }
 
 /* BUTTON */
