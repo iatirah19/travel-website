@@ -103,10 +103,10 @@
             $bil = 1;
 
             $query = "
-            SELECT b.*, p.title 
+            SELECT b.*, p.packname
             FROM bookings b
             JOIN packages p ON b.package_id = p.package_id
-            ORDER BY b.created_at DESC
+            
             ";
 
             $result = mysqli_query($conn, $query);
@@ -123,7 +123,7 @@
                     <small><?php echo htmlspecialchars($row['phone']); ?></small>
                 </td>
 
-                <td><?php echo htmlspecialchars($row['title']); ?></td>
+                <td><?php echo htmlspecialchars($row['packname']); ?></td>
 
                 <td><?php echo date("d M Y", strtotime($row['travel_date'])); ?></td>
 
@@ -166,7 +166,7 @@
 
             $query = "
                 SELECT * 
-                FROM contacts
+                FROM contact_messages
                 ORDER BY created_at DESC
             ";
 
