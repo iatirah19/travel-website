@@ -401,22 +401,55 @@ $result = mysqli_query($conn, $sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Manage Package - Sahabat International Travel Sdn Bhd</title>
+    <link rel="icon" type="image/png" href="../picture/LOGO.png">
     <link rel="stylesheet" href="admin_manage_package.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-<div class="page-header">
+<!-- TOGGLE BUTTON -->
+<div class="menu-toggle" id="menuToggle">
+    <i class="fa-solid fa-bars"></i>
+</div>
 
-    <a href="admin_dashboard.php" class="btn-back">← Back</a>
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
 
-    <h2>Manage Package</h2>
+    <!-- CLOSE BUTTON -->
+    <div class="close-btn" id="closeBtn">
+        <i class="fa-solid fa-xmark"></i>
+    </div>
 
-    <a href="add_package.php" class="btn-add">+ Add Package</a>
+    <h2 class="logo">Admin Panel</h2>
+
+    <ul>
+        <li><a href="admin_dashboard.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+        <li><a href="admin_manage_country.php"><i class="fa-solid fa-earth-asia"></i> Manage Country</a></li>
+        <li><a href="admin_manage_package.php"><i class="fa-solid fa-box"></i> Manage Package</a></li>
+        <li><a href="admin_manage_review.php"><i class="fa-solid fa-star"></i> Manage Review</a></li>
+        <li><a href=""><i class="fa-solid fa-star"></i> Add Admin</a></li>
+        <li><a href="" onclick="confirmLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+    </ul>
 
 </div>
 
-<form method="GET" style="margin-bottom: 15px;">
+<!-- OVERLAY -->
+<div class="overlay" id="overlay"></div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+    <div>
+        <h1>Manage Package</h1>
+        <p>Dashboard > Package</p>
+    </div>
+</div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+
+    <!-- FILTER -->
+    <form method="GET" style="margin-bottom: 15px;">
     <label>Filter Type:</label>
 
     <select name="type_filter" class="filter-box" onchange="this.form.submit()">
@@ -428,18 +461,21 @@ $result = mysqli_query($conn, $sql);
     </select>
 </form>
 
+    <!-- ADD BUTTON -->
+    <a href="add_package.php" class="add-btn">
+        + Add Package
+    </a>
+
+</div>
+
     <table>
         <tr>
             <th>ID</th>
-			<th>Category</th>
             <th>Country</th>
-            <th>Package Type</th>
             <th>Package Category</th>
+            <th>Agency</th>
             <th>Package Name</th>
             <th>Duration</th>
-            <th>Price (RM)</th>
-            <th>Flight</th>
-            <th>Min Pax</th>
             <th>Action</th>
         </tr>
         <tbody>
@@ -485,6 +521,35 @@ $result = mysqli_query($conn, $sql);
         <?php } ?>
         </tbody>
     </table>
+    <script>
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+const closeBtn = document.getElementById("closeBtn");
+const overlay = document.getElementById("overlay");
 
+/* OPEN SIDEBAR */
+menuToggle.addEventListener("click", () => {
+    sidebar.classList.add("active");
+    overlay.classList.add("active");
+});
+
+/* CLOSE SIDEBAR */
+closeBtn.addEventListener("click", () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+});
+
+/* CLOSE WHEN CLICK OVERLAY */
+overlay.addEventListener("click", () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+});
+
+function confirmLogout() {
+    if (confirm("Are you sure you want to logout?")) {
+        window.location.href = "login.php";
+    }
+}
+</script>
 </body>
 </html>
