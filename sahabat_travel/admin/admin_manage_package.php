@@ -377,7 +377,7 @@ $type_filter = $_GET['type_filter'] ?? '';
 $sql = "
 SELECT 
     packages.*,
-    tour_categories.category_name,
+    categories.category_name,
     countries.country_name
 FROM packages
 LEFT JOIN categories 
