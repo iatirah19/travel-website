@@ -307,7 +307,7 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault(); // stop link behavior
 
     if (confirm("Are you sure you want to logout?")) {
-        window.location.href = "admin_dashboard.php?logout=1";
+        window.location.href = "navbar.php?logout=1";
     }
     }
 });
