@@ -25,63 +25,54 @@ require 'db.php';
     </div>
 </div>
 
-<section class="info-highlight-section">
-    <div class="company-title">
-        <h2>SAHABAT INTERNATIONAL TRAVEL SDN. BHD.</h2>
-    </div>
-
-    <div class="contact-info-bar">
-        <div class="info-box">
-            <div class="icon">📍</div>
-            <h4>Alamat Pejabat</h4>
-            <p>No. 22C, Jalan Jubli Perak 22/1,<br>Shah Alam, Selangor</p>
-        </div>
-
-        <div class="info-box">
-            <div class="icon">📞</div>
-            <h4>Hubungi & Emel</h4>
-            <p>+603-6102 0330 / 014-8803100<br>sahabattravelmalaysia@gmail.com</p>
-        </div>
-
-        <div class="info-box">
-            <div class="icon">⏰</div>
-            <h4>Waktu Operasi</h4>
-            <p>Isnin - Jumaat<br>9:00 AM - 4:30 PM</p>
-        </div>
-    </div>
-</section>
-
 <section class="contact-interaction-section">
     <div class="content-wrapper">
-        <div class="map-section">
-            <h3>Lokasi Kami</h3>
-            <div class="map-responsive">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d53204.160642956056!2d101.48957703125002!3d3.071452000000016!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc4d3558112ae9%3A0x8bedc47f344ec27b!2sSahabat%20International%20Travel%20Sdn%20Bhd!5e1!3m2!1sen!2smy!4v1773107877374!5m2!1sen!2smy" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        <!-- LEFT -->
+        <div class="info-highlight-section">
+
+            <div class="company-title">
+                <h2>SAHABAT INTERNATIONAL TRAVEL SDN. BHD.</h2>
+            </div>
+
+            <div class="contact-info-bar">
+
+                <div class="info-box">
+                    <div class="icon">📍</div>
+                    <h4>Alamat Pejabat</h4>
+                    <p>No. 22C, Jalan Jubli Perak 22/1,<br>Shah Alam, Selangor</p>
+                </div>
+
+                <div class="info-box">
+                    <div class="icon">📞</div>
+                    <h4>Hubungi & Emel</h4>
+                    <p>+603-6102 0330 / 014-8803100<br>
+                    sahabattravelmalaysia@gmail.com</p>
+                </div>
+
+                <div class="info-box">
+                    <div class="icon">⏰</div>
+                    <h4>Waktu Operasi</h4>
+                    <p>Isnin - Jumaat<br>9:00 AM - 4:30 PM</p>
+                </div>
+
             </div>
         </div>
 
-		<div class="form-section">
-            <h3>Borang Pertanyaan</h3>
-			<form action="contact_process.php" method="POST">
-				<div class="input-group">
-					<label>Nama Penuh</label>
-					<input type="text" name="name" placeholder="Masukkan Nama Anda" required>
-				</div>
+        <!-- RIGHT -->
+        <div class="map-section">
 
-				<div class="input-group">
-					<label>Alamat Emel</label>
-					<input type="email" name="email" placeholder="Masukkan Alamat Email Anda" required>
-				</div>
+            <h3>Lokasi Kami</h3>
 
-				<div class="input-group">
-					<label>Mesej Anda</label>
-					<textarea name="message" placeholder="Sila Type Message Anda Di Sini" rows="4" required></textarea>
-				</div>
+            <div class="map-responsive">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d53204.160642956056!2d101.48957703125002!3d3.071452000000016!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc4d3558112ae9%3A0x8bedc47f344ec27b!2sSahabat%20International%20Travel%20Sdn%20Bhd!5e1!3m2!1sen!2smy!4v1773107877374!5m2!1sen!2smy">
+                </iframe>
+            </div>
 
-				<button type="submit" class="btn-submit">Hantar Sekarang</button>
-			</form>
-		</div>
-	</div>
+        </div>
+
+    </div>
 </section>
 
 <!-- FOOTER SECTION -->

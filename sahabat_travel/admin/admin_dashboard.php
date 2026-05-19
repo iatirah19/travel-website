@@ -236,7 +236,7 @@
 
     function confirmLogout() {
         if (confirm("Are you sure you want to logout?")) {
-            window.location.href = "login.php";
+            window.location.href = "auth.php";
         }
     }
     </script>
