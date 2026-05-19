@@ -448,8 +448,8 @@ $result = mysqli_query($conn, $sql);
 <!-- PAGE HEADER -->
 <div class="page-header">
     <div>
-        <h1>Manage Countries</h1>
-        <p>Dashboard > Countries</p>
+        <h1>Manage Package</h1>
+        <p>Dashboard > Package</p>
     </div>
 </div>
 
@@ -470,8 +470,8 @@ $result = mysqli_query($conn, $sql);
     </form>
 
     <!-- ADD BUTTON -->
-    <a href="add_country.php" class="add-btn">
-        + Add Country
+    <a href="add_package.php" class="add-btn">
+        + Add Package
     </a>
 
 </div>
