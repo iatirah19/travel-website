@@ -75,6 +75,34 @@ require 'db.php';
     </div>
 </section>
 
+<div class="contact-form-container">
+
+    <form action="contact_process.php" method="POST" class="contact-form">
+
+        <h2>Get In Touch</h2>
+        <p>We would love to hear from you.</p>
+
+        <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" name="name" placeholder="Enter your full name" required>
+        </div>
+
+        <div class="input-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" placeholder="Enter your phone number" required>
+        </div>
+
+        <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="Enter your email" required>
+        </div>
+
+        <button type="submit">Send Message</button>
+
+    </form>
+
+</div>
+
 <!-- FOOTER SECTION -->
 <footer class="main-footer">
     <div class="footer-container">

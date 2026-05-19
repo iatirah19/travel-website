@@ -137,63 +137,130 @@
 .map-responsive iframe {
     width:100%;
     height:100%;
-    min-height:450px;
+    min-height:200px;
     border:0;
 }
 
-/* Borang Section */
-.form-section {
-    background: #fdfdfd;
-    padding: 25px;
-    border-radius: 15px;
-    border: 1px solid #f0eaea;
+.contact-form-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
 }
 
-/* Gaya Input */
-.input-group label {
-    display: block;
+.contact-form{
+    width: 100%;
+    max-width: 1000px;
+    padding: 40px;
+    border-radius: 24px;
+
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.2),
+        inset 0 1px 1px rgba(255,255,255,0.1);
+
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.contact-form h2{
+    font-size: 32px;
+    color: #000;
+    text-align: center;
+    margin-bottom: -10px;
+}
+
+.contact-form p{
+    text-align: center;
+    color: #000;
+    margin-bottom: 10px;
+}
+
+.input-group{
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label{
     margin-bottom: 8px;
     font-weight: 600;
-    color: #4a5568;
-    font-weight: 600; /* Semibold */
-    font-family: 'Poppins', sans-serif;
-}
-
-.input-group input, 
-.input-group textarea {
-    width: 100%;
-    padding: 12px 15px;
-    margin-bottom: 20px;
-    border: 1px solid #cbd5e0;
-    border-radius: 10px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
     color: #000;
-    font-family: 'Playfair Display', serif;
+    font-size: 14px;
 }
 
-.input-group input:focus, 
-.input-group textarea:focus {
+.input-group input{
+    padding: 15px 18px;
+    border-radius: 14px;
+    border: 1px solid #000;
+
+    background: rgba(255,255,255,0.06);
+
+    color: #000;
+    font-size: 15px;
+
     outline: none;
-    border-color: #19516B;
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+
+    transition: 0.3s ease;
 }
 
-/* Butang Hantar */
-.btn-submit {
-    width: 100%;
-    padding: 14px;
-    background-color: #19516B;
-    color: white;
+.input-group input::placeholder{
+    color: #000;
+}
+
+.input-group input:focus{
+    border-color: #38bdf8;
+    background: rgba(255,255,255,0.1);
+
+    box-shadow: 0 0 15px rgba(56,189,248,0.3);
+}
+
+.contact-form button{
+    margin-top: 10px;
+    padding: 15px;
+
     border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: bold;
+    border-radius: 14px;
+
+    background: linear-gradient(
+        135deg,
+        #11998e,
+        #38ef7d
+    );
+
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+
     cursor: pointer;
-    transition: background 0.3s transform 0.2s;
-    font-family: 'Montserrat', sans-serif;
+
+    transition: 0.3s ease;
+
+    box-shadow: 0 6px 20px rgba(17,153,142,0.35);
 }
 
+.contact-form button:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(17,153,142,0.45);
+}
+
+@media(max-width: 600px){
+
+    .contact-form{
+        padding: 30px 20px;
+    }
+
+    .contact-form h2{
+        font-size: 26px;
+    }
+
+}
 .main-footer {
     background-color: #9E1F25;
     padding: 20px;
