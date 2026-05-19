@@ -3,6 +3,12 @@ if(session_status() === PHP_SESSION_NONE){
     session_start();
 }
 
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: auth.php");
+    exit();
+}
+
 require 'db.php';
 ?>
 
@@ -103,8 +109,8 @@ $navbarClass = in_array($currentPage, $lightPages) ? 'navbar-light' : 'navbar-da
                             <i class="fa-solid fa-suitcase"></i>
                             My Booking
                         </a>
-                        <a href="" onclick="confirmLogout()">
-                            <i class="fa-solid fa-right-from-bracket"></i>
+                        <a href="#" onclick="confirmLogout(event)">
+                            <i class="fa-solid fa-right-from-bracket"></i> 
                             Logout
                         </a>
                     </div>
@@ -242,7 +248,8 @@ $navbarClass = in_array($currentPage, $lightPages) ? 'navbar-light' : 'navbar-da
             </li>
 
             <li>
-                <a href="logout.php">
+                <a href="#" onclick="confirmLogout(event)">
+                    <i class="fa-solid fa-right-from-bracket"></i> 
                     Logout
                 </a>
             </li>
@@ -296,10 +303,12 @@ document.addEventListener("DOMContentLoaded", function () {
         mobileSubDropdown.classList.toggle("active");
     });
 
-    function confirmLogout() {
+    function confirmLogout(event) {
+    event.preventDefault(); // stop link behavior
+
     if (confirm("Are you sure you want to logout?")) {
-        window.location.href = "login.php";
+        window.location.href = "admin_dashboard.php?logout=1";
     }
-}
+    }
 });
 </script>

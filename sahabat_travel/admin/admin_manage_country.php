@@ -31,7 +31,7 @@
         <li><a href="admin_manage_package.php"><i class="fa-solid fa-box"></i> Manage Package</a></li>
         <li><a href="admin_manage_review.php"><i class="fa-solid fa-star"></i> Manage Review</a></li>
         <li><a href=""><i class="fa-solid fa-star"></i> Add Admin</a></li>
-        <li><a href="" onclick="confirmLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        <li><a href="#" onclick="confirmLogout(event)"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
     </ul>
 
 </div>
@@ -66,6 +66,14 @@
 
 <?php
 require '../db.php';
+
+session_start();
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: auth.php");
+    exit();
+}
 
 /* GET ALL COUNTRIES */
 $search = $_GET['search'] ?? '';
@@ -200,9 +208,11 @@ overlay.addEventListener("click", () => {
     overlay.classList.remove("active");
 });
 
-function confirmLogout() {
+function confirmLogout(event) {
+    event.preventDefault(); // stop link behavior
+
     if (confirm("Are you sure you want to logout?")) {
-        window.location.href = "login.php";
+        window.location.href = "admin_dashboard.php?logout=1";
     }
 }
 </script>

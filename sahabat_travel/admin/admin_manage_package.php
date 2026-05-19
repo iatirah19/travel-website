@@ -1,6 +1,14 @@
 <?php
 require '../db.php';
 
+session_start();
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: auth.php");
+    exit();
+}
+
 /* =========================
    DELETE PACKAGE
 ========================= */
@@ -429,7 +437,7 @@ $result = mysqli_query($conn, $sql);
         <li><a href="admin_manage_package.php"><i class="fa-solid fa-box"></i> Manage Package</a></li>
         <li><a href="admin_manage_review.php"><i class="fa-solid fa-star"></i> Manage Review</a></li>
         <li><a href=""><i class="fa-solid fa-star"></i> Add Admin</a></li>
-        <li><a href="" onclick="confirmLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        <li><a href="#" onclick="confirmLogout(event)"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
     </ul>
 
 </div>
@@ -440,8 +448,8 @@ $result = mysqli_query($conn, $sql);
 <!-- PAGE HEADER -->
 <div class="page-header">
     <div>
-        <h1>Manage Package</h1>
-        <p>Dashboard > Package</p>
+        <h1>Manage Countries</h1>
+        <p>Dashboard > Countries</p>
     </div>
 </div>
 
@@ -450,25 +458,26 @@ $result = mysqli_query($conn, $sql);
 
     <!-- FILTER -->
     <form method="GET" style="margin-bottom: 15px;">
-    <label>Filter Type:</label>
+        <label>Filter Type:</label>
 
-    <select name="type_filter" class="filter-box" onchange="this.form.submit()">
-        <option value="">-- All Types --</option>
-        <option value="SIT" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='SIT') echo 'selected'; ?>>SIT</option>
-        <option value="MTB" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='MTB') echo 'selected'; ?>>MTB</option>
-        <option value="JJ" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='JJ') echo 'selected'; ?>>JJ</option>
-        <option value="SUKA" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='SUKA') echo 'selected'; ?>>SUKA</option>
-    </select>
-</form>
+        <select name="type_filter" class="filter-box" onchange="this.form.submit()">
+            <option value="">-- All Types --</option>
+            <option value="SIT" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='SIT') echo 'selected'; ?>>SIT</option>
+            <option value="MTB" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='MTB') echo 'selected'; ?>>MTB</option>
+            <option value="JJ" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='JJ') echo 'selected'; ?>>JJ</option>
+            <option value="SUKA" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='SUKA') echo 'selected'; ?>>SUKA</option>
+        </select>
+    </form>
 
     <!-- ADD BUTTON -->
-    <a href="add_package.php" class="add-btn">
-        + Add Package
+    <a href="add_country.php" class="add-btn">
+        + Add Country
     </a>
 
 </div>
 
     <table>
+    <thead>
         <tr>
             <th>ID</th>
             <th>Country</th>
@@ -478,49 +487,77 @@ $result = mysqli_query($conn, $sql);
             <th>Duration</th>
             <th>Action</th>
         </tr>
-        <tbody>
-        <?php while($row = mysqli_fetch_assoc($result)) { ?>
-        <tr>
-            <td><?php echo $row['package_id']; ?></td>
-			
-			<td><?php echo htmlspecialchars($row['category_name']); ?></td>
-            
-            <td><?php echo htmlspecialchars($row['country_name']); ?></td>
-            
-            <td><?php echo htmlspecialchars($row['package_type']); ?></td>
+    </thead>
 
-            <td>
-                <?php 
-                if ($row['package_type'] == 'MTB') {
-                    echo ucfirst($row['package_category']);
-                } else {
-                    echo '-';
-                }
-                ?>
-            </td>
+    <tbody>
+<?php while($row = mysqli_fetch_assoc($result)) { ?>
+    <tr>
 
-            <td><strong><?php echo htmlspecialchars($row['title']); ?></strong></td>
+        <td><?php echo $row['package_id']; ?></td>
 
-            <td><?php echo htmlspecialchars($row['duration']); ?></td>
+        <!-- COUNTRY -->
+        <td>
+            <?php 
+            echo !empty($row['country_name']) 
+                ? htmlspecialchars($row['country_name']) 
+                : '-';
+            ?>
+        </td>
 
-            <td>RM <?php echo number_format($row['price'], 2); ?></td>
-            
-            <td><?php echo htmlspecialchars($row['flight']); ?></td>
-            
-            <td><?php echo $row['min_pax']; ?></td>
+        <!-- PACKAGE CATEGORY -->
+        <td>
+            <?php 
+            echo !empty($row['package_category']) 
+                ? ucfirst(htmlspecialchars($row['package_category'])) 
+                : '-';
+            ?>
+        </td>
 
-            <td>
-                <div style="display: flex; gap: 5px;">
-                    <a href="admin_view_package.php?id=<?php echo $row['package_id']; ?>">View</a> |
-                    <a href="edit_package.php?id=<?php echo $row['package_id']; ?>">Edit</a> |
-                    <a href="admin_manage_package.php?delete=<?php echo $row['package_id']; ?>" 
-                       onclick="return confirm('Are you sure want to delete this package?')">Delete</a>
-                </div>
-            </td>
-        </tr>
-        <?php } ?>
-        </tbody>
-    </table>
+        <!-- AGENCY -->
+        <td>
+            <?php 
+            echo !empty($row['package_type']) 
+                ? htmlspecialchars($row['package_type']) 
+                : '-';
+            ?>
+        </td>
+
+        <!-- PACKAGE NAME -->
+        <td>
+            <strong>
+                <?php echo htmlspecialchars($row['title']); ?>
+            </strong>
+        </td>
+
+        <!-- DURATION -->
+        <td>
+            <?php echo htmlspecialchars($row['duration']); ?>
+        </td>
+
+        <!-- ACTION -->
+        <td>
+            <div style="display:flex; gap:5px;">
+
+                <a href="admin_view_package.php?id=<?php echo $row['package_id']; ?>">
+                    View
+                </a> |
+
+                <a href="edit_package.php?id=<?php echo $row['package_id']; ?>">
+                    Edit
+                </a> |
+
+                <a href="admin_manage_package.php?delete=<?php echo $row['package_id']; ?>" 
+                   onclick="return confirm('Are you sure want to delete this package?')">
+                   Delete
+                </a>
+
+            </div>
+        </td>
+
+    </tr>
+<?php } ?>
+</tbody>
+</table>
     <script>
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
@@ -545,9 +582,11 @@ overlay.addEventListener("click", () => {
     overlay.classList.remove("active");
 });
 
-function confirmLogout() {
+function confirmLogout(event) {
+    event.preventDefault(); // stop link behavior
+
     if (confirm("Are you sure you want to logout?")) {
-        window.location.href = "login.php";
+        window.location.href = "admin_dashboard.php?logout=1";
     }
 }
 </script>

@@ -1,6 +1,19 @@
 <?php
 require '../db.php';
 
+session_start();
+
+if ($_SESSION['role'] != 'admin') {
+    header("Location: homepage.php");
+    exit();
+}
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: auth.php");
+    exit();
+}
+
 /* =======================
    TOTAL USERS
 ======================= */
@@ -55,13 +68,14 @@ if (isset($_GET['delete_message_id'])) {
 
 if(isset($_GET['toggle_status_id'])){
 
-    $id = $_GET['toggle_status_id'];
+    $id = intval($_GET['toggle_status_id']);
 
     // ambil status current
     $getStatus = mysqli_query($conn, "SELECT status FROM contact_messages WHERE contact_id='$id'");
     $data = mysqli_fetch_assoc($getStatus);
 
-    $newStatus = ($data['status'] == 'done') ? 'undone' : 'done';
+    $current = $data['status'] ?? 'undone';
+    $newStatus = ($current === 'done') ? 'undone' : 'done';
 
     mysqli_query($conn, "
         UPDATE contact_messages 
@@ -107,7 +121,7 @@ if(isset($_GET['toggle_status_id'])){
         <li><a href="admin_manage_package.php"><i class="fa-solid fa-box"></i> Manage Package</a></li>
         <li><a href="admin_manage_review.php"><i class="fa-solid fa-star"></i> Manage Review</a></li>
         <li><a href=""><i class="fa-solid fa-star"></i> Add Admin</a></li>
-        <li><a href="" onclick="confirmLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        <li><a href="#" onclick="confirmLogout(event)"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
     </ul>
 
 </div>
@@ -169,7 +183,7 @@ if(isset($_GET['toggle_status_id'])){
 
             <td><?php echo htmlspecialchars($row['username']); ?></td>
 
-            <td><?php echo htmlspecialchars($row['package_name']); ?></td>
+            <td><?php echo htmlspecialchars($row['title']); ?></td>
 
             <td><?php echo date('d M Y', strtotime($row['travel_date'])); ?></td>
 
@@ -269,21 +283,19 @@ if(isset($_GET['toggle_status_id'])){
 </td>
 
             <td>
-
-    <!-- DELETE -->
-    <a href="admin_dashboard.php?delete_message_id=<?php echo $row['contact_id']; ?>"
-       onclick="return confirm('Are you sure want to delete this message?')">
-        <i class="fa-solid fa-trash"></i>
-    </a>
-
-    <!-- TOGGLE STATUS -->
-    <a href="admin_dashboard.php?toggle_status_id=<?php echo $row['contact_id']; ?>"
-       onclick="return confirm('Change status?')"
-       style="margin-left:10px;">
-        <i class="fa-solid fa-check"></i>
-    </a>
-
-</td>
+                <!-- DELETE -->
+                <a href="admin_dashboard.php?delete_message_id=<?php echo $row['contact_id']; ?>"
+                    onclick="return confirm('Are you sure want to delete this message?')">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+                
+                <!-- TOGGLE STATUS -->
+                <a href="admin_dashboard.php?toggle_status_id=<?php echo $row['contact_id']; ?>"
+                    onclick="return confirm('Change status?')"
+                    style="margin-left:10px;">
+                    <i class="fa-solid fa-check"></i>
+                </a>
+            </td>
         </tr>
 
         <?php } ?>
@@ -323,9 +335,11 @@ overlay.addEventListener("click", () => {
     overlay.classList.remove("active");
 });
 
-function confirmLogout() {
+function confirmLogout(event) {
+    event.preventDefault(); // stop link behavior
+
     if (confirm("Are you sure you want to logout?")) {
-        window.location.href = "auth.php";
+        window.location.href = "admin_dashboard.php?logout=1";
     }
 }
 </script>

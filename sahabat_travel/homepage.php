@@ -44,7 +44,7 @@ if (isset($_GET['logout'])) {
         <?php
         include 'db.php';
 
-        $sql = "SELECT * FROM packages WHERE is_active='popular' LIMIT 4";
+        $sql = "SELECT * FROM packages WHERE status='popular' LIMIT 4";
         $result = $conn->query($sql);
 
         if($result->num_rows > 0):

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php';
+require '../db.php';
 
 $error = "";
 $success = "";
@@ -85,7 +85,7 @@ if (isset($_POST['login'])) {
         $_SESSION['role'] = $user['role'];
 
         if ($user['role'] == 'admin') {
-            header("Location: ../admin_dashboard.php");
+            header("Location: admin_dashboard.php");
         } else {
             header("Location: homepage.php");
         }
