@@ -103,7 +103,7 @@ $navbarClass = in_array($currentPage, $lightPages) ? 'navbar-light' : 'navbar-da
                             <i class="fa-solid fa-suitcase"></i>
                             My Booking
                         </a>
-                        <a href="?logout=1">
+                        <a href="" onclick="confirmLogout()">
                             <i class="fa-solid fa-right-from-bracket"></i>
                             Logout
                         </a>
@@ -296,5 +296,10 @@ document.addEventListener("DOMContentLoaded", function () {
         mobileSubDropdown.classList.toggle("active");
     });
 
+    function confirmLogout() {
+    if (confirm("Are you sure you want to logout?")) {
+        window.location.href = "login.php";
+    }
+}
 });
 </script>
