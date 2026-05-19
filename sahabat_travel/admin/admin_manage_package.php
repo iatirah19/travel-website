@@ -401,6 +401,7 @@ $result = mysqli_query($conn, $sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Manage Package - Sahabat International Travel Sdn Bhd</title>
+    <link rel="icon" type="image/png" href="../picture/LOGO.png">
     <link rel="stylesheet" href="admin_manage_package.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
@@ -433,13 +434,15 @@ $result = mysqli_query($conn, $sql);
 <!-- PAGE HEADER -->
 <div class="page-header">
     <div>
-        <h1>Manage Countries</h1>
-        <p>Dashboard > Countries</p>
+        <h1>Manage Packages</h1>
+        <p>Dashboard > Packages</p>
         
     </div>
 </div>
+<!-- TOP BAR -->
+<div class="top-bar">
 
-<form method="GET" style="margin-bottom: 15px;">
+   <form method="GET" style="margin-bottom: 15px;">
     <label>Filter Type:</label>
     
     <select name="type_filter" class="filter-box" onchange="this.form.submit()">
@@ -449,8 +452,14 @@ $result = mysqli_query($conn, $sql);
         <option value="JJ" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='JJ') echo 'selected'; ?>>JJ</option>
         <option value="SUKA" <?php if(isset($_GET['type_filter']) && $_GET['type_filter']=='SUKA') echo 'selected'; ?>>SUKA</option>
     </select>
-</form>
-<a href="add_package.php" class="btn-add">+ Add Package</a>
+    </form>
+
+    <!-- ADD BUTTON -->
+    <a href="add_package.php" class="btn-add">+ Add Package</a>
+
+</div>
+
+
     <table>
         <tr>
             <th>ID</th>

@@ -1,7 +1,8 @@
-body {
-    font-family: 'Playfair Display', serif;
-    margin: 20px;
-    background: linear-gradient(135deg, #f4f6f9, #e9ecef);
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
 }
 
 /* HEADER */
@@ -110,33 +111,53 @@ body {
 }
 
 /* supaya h2 betul-betul center */
-.page-header h2 {
+.page-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    margin-top: 80px; /* bagi turun bawah dari toggle */
+}
+
+.page-header h1 {
     flex: 1;
     text-align: center;
     margin: 0;
 	font-size: 30px;
 }
 
+.top-bar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background: #f5f7fb;
+    margin: 0;
+    padding: 30px;
+}
 
 /* ADD BUTTON */
-.btn-add {
-    background: #198754;
+.add-btn{
+    background: #2563eb;
     color: white;
-    padding: 10px 15px;
     text-decoration: none;
-    border-radius: 6px;
-    font-weight: bold;
+
+    padding: 12px 22px;
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 500;
+
     transition: 0.3s;
-	font-size: 18px;
 }
 
-.btn-add:hover {
-    background: #146c43;
-}
-
-.filter-box {
-    padding: 5px 10px;
-    border-radius: 6px;
+.add-btn:hover{
+    background: #1d4ed8;
 }
 
 /* TABLE */
