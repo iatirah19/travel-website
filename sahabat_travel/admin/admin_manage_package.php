@@ -377,11 +377,11 @@ $type_filter = $_GET['type_filter'] ?? '';
 $sql = "
 SELECT 
     packages.*,
-    categories.category_name,
+    package_categories.category_name,
     countries.country_name
 FROM packages
-LEFT JOIN categories 
-    ON packages.category_id = categories.category_id
+LEFT JOIN package_categories 
+    ON packages.category_id = package_categories.category_id
 LEFT JOIN countries 
     ON packages.country_id = countries.country_id
 ";
