@@ -22,7 +22,6 @@ $packageQuery = "SELECT COUNT(*) AS total_packages FROM packages";
 $packageResult = mysqli_query($conn, $packageQuery);
 $totalPackages = mysqli_fetch_assoc($packageResult)['total_packages'];
 
-<<<<<<< Updated upstream
 /* =======================
    BOOKINGS DATA
 ======================= */
@@ -38,24 +37,6 @@ $bookingQuery = "
 ";
 
 $bookingResult = mysqli_query($conn, $bookingQuery);
-=======
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Admin Dashboard - Sahabat International Travel Sdn Bhd</title>
-        <link rel="icon" type="image/png" href="../picture/LOGO.png">
-        <link rel="stylesheet" href="admin_dashboard.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    </head>
-    
-    <body>
-    <!-- TOGGLE BUTTON -->
-    <div class="menu-toggle" id="menuToggle">
-        <i class="fa-solid fa-bars"></i>
-    </div>
->>>>>>> Stashed changes
 
 /* =======================
    DELETE MESSAGE (INLINE)
