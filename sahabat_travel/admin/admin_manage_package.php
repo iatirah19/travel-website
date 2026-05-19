@@ -3,6 +3,11 @@ require '../db.php';
 
 session_start();
 
+if ($_SESSION['role'] != 'admin') {
+    header("Location: homepage.php");
+    exit();
+}
+
 if (isset($_GET['logout'])) {
     session_destroy();
     header("Location: auth.php");
@@ -39,7 +44,7 @@ if (isset($_GET['delete'])) {
 ========================= */
 if (isset($_POST['add_package'])) {
 
-    $package_name = mysqli_real_escape_string($conn, $_POST['package_name']);
+    $package_name = mysqli_real_escape_string($conn, $_POST['title']);
     $country_id   = $_POST['country_id'] ?? null;
     $category_id  = (int)$_POST['category_id'];
     $duration     = mysqli_real_escape_string($conn, $_POST['duration']);
