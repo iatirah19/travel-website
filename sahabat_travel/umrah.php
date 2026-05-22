@@ -102,45 +102,5 @@ require 'db.php';
     </div>
 </footer>
 
-<script>
-
-const menuToggle = document.getElementById("menuToggle");
-const sidebar = document.getElementById("mobileSidebar");
-const closeMenu = document.getElementById("closeMenu");
-const overlay = document.getElementById("overlay");
-
-menuToggle.onclick = () => {
-    sidebar.classList.add("active");
-    overlay.classList.add("active");
-}
-
-closeMenu.onclick = () => {
-    sidebar.classList.remove("active");
-    overlay.classList.remove("active");
-}
-
-overlay.onclick = () => {
-    sidebar.classList.remove("active");
-    overlay.classList.remove("active");
-}
-
-/* MOBILE DROPDOWN */
-document.querySelectorAll(".mobile-dropdown-btn")
-.forEach(btn => {
-    btn.addEventListener("click", () => {
-        btn.parentElement.classList.toggle("active");
-    });
-});
-
-/* MOBILE SUB DROPDOWN */
-document.querySelectorAll(".mobile-sub-btn")
-.forEach(btn => {
-    btn.addEventListener("click", () => {
-        btn.parentElement.classList.toggle("active");
-    });
-});
-
-</script>
-
 </body>
 </html>
