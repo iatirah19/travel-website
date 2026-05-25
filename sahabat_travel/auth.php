@@ -43,7 +43,7 @@ if (isset($_POST['register'])) {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
             $sql = "INSERT INTO users
-            (username, email, gender, address, phone_number, password_hash, role)
+            (username, email, gender, address, phone_number, password, role)
             VALUES
             ('$username', '$email', '$gender', '$address', '$phone', '$hashedPassword', 'customer')";
 
@@ -66,7 +66,7 @@ if (isset($_POST['login'])) {
     $email = trim(mysqli_real_escape_string($conn, $_POST['login_email']));
     $password = $_POST['password'];
 
-    $sql = "SELECT user_id, username, password_hash, role
+    $sql = "SELECT user_id, username, password, role
     FROM users
     WHERE email='$email'
     LIMIT 1";
@@ -76,7 +76,7 @@ if (isset($_POST['login'])) {
 
         $user = mysqli_fetch_assoc($result);
 
-        if (password_verify($password, $user['password_hash'])) {
+        if (password_verify($password, $user['password'])) {
 
         session_start();
 

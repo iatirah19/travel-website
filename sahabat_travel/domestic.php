@@ -29,7 +29,7 @@ require 'db.php';
 
 	<?php
 	$category_id = 1;
-	$sql = "SELECT * FROM packages WHERE category_id = $category_id";
+	$sql = "SELECT * FROM packages WHERE tour_category_id = $category_id";
 	$result = $conn->query($sql);
 
 	if ($result && $result->num_rows > 0) {

@@ -36,24 +36,24 @@ if ($package_id) {
 
     // DATES
     $date_query = mysqli_query($conn, "
-        SELECT departure_date
+        SELECT travel_date
         FROM package_dates
         WHERE package_id='$package_id'
-        ORDER BY departure_date ASC
+        ORDER BY travel_date ASC
     ");
 
     // INCLUDE
     $include_query = mysqli_query($conn, "
-        SELECT type, description 
+        SELECT include_type, description 
         FROM package_include 
         WHERE package_id='$package_id'
     ");
 
     while ($i = mysqli_fetch_assoc($include_query)) {
-        if ($i['type'] == 'halfboard') {
+        if ($i['include_type'] == 'halfboard') {
             $halfboard[] = $i['description'];
         }
-        if ($i['type'] == 'fullboard') {
+        if ($i['include_type'] == 'fullboard') {
             $fullboard[] = $i['description'];
         }
     }
@@ -84,9 +84,9 @@ if ($package_id) {
 
 <section class="hero">
     <div class="hero-overlay"></div>
-    <a href="javascript:history.back()" class="back-btn">← Back</a>
+    <!--<a href="javascript:history.back()" class="back-btn">← Back</a>-->
     <?php if($data) { ?>
-        <img src="uploads/<?php echo $data['image']; ?>" class="hero-img">
+        <img src="uploads/<?php echo $data['main_image']; ?>" class="hero-img">
     <?php } ?>
 </section>
 
@@ -95,7 +95,7 @@ if ($package_id) {
     <!-- TITLE -->
     <?php if($data) { ?>
         <h1 class="package-title">
-            <?php echo $data['title']; ?> <?php echo $data['duration']; ?>
+            <?php echo $data['title']; ?> <?php echo $data['duration_days']; ?>
         </h1>
     <?php } else { ?>
         <h1 class="package-title">Package not found</h1>
@@ -114,9 +114,9 @@ if ($package_id) {
                     <?php if ($highlights && mysqli_num_rows($highlights) > 0) { ?>
                         <?php while($row = mysqli_fetch_assoc($highlights)) { ?>
                             <div class="highlight-card">
-                                <img src="uploads/<?php echo $row['image']; ?>">
+                                <img src="uploads/<?php echo $row['highlight_image']; ?>">
                                 <div class="highlight-name">
-                                    <?php echo $row['name']; ?>
+                                    <?php echo $row['highlight_name']; ?>
                                 </div>
                             </div>
                         <?php } ?>
@@ -142,12 +142,12 @@ if ($package_id) {
                         <?php
                         if ($date_query && mysqli_num_rows($date_query) > 0) {
                             while ($d = mysqli_fetch_assoc($date_query)) {
-                                $date = date('d M Y', strtotime($d['departure_date']));
+                                $date = date('d M Y', strtotime($d['travel_date']));
                         ?>
                                 <tr>
                                     <td><?php echo $date; ?></td>
                                     <td>
-                                        <a href="book_package.php?package_id=<?php echo $package_id; ?>&travel_date=<?php echo $d['departure_date']; ?>" 
+                                        <a href="book_package.php?package_id=<?php echo $package_id; ?>&travel_date=<?php echo $d['travel_date']; ?>" 
                                         class="btn-book btn-<?php echo $type; ?>">
                                         Book Now
                                         </a>

@@ -44,7 +44,7 @@ if (isset($_GET['logout'])) {
         <?php
         include 'db.php';
 
-        $sql = "SELECT * FROM packages WHERE status='popular' LIMIT 4";
+        $sql = "SELECT * FROM packages WHERE status='active' LIMIT 4";
         $result = $conn->query($sql);
 
         if($result->num_rows > 0):
@@ -52,11 +52,11 @@ if (isset($_GET['logout'])) {
         ?>
 
         <div class="package-card">
-            <img src="uploads/<?php echo $row['packimage']; ?>" alt="Package Image">
+            <img src="uploads/<?php echo $row['main_image']; ?>" alt="Package Image">
 
             <div class="package-info">
-                <h3><?php echo $row['packname']; ?></h3>
-                <p class="details"><?= $row['duration'] ?></p>
+                <h3><?php echo $row['title']; ?></h3>
+                <p class="details"><?= $row['duration_days'] ?></p>
 
                 <a href="package_detail.php?id=<?php echo $row['package_id']; ?>" class="view-btn">
                     View Details
