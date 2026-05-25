@@ -1,301 +1,705 @@
 <?php
 require '../db.php';
 
+/*
+|--------------------------------------------------------------------------
+| GET PACKAGE
+|--------------------------------------------------------------------------
+*/
+
 if (!isset($_GET['id'])) {
-    echo "No package selected";
-    exit;
+    die("Package ID not found.");
 }
 
-$id = (int) $_GET['id'];
+$package_id = intval($_GET['id']);
 
-$result = mysqli_query($conn, "SELECT * FROM packages WHERE package_id = $id");
-$row = mysqli_fetch_assoc($result);
+/*
+|--------------------------------------------------------------------------
+| FETCH PACKAGE
+|--------------------------------------------------------------------------
+*/
 
-$package_id = $row['package_id'];
+$packageQuery = mysqli_query($conn, "SELECT * FROM packages WHERE package_id='$package_id'");
+$package = mysqli_fetch_assoc($packageQuery);
 
-$category_query = mysqli_query($conn, "SELECT * FROM categories");
-$country_query  = mysqli_query($conn, "SELECT * FROM countries");
+if (!$package) {
+    die("Package not found.");
+}
 
-$date_query = mysqli_query($conn, "SELECT * FROM package_dates WHERE package_id = $package_id");
-$highlight_query = mysqli_query($conn, "SELECT * FROM package_highlights WHERE package_id = $package_id");
+/*
+|--------------------------------------------------------------------------
+| DROPDOWN DATA
+|--------------------------------------------------------------------------
+*/
 
-function getList($conn, $id, $type = null) {
-    $q = $type
-        ? "SELECT description FROM package_include WHERE package_id=$id AND type='$type'"
-        : "SELECT description FROM package_exclude WHERE package_id=$id";
+$countryQuery = mysqli_query($conn, "SELECT * FROM countries ORDER BY country_name ASC");
+$agencyQuery = mysqli_query($conn, "SELECT * FROM agencies ORDER BY agency_name ASC");
+$tourCategoryQuery = mysqli_query($conn, "SELECT * FROM tour_categories ORDER BY tour_category_name ASC");
+$packageCategoryQuery = mysqli_query($conn, "SELECT * FROM package_categories ORDER BY category_name ASC");
 
-    $res = mysqli_query($conn, $q);
+/*
+|--------------------------------------------------------------------------
+| PRICING
+|--------------------------------------------------------------------------
+*/
 
-    $arr = [];
-    while ($r = mysqli_fetch_assoc($res)) {
-        $arr[] = $r['description'];
+$pricingRes = mysqli_query($conn, "SELECT * FROM package_pricing WHERE package_id='$package_id'");
+$pricing = [];
+
+while ($row = mysqli_fetch_assoc($pricingRes)) {
+    $pricing[$row['type']] = $row['price'];
+}
+
+/*
+|--------------------------------------------------------------------------
+| INCLUDE / EXCLUDE / DATES / HIGHLIGHTS
+|--------------------------------------------------------------------------
+*/
+
+// INCLUDE
+$includeRes = mysqli_query($conn, "SELECT * FROM package_include WHERE package_id='$package_id'");
+
+$include = [
+    'Fullboard' => [],
+    'Halfboard' => []
+];
+
+while ($row = mysqli_fetch_assoc($includeRes)) {
+    if ($row['include_type'] == 'Fullboard') {
+        $include['Fullboard'][] = $row['description'];
+    } else {
+        $include['Halfboard'][] = $row['description'];
     }
-    return $arr;
 }
 
-$halfboard = getList($conn, $package_id, 'halfboard');
-$fullboard = getList($conn, $package_id, 'fullboard');
-$exclude   = getList($conn, $package_id);
+// EXCLUDE
+$excludeRes = mysqli_query($conn, "SELECT * FROM package_exclude WHERE package_id='$package_id'");
+$exclude = [];
+
+while ($row = mysqli_fetch_assoc($excludeRes)) {
+    $exclude[] = $row['description'];
+}
+
+// DATES
+$dateRes = mysqli_query($conn, "SELECT * FROM package_dates WHERE package_id='$package_id'");
+$dates = [];
+
+while ($row = mysqli_fetch_assoc($dateRes)) {
+    $dates[] = $row['travel_date'];
+}
+
+// HIGHLIGHTS
+$highlightRes = mysqli_query($conn, "SELECT * FROM package_highlights WHERE package_id='$package_id'");
+$highlights = [];
+
+while ($row = mysqli_fetch_assoc($highlightRes)) {
+    $highlights[] = $row;
+}
+
+/*
+|--------------------------------------------------------------------------
+| UPDATE PACKAGE
+|--------------------------------------------------------------------------
+*/
+
+if (isset($_POST['submit_package'])) {
+
+    $title = mysqli_real_escape_string($conn, $_POST['title']);
+    $duration = mysqli_real_escape_string($conn, $_POST['duration']);
+
+    $tour_category_id = intval($_POST['tour_category']);
+    $agency_id = intval($_POST['agency_id']);
+    $package_category_id = intval($_POST['package_category_id']);
+
+    $country_id = !empty($_POST['country_id']) ? intval($_POST['country_id']) : null;
+
+    $deposit = $_POST['deposit'] ?? 0;
+    $flight_details = mysqli_real_escape_string($conn, $_POST['flight_details'] ?? '');
+    $min_pax = $_POST['min_pax'] ?? 1;
+    $status = mysqli_real_escape_string($conn, $_POST['status']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | FILE UPLOAD (ITINERARY + IMAGE)
+    |--------------------------------------------------------------------------
+    */
+
+    $itinerary_file = $package['itinerary_file'];
+    $main_image = $package['main_image'];
+
+    if (!empty($_FILES['itinerary_file']['name'])) {
+
+        $itinerary_file = time() . "_" . uniqid() . "_" . $_FILES['itinerary_file']['name'];
+
+        move_uploaded_file(
+            $_FILES['itinerary_file']['tmp_name'],
+            "../uploads/packages/" . $itinerary_file
+        );
+    }
+
+    if (!empty($_FILES['main_image']['name'])) {
+
+        $main_image = time() . "_" . uniqid() . "_" . $_FILES['main_image']['name'];
+
+        move_uploaded_file(
+            $_FILES['main_image']['tmp_name'],
+            "../uploads/packages/" . $main_image
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE PACKAGE
+    |--------------------------------------------------------------------------
+    */
+
+    mysqli_query($conn, "
+        UPDATE packages SET
+        title='$title',
+        duration_days='$duration',
+        tour_category_id='$tour_category_id',
+        country_id=" . ($country_id === null ? "NULL" : "'$country_id'") . ",
+        agency_id='$agency_id',
+        package_category_id='$package_category_id',
+        deposit='$deposit',
+        flight_details='$flight_details',
+        min_pax='$min_pax',
+        status='$status',
+        itinerary_file='$itinerary_file',
+        main_image='$main_image'
+        WHERE package_id='$package_id'
+    ");
+
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE OLD DATA
+    |--------------------------------------------------------------------------
+    */
+
+    mysqli_query($conn, "DELETE FROM package_pricing WHERE package_id='$package_id'");
+    mysqli_query($conn, "DELETE FROM package_include WHERE package_id='$package_id'");
+    mysqli_query($conn, "DELETE FROM package_exclude WHERE package_id='$package_id'");
+    mysqli_query($conn, "DELETE FROM package_dates WHERE package_id='$package_id'");
+    mysqli_query($conn, "DELETE FROM package_highlights WHERE package_id='$package_id'");
+
+    /*
+    |--------------------------------------------------------------------------
+    | PRICING INSERT
+    |--------------------------------------------------------------------------
+    */
+
+    $pricingData = [
+        ['Adult Twin / Triple', $_POST['adult_twin_triple'] ?? 0],
+        ['Single', $_POST['single_price'] ?? 0],
+        ['Child Twin', $_POST['child_twin'] ?? 0],
+        ['Child No Bed', $_POST['child_no_bed'] ?? 0],
+        ['Child With Bed', $_POST['child_with_bed'] ?? 0],
+        ['Infant', $_POST['infant_price'] ?? 0]
+    ];
+
+    foreach ($pricingData as $p) {
+        mysqli_query($conn, "
+            INSERT INTO package_pricing VALUES (NULL,'$package_id','{$p[0]}','{$p[1]}')
+        ");
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | INCLUDE
+    |--------------------------------------------------------------------------
+    */
+
+    if (!empty($_POST['fullboard_points'])) {
+        foreach ($_POST['fullboard_points'] as $p) {
+            $p = mysqli_real_escape_string($conn, trim($p));
+            mysqli_query($conn, "INSERT INTO package_include VALUES (NULL,'$package_id','Fullboard','$p')");
+        }
+    }
+
+    if (!empty($_POST['halfboard_points'])) {
+        foreach ($_POST['halfboard_points'] as $p) {
+            $p = mysqli_real_escape_string($conn, trim($p));
+            mysqli_query($conn, "INSERT INTO package_include VALUES (NULL,'$package_id','Halfboard','$p')");
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | EXCLUDE (TEXTAREA VERSION)
+    |--------------------------------------------------------------------------
+    */
+
+    if (!empty($_POST['exclude'])) {
+
+        $lines = explode("\n", $_POST['exclude']);
+
+        foreach ($lines as $p) {
+
+            $p = trim($p);
+
+            if ($p != '') {
+                $p = mysqli_real_escape_string($conn, $p);
+                mysqli_query($conn, "INSERT INTO package_exclude VALUES (NULL,'$package_id','$p')");
+            }
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATES
+    |--------------------------------------------------------------------------
+    */
+
+    if (!empty($_POST['travel_date'])) {
+        foreach ($_POST['travel_date'] as $d) {
+            mysqli_query($conn, "INSERT INTO package_dates VALUES (NULL,'$package_id','$d')");
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | HIGHLIGHTS
+    |--------------------------------------------------------------------------
+    */
+
+    if (!empty($_POST['highlight_title'])) {
+
+        foreach ($_POST['highlight_title'] as $key => $title) {
+
+            $title = mysqli_real_escape_string($conn, $title);
+            $img = "";
+
+            if (!empty($_FILES['highlight_image']['name'][$key])) {
+
+                $ext = pathinfo($_FILES['highlight_image']['name'][$key], PATHINFO_EXTENSION);
+                $img = time() . "_" . uniqid() . "." . $ext;
+
+                move_uploaded_file(
+                    $_FILES['highlight_image']['tmp_name'][$key],
+                    "../uploads/packages/" . $img
+                );
+            }
+
+            mysqli_query($conn, "
+                INSERT INTO package_highlights VALUES (NULL,'$package_id','$title','$img')
+            ");
+        }
+    }
+
+    header("Location: admin_manage_package.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Package</title>
-<link rel="stylesheet" href="edit_package.css">
+    <meta charset="UTF-8">
+    <title>Edit Package</title>
+
+    <link rel="icon" type="image/png" href="../picture/LOGO.png">
+    <link rel="stylesheet" href="add_package.css">
 </head>
 
 <body>
 
-<div class="page-header">
-    <a href="admin_manage_package.php" class="btn-back">← Back</a>
-    <h2>✏️ Edit Package</h2>
+<h1 class="page-title">Edit Package</h1>
+
+<form method="POST" enctype="multipart/form-data">
+
+<!-- ROW 1 -->
+<div class="form-row">
+
+    <div class="form-group">
+        <label>Package Name</label>
+        <input type="text" name="title" value="<?= $package['title'] ?>">
+    </div>
+
+    <div class="form-group">
+        <label>Duration</label>
+        <input type="text" name="duration" value="<?= $package['duration_days'] ?>">
+    </div>
+
 </div>
 
-<div class="form-container">
+<!-- ROW 2 -->
+<div class="form-row">
 
-<form action="admin_manage_package.php" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Tour Category</label>
+        <select name="tour_category" id="tour-category">
 
-<input type="hidden" name="update_package" value="1">
-<input type="hidden" name="package_id" value="<?php echo $id; ?>">
+            <?php while($c = mysqli_fetch_assoc($tourCategoryQuery)) { ?>
+                <option value="<?= $c['tour_category_id'] ?>"
+                    <?= $c['tour_category_id']==$package['tour_category_id']?'selected':'' ?>>
+                    <?= $c['tour_category_name'] ?>
+                </option>
+            <?php } ?>
 
-<!-- PACKAGE NAME -->
-<div class="form-group">
-    <label>Package Name</label>
-    <input type="text" name="package_name"
-           value="<?php echo htmlspecialchars($row['title']); ?>" required>
+        </select>
+    </div>
+
+    <div class="form-group" id="country-group">
+
+        <label>Country</label>
+        <select name="country_id" id="country-select">
+
+            <option value="">-- Select Country --</option>
+
+            <?php while($c = mysqli_fetch_assoc($countryQuery)) { ?>
+                <option value="<?= $c['country_id'] ?>"
+                    <?= $c['country_id']==$package['country_id']?'selected':'' ?>>
+                    <?= $c['country_name'] ?>
+                </option>
+            <?php } ?>
+
+        </select>
+    </div>
+
 </div>
 
-<!-- CATEGORY -->
-<div class="form-group">
-    <label>Category</label>
-    <select name="category_id" id="categorySelect" required>
-        <option value="">-- Select Category --</option>
-        <?php while ($c = mysqli_fetch_assoc($category_query)) { ?>
-            <option value="<?php echo $c['category_id']; ?>"
-                <?php if ($c['category_id'] == $row['category_id']) echo 'selected'; ?>>
-                <?php echo htmlspecialchars($c['category_name']); ?>
-            </option>
-        <?php } ?>
-    </select>
-</div>
+<!-- ROW 3 -->
+<div class="form-row">
 
-<!-- COUNTRY -->
-<div class="form-group" id="countryBox" style="display:none;">
-    <label>Country</label>
-    <select name="country_id" id="countrySelect">
-        <option value="">-- Select Country --</option>
-        <?php while ($c = mysqli_fetch_assoc($country_query)) { ?>
-            <option value="<?php echo $c['country_id']; ?>"
-                <?php if ($c['country_id'] == $row['country_id']) echo 'selected'; ?>>
-                <?php echo htmlspecialchars($c['country_name']); ?>
-            </option>
-        <?php } ?>
-    </select>
-</div>
+    <div class="form-group">
+        <label>Agency</label>
+        <select name="agency_id">
 
-<!-- PACKAGE TYPE -->
-<div class="form-group">
-    <label>Package Type</label>
-    <select name="package_type" required>
-        <option value="">-- Select Type --</option>
-        <option value="SIT" <?php if($row['package_type']=='SIT') echo 'selected'; ?>>SIT</option>
-        <option value="MTB" <?php if($row['package_type']=='MTB') echo 'selected'; ?>>MTB</option>
-        <option value="JJ" <?php if($row['package_type']=='JJ') echo 'selected'; ?>>JJ</option>
-        <option value="SUKA" <?php if($row['package_type']=='SUKA') echo 'selected'; ?>>SUKA</option>
-    </select>
-</div>
+            <?php while($a = mysqli_fetch_assoc($agencyQuery)) { ?>
+                <option value="<?= $a['agency_id'] ?>"
+                    <?= $a['agency_id']==$package['agency_id']?'selected':'' ?>>
+                    <?= $a['agency_name'] ?>
+                </option>
+            <?php } ?>
 
-<!-- PACKAGE CATEGORY (MTB ONLY) -->
-<div class="form-group" id="packageCategoryBox" style="display:none;">
-    <label>Package Category</label>
-    <select name="package_category">
-        <option value="">-- Select Category --</option>
-        <option value="group" <?php if($row['package_category']=='group') echo 'selected'; ?>>Group Package</option>
-        <option value="private" <?php if($row['package_category']=='private') echo 'selected'; ?>>Private Package</option>
-        <option value="honeymoon" <?php if($row['package_category']=='honeymoon') echo 'selected'; ?>>Honeymoon Package</option>
-    </select>
-</div>
+        </select>
+    </div>
 
-<!-- DURATION -->
-<div class="form-group">
-    <label>Duration</label>
-    <input type="text" name="duration" value="<?php echo $row['duration']; ?>">
+    <div class="form-group">
+        <label>Package Category</label>
+        <select name="package_category_id">
+
+            <?php while($p = mysqli_fetch_assoc($packageCategoryQuery)) { ?>
+                <option value="<?= $p['package_category_id'] ?>"
+                    <?= $p['package_category_id']==$package['package_category_id']?'selected':'' ?>>
+                    <?= $p['category_name'] ?>
+                </option>
+            <?php } ?>
+
+        </select>
+    </div>
+
 </div>
 
 <!-- PRICE -->
-<div class="form-group">
-    <label>Price (RM)</label>
-    <input type="number" step="0.01" name="price" value="<?php echo $row['price']; ?>">
-</div>
+<h3>Package Price</h3>
 
-<!-- DEPOSIT -->
-<div class="form-group">
-    <label>Deposit (RM)</label>
-    <input type="number" step="0.01" name="deposit" value="<?php echo $row['deposit']; ?>">
-</div>
+<div class="price-grid">
 
-<!-- FLIGHT -->
-<div class="form-group">
-    <label>Flight Details</label>
-    <input type="text" name="flight" value="<?php echo htmlspecialchars($row['flight']); ?>">
-</div>
-
-<!-- MIN PAX -->
-<div class="form-group">
-    <label>Minimum Pax</label>
-    <input type="number" name="min_pax" value="<?php echo $row['min_pax']; ?>">
-</div>
-
-<!-- DATES -->
-<div class="form-group">
-    <label>Travel Dates</label>
-    <div class="date-wrapper">
-        <?php while ($d = mysqli_fetch_assoc($date_query)) { ?>
-            <div class="date-item">
-                <span><?php echo date('d M Y', strtotime($d['departure_date'])); ?></span>
-                <a href="delete_date.php?id=<?php echo $d['date_id']; ?>&package_id=<?php echo $id; ?>">❌</a>
-            </div>
-        <?php } ?>
+    <div class="form-group">
+        <label>Adult Twin / Triple</label>
+        <input type="number" step="0.01" name="adult_twin_triple"
+            value="<?= $pricing['Adult Twin / Triple'] ?? '' ?>">
     </div>
-    <button type="button" class="btn-add-date" onclick="addDate()">+ Add Date</button>
+
+    <div class="form-group">
+        <label>Single Supplement</label>
+        <input type="number" step="0.01" name="single_price"
+            value="<?= $pricing['Single'] ?? '' ?>">
+    </div>
+
+    <div class="form-group">
+        <label>Child Twin Sharing</label>
+        <input type="number" step="0.01" name="child_twin"
+            value="<?= $pricing['Child Twin'] ?? '' ?>">
+    </div>
+
+    <div class="form-group">
+        <label>Child No Bed</label>
+        <input type="number" step="0.01" name="child_no_bed"
+            value="<?= $pricing['Child No Bed'] ?? '' ?>">
+    </div>
+
+    <div class="form-group">
+        <label>Child With Bed</label>
+        <input type="number" step="0.01" name="child_with_bed"
+            value="<?= $pricing['Child With Bed'] ?? '' ?>">
+    </div>
+
+    <div class="form-group">
+        <label>Infant Price</label>
+        <input type="number" step="0.01" name="infant_price"
+            value="<?= $pricing['Infant'] ?? '' ?>">
+    </div>
+
+</div>
+
+<!-- EXTRA -->
+<div class="form-row">
+
+    <div class="form-group">
+        <label>Deposit Per Pax</label>
+        <input type="number" step="0.01" name="deposit"
+            value="<?= $package['deposit'] ?>">
+    </div>
+
+    <div class="form-group">
+        <label>Flight Details</label>
+        <textarea name="flight_details" rows="4"><?= $package['flight_details'] ?></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Minimum Pax</label>
+        <input type="number" name="min_pax"
+            value="<?= $package['min_pax'] ?>">
+    </div>
+
+</div>
+
+<!-- TRAVEL DATE -->
+<div class="form-group">
+
+    <label>Travel Dates</label>
+
+    <div id="travel-date-container">
+
+        <?php foreach($dates as $d) { ?>
+        <div class="travel-date-item">
+            <input type="date" name="travel_date[]" value="<?= $d ?>">
+            <button type="button" class="remove-date-btn">Remove</button>
+        </div>
+        <?php } ?>
+
+    </div>
+
+    <button type="button" id="add-date-btn">+ Add Date</button>
 </div>
 
 <!-- HIGHLIGHT -->
 <div class="form-group">
-<label>Highlight Places</label>
 
-<div id="highlight-wrapper">
+    <label>Highlight Places</label>
 
-<?php $i = 0; while ($h = mysqli_fetch_assoc($highlight_query)) { ?>
+    <div id="highlight-container">
 
-    <div class="highlight-item">
+        <?php foreach($highlights as $h) { ?>
+        <div class="highlight-item">
 
-        <!-- ID -->
-        <input type="hidden" name="highlight_id[]" value="<?php echo $h['highlight_id']; ?>">
+            <input type="text" name="highlight_title[]"
+                value="<?= $h['highlight_title'] ?>">
 
-        <!-- NAME -->
-        <input type="text" name="highlight_name[]"
-               value="<?php echo htmlspecialchars($h['name']); ?>">
+            <input type="file" name="highlight_image[]">
 
-        <!-- EXISTING IMAGE -->
-        <input type="hidden" name="existing_image[]" value="<?php echo $h['image']; ?>">
+            <button type="button" class="remove-highlight-btn">Remove</button>
 
-        <!-- NEW IMAGE -->
-        <input type="file" name="highlight_image[]">
-
-        <!-- PREVIEW -->
-        <?php if (!empty($h['image'])) { ?>
-            <img src="../uploads/<?php echo $h['image']; ?>" width="80">
+        </div>
         <?php } ?>
 
     </div>
 
-<?php $i++; } ?>
+    <button type="button" id="add-highlight-btn">+ Add Highlight</button>
+</div>
+
+<!-- INCLUDED -->
+<div class="included-row">
+
+    <div class="included-box">
+        <h4>Fullboard</h4>
+        <div id="fullboard-container">
+
+            <?php foreach($include['Fullboard'] ?? [] as $p) { ?>
+                <div class="point-item">
+                    <input type="text" name="fullboard_points[]" value="<?= $p ?>">
+                    <button type="button" onclick="this.parentElement.remove()">X</button>
+                </div>
+            <?php } ?>
+
+        </div>
+        <button type="button" onclick="addPoint('fullboard')">+ Add Point</button>
+    </div>
+
+    <div class="included-box">
+        <h4>Halfboard</h4>
+        <div id="halfboard-container">
+
+            <?php foreach($include['Halfboard'] ?? [] as $p) { ?>
+                <div class="point-item">
+                    <input type="text" name="halfboard_points[]" value="<?= $p ?>">
+                    <button type="button" onclick="this.parentElement.remove()">X</button>
+                </div>
+            <?php } ?>
+
+        </div>
+        <button type="button" onclick="addPoint('halfboard')">+ Add Point</button>
+    </div>
 
 </div>
 
-<button type="button" class="btn-add-date" onclick="addHighlight()">+ Add Highlight</button>
-</div>
-
-<!-- INCLUDE -->
+<!-- EXCLUDED -->
 <div class="form-group">
-<label>Halfboard Included</label>
-<textarea name="include_halfboard" placeholder="1 item per line"><?php echo implode("\n", $halfboard); ?></textarea>
-</div>
 
-<div class="form-group">
-<label>Fullboard Included</label>
-<textarea name="include_fullboard" placeholder="1 item per line"><?php echo implode("\n", $fullboard); ?></textarea>
-</div>
+    <label>Excluded</label>
 
-<!-- EXCLUDE -->
-<div class="form-group">
-<label>Exclude</label>
-<textarea name="exclude"><?php echo implode("\n", $exclude); ?></textarea>
-</div>
+    <textarea name="exclude" rows="6" placeholder="Enter each item on new line"><?php
 
-<!-- PDF -->
-<div class="form-group">
-    <label>Upload Itinerary File</label>
-    <input type="file" name="itinerary_file">
-    <br>
-    <?php if (!empty($row['itinerary_file'])) { ?>
-        <a href="../uploads/<?php echo $row['itinerary_file']; ?>" target="_blank">View Current PDF</a>
-    <?php } ?>
-</div>
-
-<!-- STATUS -->
-<div class="form-group">
-<label>Status</label>
-<select name="status">
-<option value="active" <?php if($row['status']=='active') echo 'selected'; ?>>Popular</option>
-<option value="inactive" <?php if($row['status']=='inactive') echo 'selected'; ?>>Not Popular</option>
-</select>
-</div>
-
-<!-- IMAGE -->
-<div class="form-group">
-<label>Upload Main Image</label>
-<input type="file" name="image">
-<br>
-<img src="../uploads/<?php echo $row['image']; ?>" width="120">
-</div>
-
-<button type="submit" class="btn-submit">Update Package</button>
-
-</form>
-</div>
-
-<script>
-let highlightIndex = <?php echo $i ?? 0; ?>;
-
-function addHighlight() {
-    let div = document.createElement("div");
-    div.innerHTML = `
-        <input type="text" name="highlight_name[${highlightIndex}]">
-        <input type="file" name="highlight_image[${highlightIndex}]">
-    `;
-    document.getElementById("highlight-wrapper").appendChild(div);
-    highlightIndex++;
-}
-
-function addDate() {
-    let div = document.createElement("div");
-    div.innerHTML = `<input type="date" name="new_dates[]">`;
-    document.querySelector(".date-wrapper").appendChild(div);
-}
-
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const categorySelect = document.getElementById("categorySelect");
-    const countryBox = document.getElementById("countryBox");
-
-    const packageType = document.querySelector("select[name='package_type']");
-    const packageCategoryBox = document.getElementById("packageCategoryBox");
-
-    function toggleCountry() {
-        countryBox.style.display = (categorySelect.value === "2") ? "block" : "none";
-    }
-
-    function togglePackageCategory() {
-        if (packageType.value === "MTB") {
-            packageCategoryBox.style.display = "block";
-        } else {
-            packageCategoryBox.style.display = "none";
+    if (!empty($exclude)) {
+        foreach ($exclude as $e) {
+            echo htmlspecialchars(trim($e)) . "\n";
         }
     }
 
-    categorySelect.addEventListener("change", toggleCountry);
-    packageType.addEventListener("change", togglePackageCategory);
+    ?></textarea>
 
-    toggleCountry();
-    togglePackageCategory();
+</div>
+
+<!-- FINAL -->
+<div class="form-row">
+
+    <div class="form-group">
+        <label>Upload Itinerary File</label>
+
+        <input type="file" name="itinerary_file">
+
+        <?php if (!empty($package['itinerary_file'])) { ?>
+
+        <?php 
+            $fileName = basename($package['itinerary_file']); 
+        ?>
+
+        <p>
+            📄 Current File:
+            <a href="../uploads/packages/<?= $package['itinerary_file'] ?>" target="_blank">
+                <?= $fileName ?>
+            </a>
+        </p>
+
+        <?php } ?>
+    </div>
+
+    <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+
+            <option value="active" <?= $package['status']=='active'?'selected':'' ?>>Active</option>
+            <option value="inactive" <?= $package['status']=='inactive'?'selected':'' ?>>Inactive</option>
+
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Main Image</label>
+
+        <input type="file" name="main_image">
+
+        <?php if (!empty($package['main_image'])) { ?>
+            <div style="margin-top:10px;">
+                <p>Current Image:</p>
+                <img src="../uploads/packages/<?= $package['main_image'] ?>" 
+                     style="width:150px;height:100px;object-fit:cover;border-radius:8px;">
+            </div>
+        <?php } ?>
+    </div>
+
+</div>
+
+<button type="submit" name="submit_package">
+    Update Package
+</button>
+
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ======================
+    // TRAVEL DATE
+    // ======================
+    const dateContainer = document.getElementById("travel-date-container");
+    const addDateBtn = document.getElementById("add-date-btn");
+
+    if (dateContainer && addDateBtn) {
+
+        // ADD DATE
+        addDateBtn.addEventListener("click", function () {
+            const div = document.createElement("div");
+            div.classList.add("travel-date-item");
+
+            div.innerHTML = `
+                <input type="date" name="travel_date[]">
+                <button type="button" class="remove-date-btn">Remove</button>
+            `;
+
+            dateContainer.appendChild(div);
+        });
+
+        // REMOVE DATE (event delegation)
+        dateContainer.addEventListener("click", function (e) {
+            if (e.target.classList.contains("remove-date-btn")) {
+                e.target.parentElement.remove();
+            }
+        });
+    }
+
+    // ======================
+    // HIGHLIGHT
+    // ======================
+    const highlightContainer = document.getElementById("highlight-container");
+    const addHighlightBtn = document.getElementById("add-highlight-btn");
+
+    if (highlightContainer && addHighlightBtn) {
+
+        addHighlightBtn.addEventListener("click", function () {
+
+            const div = document.createElement("div");
+            div.classList.add("highlight-item");
+
+            div.innerHTML = `
+                <input type="text" name="highlight_title[]" placeholder="Place name">
+                <input type="file" name="highlight_image[]">
+                <button type="button" class="remove-highlight-btn">Remove</button>
+            `;
+
+            highlightContainer.appendChild(div);
+        });
+
+        highlightContainer.addEventListener("click", function (e) {
+            if (e.target.classList.contains("remove-highlight-btn")) {
+                e.target.parentElement.remove();
+            }
+        });
+    }
+
+    // ======================
+    // INCLUDED - FULLBOARD & HALFOARD
+    // ======================
+
+    window.addPoint = function(type) {
+
+        let containerId = "";
+
+        if (type === "fullboard") {
+            containerId = "fullboard-container";
+        } 
+        else if (type === "halfboard") {
+            containerId = "halfboard-container";
+        }
+
+        const container = document.getElementById(containerId);
+
+        if (!container) return;
+
+        const div = document.createElement("div");
+        div.classList.add("point-item");
+
+        div.innerHTML = `
+            <input type="text" name="${type}_points[]" placeholder="Enter point">
+            <button type="button" onclick="this.parentElement.remove()">X</button>
+        `;
+
+        container.appendChild(div);
+    };
+
 });
 </script>
-
 </body>
 </html>
