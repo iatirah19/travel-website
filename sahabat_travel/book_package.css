@@ -33,7 +33,7 @@ body {
    WRAPPER
 ======================== */
 .step-container {
-    max-width: 600px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
@@ -93,7 +93,7 @@ body {
 .progress-container::before {
     content: "";
     position: absolute;
-    top: 36px;
+    top: 45px;
     left: 13%;
     right: 13%;
     height: 2px;
@@ -103,7 +103,7 @@ body {
 
 .progress-line {
     position: absolute;
-    top: 36px;
+    top: 45px;
     left: 13%;
     right: 13%;
     height: 2px;

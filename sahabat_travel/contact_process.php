@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $number = trim($_POST['phone']);
 
     // Default status
-    $status = "Unread";
+    $status = "Undone";
 
     // Validation
     if (empty($name) || empty($email) || empty($number)) {
