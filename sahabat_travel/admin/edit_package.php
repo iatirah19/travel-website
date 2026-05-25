@@ -133,7 +133,7 @@ if (isset($_POST['submit_package'])) {
 
         move_uploaded_file(
             $_FILES['itinerary_file']['tmp_name'],
-            "../uploads/packages/" . $itinerary_file
+            "../uploads/" . $itinerary_file
         );
     }
 
@@ -143,7 +143,7 @@ if (isset($_POST['submit_package'])) {
 
         move_uploaded_file(
             $_FILES['main_image']['tmp_name'],
-            "../uploads/packages/" . $main_image
+            "../uploads/" . $main_image
         );
     }
 

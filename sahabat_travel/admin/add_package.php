@@ -66,7 +66,7 @@ if (isset($_POST['submit_package'])) {
     |--------------------------------------------------------------------------
     */
 
-    $uploadDir = "../uploads/packages/";
+    $uploadDir = "../uploads/";
     if (!file_exists($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }
