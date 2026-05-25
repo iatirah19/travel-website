@@ -28,7 +28,7 @@ require 'db.php';
 
 	<?php
 	$category_id = 3;
-	$sql = "SELECT * FROM packages WHERE category_id = $category_id";
+	$sql = "SELECT * FROM packages WHERE tour_category_id = $category_id";
 	$result = $conn->query($sql);
 
 	if ($result && $result->num_rows > 0) {
@@ -38,12 +38,11 @@ require 'db.php';
 
 		<div class="pakej-row">
 			<div class="pakej-img-box">
-				<img src="uploads/<?php echo !empty($row['image']) ? $row['image'] : 'default.png'; ?>" alt="">
+				<img src="uploads/<?php echo !empty($row['main_image']) ? $row['main_image'] : 'default.png'; ?>" alt="">
 			</div>
 
 			<div class="pakej-main-info">
 				<h3><?php echo $row['title']; ?></h3>
-				<p class="pakej-desc"><?php echo $row['duration']; ?></p>
 			</div>
 
 			<div class="pakej-action">

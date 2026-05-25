@@ -58,7 +58,7 @@ if (isset($_GET['logout'])) {
                 <h3><?php echo $row['title']; ?></h3>
                 <p class="details"><?= $row['duration_days'] ?></p>
 
-                <a href="package_detail.php?id=<?php echo $row['package_id']; ?>" class="view-btn">
+                <a href="view_package.php?id=<?php echo $row['package_id']; ?>" class="view-btn">
                     View Details
                 </a>
             </div>

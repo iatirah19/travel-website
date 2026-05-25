@@ -1,69 +1,116 @@
 <?php
 require 'db.php';
 
-// GET ID
-$package_id = $_GET['id'] ?? null;
+/* =========================================
+   GET PACKAGE ID
+========================================= */
+
+$package_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 $data = null;
 $highlights = null;
 $date_query = null;
+
 $halfboard = [];
 $fullboard = [];
 $exclude = [];
 
-if ($package_id) {
+/* =========================================
+   FETCH PACKAGE
+========================================= */
+
+if ($package_id > 0) {
 
     // PACKAGE
-    $package = mysqli_query($conn, 
-        "SELECT * FROM packages WHERE package_id='$package_id'");
-    
+    $package = mysqli_query($conn, "
+        SELECT *
+        FROM packages
+        WHERE package_id = '$package_id'
+    ");
+
     if (!$package) {
-        die("Query Error: " . mysqli_error($conn));
+        die("Package Query Error: " . mysqli_error($conn));
     }
 
     $data = mysqli_fetch_assoc($package);
-    
-    // PACKAGE TYPE (FINAL CORRECT)
-    $type = strtolower($data['package_type'] ?? 'sit');
 
-    // HIGHLIGHTS
-    $highlights = mysqli_query($conn, 
-        "SELECT * FROM package_highlights WHERE package_id='$package_id'");
-
-    if (!$highlights) {
-        die("Query Error: " . mysqli_error($conn));
+    if (!$data) {
+        die("Package not found.");
     }
 
-    // DATES
+    /* =========================================
+       PACKAGE TYPE
+    ========================================= */
+
+    $type = strtolower($data['package_type'] ?? 'sit');
+
+    /* =========================================
+       HIGHLIGHTS
+    ========================================= */
+
+    $highlights = mysqli_query($conn, "
+        SELECT *
+        FROM package_highlights
+        WHERE package_id = '$package_id'
+    ");
+
+    if (!$highlights) {
+        die("Highlight Query Error: " . mysqli_error($conn));
+    }
+
+    /* =========================================
+       TRAVEL DATES
+    ========================================= */
+
     $date_query = mysqli_query($conn, "
         SELECT travel_date
         FROM package_dates
-        WHERE package_id='$package_id'
+        WHERE package_id = '$package_id'
         ORDER BY travel_date ASC
     ");
 
-    // INCLUDE
+    if (!$date_query) {
+        die("Date Query Error: " . mysqli_error($conn));
+    }
+
+    /* =========================================
+       INCLUDED
+    ========================================= */
+
     $include_query = mysqli_query($conn, "
-        SELECT include_type, description 
-        FROM package_include 
-        WHERE package_id='$package_id'
+        SELECT include_type, description
+        FROM package_include
+        WHERE package_id = '$package_id'
     ");
 
+    if (!$include_query) {
+        die("Include Query Error: " . mysqli_error($conn));
+    }
+
     while ($i = mysqli_fetch_assoc($include_query)) {
+
         if ($i['include_type'] == 'halfboard') {
             $halfboard[] = $i['description'];
         }
+
         if ($i['include_type'] == 'fullboard') {
             $fullboard[] = $i['description'];
         }
     }
 
-    // EXCLUDE
+    /* =========================================
+       EXCLUDED
+    ========================================= */
+
     $exclude_query = mysqli_query($conn, "
-        SELECT description 
-        FROM package_exclude 
-        WHERE package_id='$package_id'
+        SELECT description
+        FROM package_exclude
+        WHERE package_id = '$package_id'
     ");
+
+    if (!$exclude_query) {
+        die("Exclude Query Error: " . mysqli_error($conn));
+    }
 
     while ($e = mysqli_fetch_assoc($exclude_query)) {
         $exclude[] = $e['description'];
@@ -76,7 +123,7 @@ if ($package_id) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo ucwords(strtolower($data['title'] . ' ' . $data['duration'])); ?></title>
+    <title><?php echo ucwords(strtolower($data['title'] . ' ' . $data['duration_days'])); ?></title>
     <link rel="icon" type="image/png" href="picture/LOGO.png">
     <link rel="stylesheet" href="view_package.css">
 </head>
@@ -188,7 +235,7 @@ if ($package_id) {
                             <?php endif; ?>
                         <?php endif; ?>
                         <p>👥 Min <?php echo $data['min_pax'] ?? '0'; ?> Pax</p>
-                        <p>✈️ Flight: <?php echo $data['flight'] ?? 'TBA'; ?></p>
+                        <p>✈️ Flight: <?php echo $data['flight_details'] ?? 'TBA'; ?></p>
                         <p>
                             📋 <a href="#" class="view-link" onclick="openPopup(); return false;">
                                 Tour Details

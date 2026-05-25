@@ -258,11 +258,9 @@ if (isset($_POST['submit_package'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Package - Sahabat International Travel Sdn Bhd</title>
-
     <link rel="icon" type="image/png" href="../picture/LOGO.png">
-
     <link rel="stylesheet" href="add_package.css">
 </head>
 <body>

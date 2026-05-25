@@ -39,7 +39,7 @@ require 'db.php';
 
 		<div class="pakej-row">
 			<div class="pakej-img-box">
-				<img src="uploads/<?php echo !empty($row['image']) ? $row['image'] : 'default.png'; ?>" alt="">
+				<img src="uploads/<?php echo !empty($row['main_image']) ? $row['main_image'] : 'default.png'; ?>" alt="">
 			</div>
 
 			<div class="pakej-main-info">

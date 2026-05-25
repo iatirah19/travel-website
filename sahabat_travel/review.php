@@ -6,7 +6,7 @@ if ($conn->connect_error) {
 }
 
 // 2. Ambil data dari table 'reviews'
-$sql = "SELECT review_text, rating, name FROM reviews";
+$sql = "SELECT comment, rating FROM reviews";
 $result = $conn->query($sql);
 
 $reviews_data = [];

@@ -316,10 +316,10 @@ if (isset($_POST['submit_package'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Package</title>
-
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Package - Sahabat International Travel Sdn Bhd</title>
     <link rel="icon" type="image/png" href="../picture/LOGO.png">
-    <link rel="stylesheet" href="add_package.css">
+    <link rel="stylesheet" href="edit_package.css">
 </head>
 
 <body>

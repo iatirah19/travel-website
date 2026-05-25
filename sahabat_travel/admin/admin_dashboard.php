@@ -159,6 +159,8 @@ if(isset($_GET['toggle_status_id'])){
 <!-- BOOKINGS TABLE -->
 <div class="table-container">
 
+<h3 style="margin-bottom:15px;">User Booking</h3>
+
 <table>
     <thead>
         <tr>
@@ -218,7 +220,7 @@ if(isset($_GET['toggle_status_id'])){
 <!-- CONTACT TABLE -->
 <div class="table-container" style="margin-top:30px;">
 
-<h3 style="margin-bottom:15px;">User Contacts</h3>
+<h3 style="margin-bottom:15px;">User Contact</h3>
 
 <table>
 
