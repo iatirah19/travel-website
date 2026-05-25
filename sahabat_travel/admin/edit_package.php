@@ -153,7 +153,7 @@ if (isset($_POST['submit_package'])) {
     |--------------------------------------------------------------------------
     */
 
-    mysqli_query($conn, "
+    $updateQuery = mysqli_query($conn, "
         UPDATE packages SET
         title='$title',
         duration_days='$duration',
@@ -169,6 +169,8 @@ if (isset($_POST['submit_package'])) {
         main_image='$main_image'
         WHERE package_id='$package_id'
     ");
+
+    $packageChanged = mysqli_affected_rows($conn);
 
     /*
     |--------------------------------------------------------------------------
@@ -286,7 +288,26 @@ if (isset($_POST['submit_package'])) {
         }
     }
 
-    header("Location: admin_manage_package.php");
+    if ($packageChanged > 0) {
+
+        echo "
+        <script>
+            alert('Package sudah di update');
+            window.location.href='admin_manage_package.php';
+        </script>
+        ";
+
+    } else {
+
+        echo "
+        <script>
+            alert('Package tidak ada perubahan');
+            window.location.href='admin_manage_package.php';
+        </script>
+        ";
+
+    }
+
     exit();
 }
 ?>
