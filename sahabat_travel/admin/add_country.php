@@ -1,6 +1,13 @@
 <?php
 require '../db.php';
 
+session_start();
+
+if ($_SESSION['role'] != 'admin') {
+    header("Location: homepage.php");
+    exit();
+}
+
 if (isset($_POST['add_country'])) {
 
     $name = mysqli_real_escape_string($conn, $_POST['country_name']);
