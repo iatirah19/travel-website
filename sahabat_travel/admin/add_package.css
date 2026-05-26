@@ -70,6 +70,8 @@ h3 {
     background: #fff;
     transition: 0.25s;
     box-sizing: border-box;
+    text-transform: capitalize;
+    font-family: 'Playfair Display', serif;
 }
 
 .form-group input:focus,
@@ -192,6 +194,7 @@ button[type="submit"]:hover {
     border: 1px solid #d6dbe3;
     font-size: 14px;
     outline: none;
+    font-family: 'Playfair Display', serif;
 }
 
 .point-item input:focus{
@@ -256,6 +259,7 @@ button[type="submit"]:hover {
     font-size: 14px;
     flex: 1;
     min-width: 180px;
+    font-family: 'Playfair Display', serif;
 }
 
 /* DATE INPUT SMALLER */
@@ -310,17 +314,131 @@ input[type="file"]{
     background: #fff;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px){
+/* =========================
+   TABLET + SMALL LAPTOP FIX
+   ========================= */
+@media (max-width: 1024px) {
 
+    form {
+        padding: 30px;
+    }
+
+    .price-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-row {
+        flex-wrap: wrap;
+    }
+
+    .included-row {
+        flex-wrap: wrap;
+    }
+}
+
+/* =========================
+   MOBILE RESPONSIVE (MAIN)
+   ========================= */
+@media (max-width: 768px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .page-title {
+        font-size: 26px;
+        margin: 20px 0;
+    }
+
+    form {
+        padding: 18px;
+        border-radius: 12px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    /* STACK ALL ROWS */
     .form-row,
-    .included-row,
-    .price-grid{
+    .included-row {
         flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-row .form-group {
+        width: 100%;
+    }
+
+    /* PRICE GRID → 1 COLUMN */
+    .price-grid {
         grid-template-columns: 1fr;
     }
 
-    form{
-        padding: 20px;
+    /* INCLUDED BOX FULL WIDTH */
+    .included-box {
+        width: 100%;
+    }
+
+    /* INPUT IMPROVEMENT */
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+
+    /* BUTTON FULL WIDTH FEEL */
+    button[type="submit"] {
+        font-size: 15px;
+        padding: 14px;
+    }
+
+    /* ITEM FLEX WRAP FIX */
+    .travel-date-item,
+    .highlight-item,
+    .point-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .travel-date-item input,
+    .highlight-item input,
+    .point-item input {
+        width: 96.5%;
+        min-width: 0;
+    }
+
+    .remove-date-btn,
+    .remove-highlight-btn,
+    .point-item button {
+        width: 100%;
+    }
+}
+
+/* =========================
+   VERY SMALL PHONE (EXTRA FIX)
+   ========================= */
+@media (max-width: 480px) {
+
+    .page-title {
+        font-size: 22px;
+        letter-spacing: 1px;
+    }
+
+    form {
+        padding: 14px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    .included-box h4 {
+        font-size: 14px;
+    }
+
+    button {
+        font-size: 13px;
     }
 }

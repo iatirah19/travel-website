@@ -65,18 +65,77 @@ if (isset($_POST['add_review'])) {
 
     <!-- CLOSE BUTTON -->
     <div class="close-btn" id="closeBtn">
+
         <i class="fa-solid fa-xmark"></i>
+
     </div>
 
-    <h2 class="logo">Admin Panel</h2>
+    <h2 class="logo">
+        Admin Panel
+    </h2>
 
     <ul>
-        <li><a href="admin_dashboard.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-        <li><a href="admin_manage_country.php"><i class="fa-solid fa-earth-asia"></i> Manage Country</a></li>
-        <li><a href="admin_manage_package.php"><i class="fa-solid fa-box"></i> Manage Package</a></li>
-        <li><a href="admin_manage_review.php"><i class="fa-solid fa-star"></i> Manage Review</a></li>
-        <li><a href=""><i class="fa-solid fa-star"></i> Add Admin</a></li>
-        <li><a href="#" onclick="confirmLogout(event)"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+
+        <li>
+            <a href="admin_dashboard.php">
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
+
+            </a>
+        </li>
+
+        <li>
+            <a href="admin_manage_country.php">
+
+                <i class="fa-solid fa-earth-asia"></i>
+
+                Manage Country
+
+            </a>
+        </li>
+
+        <li>
+            <a href="admin_manage_package.php">
+
+                <i class="fa-solid fa-box"></i>
+
+                Manage Package
+
+            </a>
+        </li>
+
+        <li>
+            <a href="admin_manage_review.php">
+
+                <i class="fa-solid fa-star"></i>
+
+                Manage Review
+
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+
+                <i class="fa-solid fa-user-plus"></i>
+
+                Add Admin
+
+            </a>
+        </li>
+
+        <li>
+            <a href="#" onclick="confirmLogout(event)">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                Logout
+
+            </a>
+        </li>
+
     </ul>
 
 </div>
