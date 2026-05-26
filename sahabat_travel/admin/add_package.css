@@ -163,6 +163,9 @@ button[type="submit"]:hover {
     border-radius: 14px;
     padding: 18px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 /* TITLE */
@@ -247,6 +250,12 @@ button[type="submit"]:hover {
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     flex-wrap: wrap;
+}
+
+.travel-date-item input:focus,
+.highlight-item input:focus{
+    border-color: #1e3c72;
+    box-shadow: 0 0 0 3px rgba(30,60,114,0.12);
 }
 
 /* INPUT STYLE INSIDE ITEM */
