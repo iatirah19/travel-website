@@ -250,7 +250,7 @@ body {
 }
 
 /* ========================
-   LABELS
+   LABELS & INPUTS (BOOKING)
 ======================== */
 label {
     display: block;
@@ -262,9 +262,6 @@ label {
     margin: 18px 0 6px;
 }
 
-/* ========================
-   INPUTS
-======================== */
 input,
 select,
 textarea {
@@ -384,32 +381,118 @@ button[onclick*="changePax"]:hover {
 }
 
 /* ========================
-   PAYMENT
+   PAYMENT GATEWAY (SCOPED)
 ======================== */
-#paymentDetails {
-    margin-top: 12px;
-    padding: 14px 16px;
-    background: #f0f6f9;
-    border-radius: var(--radius);
-    border: 1px solid #cde0ea;
-    animation: fadeUp 0.25s ease;
+.checkout-card {
+    background: white;
+    
+    width: 100%;
+    padding: 30px;
+    border-radius: 12px;
+    
+    margin: 20px 0; /* Added slight margin so it sits nicely inside the step */
 }
 
-#paymentDetails p {
-    background: none;
+/* Scoped headings and labels specifically for checkout */
+.checkout-card h2 {
+    margin-top: 0;
+    color: #111827;
+    font-size: 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 15px;
+}
+
+.checkout-card .form-group {
+    margin-bottom: 18px;
+}
+
+.checkout-card label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #374151;
+    text-transform: none; /* Overrides the booking form uppercase labels */
+    letter-spacing: normal;
+}
+
+.checkout-card input[type="text"],
+.checkout-card input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+}
+
+.checkout-card input:focus {
+    outline: 2px solid #143f56;
+    border-color: transparent;
+    box-shadow: none; /* Prevents booking form box-shadow conflict */
+}
+
+/* Payment Methods (Unified) */
+.payment-methods {
+    margin-top: 20px;
+}
+
+.method-option {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.method-option:hover {
+    border-color: #0070f3;
+}
+
+.method-option input {
+    margin-right: 12px;
+}
+
+.checkout-card .price-box {
+    background: #f3f4f6;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* Scoped Checkout Button */
+.checkout-card button {
+    background: #143f56;
+    color: white;
+    padding: 12px;
     border: none;
-    padding: 0;
-    font-size: 14px;
-    color: var(--primary);
-    margin: 0;
+    border-radius: 6px;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.2s;
 }
 
-#paymentDetails p b { color: var(--primary); }
+.checkout-card button:hover {
+    background: #143f56;
+    transform: none; /* Overrides booking hover bounce */
+    box-shadow: none; /* Overrides booking hover shadow */
+}
 
 /* ========================
-   BUTTONS
+   BUTTONS (BOOKING STEPS)
 ======================== */
-.step-content button {
+.step-content > button {
     padding: 11px 26px;
     border-radius: var(--radius);
     font-family: 'Segoe UI', sans-serif;
@@ -459,7 +542,7 @@ button[name="book"] {
 }
 
 button[name="book"]:hover {
-    background: #3d9940;
+    background: #143f56;
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(76, 175, 80, 0.35);
 }
@@ -469,14 +552,9 @@ button[name="book"]:hover {
 ======================== */
 @media (max-width: 600px) {
     body { padding: 24px 14px; }
-
     .step-content.active { padding: 22px 16px; }
-
     .page-title { font-size: 22px; }
-
     .circle { width: 34px; height: 34px; font-size: 12px; }
-
     .step p { font-size: 10px; }
-
     button[name="book"] { width: 100%; }
 }

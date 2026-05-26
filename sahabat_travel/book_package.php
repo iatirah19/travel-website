@@ -116,19 +116,22 @@ if (isset($_POST['book'])) {
 
 <!DOCTYPE html>
 <html>
-<head>
-<title>Book Package</title>
-<link rel="stylesheet" href="book_package.css">
-</head>
 
+<head>
+    <meta charset="UTF-8">
+    <title>Book Package</title>
+    <link rel="stylesheet" href="book_package.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="picture/LOGO.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
 <body>
 <form method="POST">
 
 <div class="step-container">
 
 <h1 class="page-title">Booking Page</h1>
-
-<a href="javascript:history.back()" class="back-btn">← Back</a>
 
 <!-- PROGRESS -->
 <div class="progress-container">
@@ -184,20 +187,6 @@ if (isset($_POST['book'])) {
     <label>Address:</label>
     <textarea name="address" required></textarea>
 
-    <br><br>
-
-    <!-- PAYMENT -->
-    <label>Payment Method:</label>
-    <select name="payment_method" id="payment_method" onchange="showPaymentForm()" required>
-        <option value="">Select</option>
-        <option value="card">Card</option>
-        <option value="fpx">FPX</option>
-        <option value="cash">Cash</option>
-    </select>
-
-    <div id="paymentDetails"></div>
-
-    <br><br>
 
     <button type="button" onclick="prevStep()">Back</button>
     <button type="button" onclick="nextStep()">Next</button>
@@ -205,11 +194,9 @@ if (isset($_POST['book'])) {
 
 <!-- STEP 4 -->
 <div class="step-content">
-    <h3>Confirm Booking</h3>
-    <p>Click confirm to submit your booking.</p>
-
+    <?php include 'payment/form.php';?> 
     <button type="button" onclick="prevStep()">Back</button>
-    <button type="submit" name="book">Confirm Booking</button>
+
 </div>
 
 </div>

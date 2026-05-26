@@ -45,7 +45,7 @@ if (isset($_POST['register'])) {
             $sql = "INSERT INTO users
             (username, email, gender, address, phone_number, password, role)
             VALUES
-            ('$username', '$email', '$gender', '$address', '$phone', '$hashedPassword', 'customer')";
+            ('$username', '$email', '$gender', '$address', '$phone', '$hashedPassword', 'admin')";
 
             if (mysqli_query($conn, $sql)) {
                 $_SESSION['success'] = "Register successful!";
