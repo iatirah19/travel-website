@@ -207,10 +207,18 @@ if (!isset($_GET['id'])) {
     |--------------------------
     */
     if (!empty($_POST['excluded'])) {
+
+        // delete only kalau ada data baru nak replace
+        mysqli_query($conn, "DELETE FROM package_exclude WHERE package_id='$package_id'");
+
         foreach ($_POST['excluded'] as $p) {
-            if ($p != '') {
+            if (trim($p) != '') {
                 $p = mysqli_real_escape_string($conn, $p);
-                mysqli_query($conn, "INSERT INTO package_exclude VALUES (NULL,'$package_id','$p')");
+
+                mysqli_query($conn, "
+                    INSERT INTO package_exclude (package_id, description)
+                    VALUES ('$package_id', '$p')
+                ");
             }
         }
     }
@@ -546,13 +554,23 @@ if (!isset($_GET['id'])) {
 
             <?php if (!empty($exclude)) { ?>
                 <?php foreach ($exclude as $point) { ?>
-                    <input type="text" name="excluded[]" value="<?= $point ?>">
+                    
+                    <div class="point-item">
+                        <input type="text" name="excluded[]" value="<?= htmlspecialchars($point) ?>">
+                        
+                        <button type="button" onclick="this.parentElement.remove()">
+                            X
+                        </button>
+                    </div>
+
                 <?php } ?>
             <?php } ?>
 
         </div>
 
-        <button type="button" onclick="addPoint('excluded')">+ Add Point</button>
+        <button type="button" onclick="addPoint('excluded')">
+            + Add Point
+        </button>
 
     </div>
 </div>
@@ -678,33 +696,30 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addPoint = function(type) {
 
         let containerId = "";
+        let inputName = "";
 
         if (type === "fullboard") {
             containerId = "fullboard-container";
+            inputName = "fullboard_points[]";
         } 
         else if (type === "halfboard") {
             containerId = "halfboard-container";
+            inputName = "halfboard_points[]";
         }
         else if (type === "excluded") {
             containerId = "excluded-container";
+            inputName = "excluded[]";
         }
 
         const container = document.getElementById(containerId);
-
         if (!container) return;
 
         const div = document.createElement("div");
         div.classList.add("point-item");
 
         div.innerHTML = `
-            <input type="text" name="${type}_points[]" placeholder="Enter point">
-
-            <button 
-                type="button" 
-                onclick="this.parentElement.remove()"
-            >
-                X
-            </button>
+            <input type="text" name="${inputName}" placeholder="Enter point">
+            <button type="button" onclick="this.parentElement.remove()">X</button>
         `;
 
         container.appendChild(div);
