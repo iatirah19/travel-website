@@ -91,8 +91,11 @@ if(isset($_GET['type_filter']) && $_GET['type_filter'] != ""){
 $query = "
 SELECT 
     packages.*,
-    categories.category_name,
-    countries.country_name
+    package_categories.category_name,
+    countries.country_name,
+    agencies.agency_name,
+    tour_categories.tour_category_name
+
 FROM packages
 
 LEFT JOIN countries

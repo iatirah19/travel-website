@@ -269,295 +269,267 @@ if (isset($_POST['submit_package'])) {
 
 <form action="" method="POST" enctype="multipart/form-data">
 
-<!-- ROW 1 -->
-<div class="form-row">
+<!-- ===================== BASIC INFO ===================== -->
+<div class="form-section">
 
-    <div class="form-group">
-        <label>Package Name</label>
-        <input type="text" name="title" required>
-    </div>
+    <h3>Basic Information</h3>
 
-    <div class="form-group">
-        <label>Duration</label>
-        <input type="text" name="duration" placeholder="Example: 5D4N" required>
-    </div>
+    <div class="form-row">
 
-</div>
+        <div class="form-group">
+            <label>Package Name</label>
+            <input type="text" name="title" required>
+        </div>
 
-<!-- ROW 2 -->
-<div class="form-row">
-
-    <div class="form-group">
-
-        <label>Tour Category</label>
-
-        <select name="tour_category" id="tour-category">
-
-            <option value="">-- Select Category --</option>
-
-            <?php while($category = mysqli_fetch_assoc($tourCategoryQuery)) { ?>
-
-                <option value="<?= $category['tour_category_id']; ?>">
-                    <?= $category['tour_category_name']; ?>
-                </option>
-
-            <?php } ?>
-
-        </select>
-
-    </div>
-
-    <div class="form-group" id="country-group" style="display:none;">
-
-        <label>Country</label>
-
-        <select name="country_id" id="country-select">
-
-            <option value="">-- Select Country --</option>
-
-            <?php while($country = mysqli_fetch_assoc($countryQuery)) { ?>
-
-                <option value="<?= $country['country_id']; ?>">
-                    <?= $country['country_name']; ?>
-                </option>
-
-            <?php } ?>
-
-        </select>
-
-    </div>
-
-</div>
-
-<!-- ROW 3 -->
-<div class="form-row">
-
-    <div class="form-group">
-
-        <label>Agency</label>
-
-        <select name="agency_id">
-
-            <option value="">-- Select Agency --</option>
-
-            <?php while($agency = mysqli_fetch_assoc($agencyQuery)) { ?>
-
-                <option value="<?= $agency['agency_id']; ?>">
-                    <?= $agency['agency_name']; ?>
-                </option>
-
-            <?php } ?>
-
-        </select>
-
-    </div>
-
-    <div class="form-group">
-
-        <label>Package Category</label>
-
-        <select name="package_category_id">
-
-            <option value="">-- Select Package Type --</option>
-
-            <?php while($packageCategory = mysqli_fetch_assoc($packageCategoryQuery)) { ?>
-
-                <option value="<?= $packageCategory['package_category_id']; ?>">
-                    <?= $packageCategory['category_name']; ?>
-                </option>
-
-            <?php } ?>
-
-        </select>
-
-    </div>
-
-</div>
-
-<h3>Package Price</h3>
-
-<div class="price-grid">
-
-    <div class="form-group">
-        <label>Adult Twin / Triple</label>
-        <input type="number" step="0.01" name="adult_twin_triple">
-    </div>
-
-    <div class="form-group">
-        <label>Single</label>
-        <input type="number" step="0.01" name="single_price">
-    </div>
-
-    <div class="form-group">
-        <label>Child Twin</label>
-        <input type="number" step="0.01" name="child_twin">
-    </div>
-
-    <div class="form-group">
-        <label>Child No Bed</label>
-        <input type="number" step="0.01" name="child_no_bed">
-    </div>
-
-    <div class="form-group">
-        <label>Child With Bed</label>
-        <input type="number" step="0.01" name="child_with_bed">
-    </div>
-
-    <div class="form-group">
-        <label>Infant</label>
-        <input type="number" step="0.01" name="infant_price">
-    </div>
-
-</div>
-
-<!-- EXTRA -->
-<div class="form-row">
-
-    <div class="form-group">
-        <label>Deposit Per Pax</label>
-        <input type="number" step="0.01" name="deposit">
-    </div>
-
-    <div class="form-group">
-        <label>Flight Details</label>
-        <textarea name="flight_details" rows="4"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label>Minimum Pax</label>
-        <input type="number" name="min_pax">
-    </div>
-
-</div>
-
-<!-- TRAVEL DATE -->
-<div class="form-group">
-
-    <label>Travel Dates</label>
-
-    <div id="travel-date-container">
-
-        <div class="travel-date-item">
-
-            <input type="date" name="travel_date[]">
-
-            <button type="button" class="remove-date-btn">
-                Remove
-            </button>
-
+        <div class="form-group">
+            <label>Duration</label>
+            <input type="text" name="duration" placeholder="Example: 5D4N" required>
         </div>
 
     </div>
 
-    <button type="button" id="add-date-btn">
-        + Add Date
-    </button>
+    <div class="form-row">
+
+        <div class="form-group">
+            <label>Tour Category</label>
+            <select name="tour_category" id="tour-category">
+                <option value="">-- Select Category --</option>
+                <?php while($category = mysqli_fetch_assoc($tourCategoryQuery)) { ?>
+                    <option value="<?= $category['tour_category_id']; ?>">
+                        <?= $category['tour_category_name']; ?>
+                    </option>
+                <?php } ?>
+            </select>
+        </div>
+
+        <div class="form-group" id="country-group" style="display:none;">
+            <label>Country</label>
+            <select name="country_id" id="country-select">
+                <option value="">-- Select Country --</option>
+                <?php while($country = mysqli_fetch_assoc($countryQuery)) { ?>
+                    <option value="<?= $country['country_id']; ?>">
+                        <?= $country['country_name']; ?>
+                    </option>
+                <?php } ?>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="form-row">
+
+        <div class="form-group">
+            <label>Agency</label>
+            <select name="agency_id">
+                <option value="">-- Select Agency --</option>
+                <?php while($agency = mysqli_fetch_assoc($agencyQuery)) { ?>
+                    <option value="<?= $agency['agency_id']; ?>">
+                        <?= $agency['agency_name']; ?>
+                    </option>
+                <?php } ?>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Package Category</label>
+            <select name="package_category_id">
+                <option value="">-- Select Package Type --</option>
+                <?php while($packageCategory = mysqli_fetch_assoc($packageCategoryQuery)) { ?>
+                    <option value="<?= $packageCategory['package_category_id']; ?>">
+                        <?= $packageCategory['category_name']; ?>
+                    </option>
+                <?php } ?>
+            </select>
+        </div>
+
+    </div>
 
 </div>
 
-<!-- HIGHLIGHT -->
-<div class="form-group">
 
-    <label>Highlight Places</label>
+<!-- ===================== PRICE ===================== -->
+<div class="form-section">
+
+    <h3>Package Price</h3>
+
+    <div class="price-grid">
+
+        <div class="form-group">
+            <label>Adult Twin / Triple</label>
+            <input type="number" step="0.01" name="adult_twin_triple">
+        </div>
+
+        <div class="form-group">
+            <label>Single</label>
+            <input type="number" step="0.01" name="single_price">
+        </div>
+
+        <div class="form-group">
+            <label>Child Twin</label>
+            <input type="number" step="0.01" name="child_twin">
+        </div>
+
+        <div class="form-group">
+            <label>Child No Bed</label>
+            <input type="number" step="0.01" name="child_no_bed">
+        </div>
+
+        <div class="form-group">
+            <label>Child With Bed</label>
+            <input type="number" step="0.01" name="child_with_bed">
+        </div>
+
+        <div class="form-group">
+            <label>Infant</label>
+            <input type="number" step="0.01" name="infant_price">
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ===================== EXTRA INFO ===================== -->
+<div class="form-section">
+
+    <h3>Extra Information</h3>
+
+    <div class="form-row">
+
+        <div class="form-group">
+            <label>Deposit Per Pax</label>
+            <input type="number" step="0.01" name="deposit">
+        </div>
+
+        <div class="form-group">
+            <label>Minimum Pax</label>
+            <input type="number" name="min_pax">
+        </div>
+
+    </div>
+
+    <div class="form-group full-width">
+        <label>Flight Details</label>
+        <textarea name="flight_details" rows="4"></textarea>
+    </div>
+
+</div>
+
+
+<!-- ===================== TRAVEL DATES ===================== -->
+<div class="form-section">
+
+    <h3>Travel Dates</h3>
+
+    <div id="travel-date-container">
+
+        <div class="travel-date-item">
+            <input type="date" name="travel_date[]">
+            <button type="button" class="remove-date-btn">Remove</button>
+        </div>
+
+    </div>
+
+    <button type="button" id="add-date-btn">+ Add Date</button>
+
+</div>
+
+
+<!-- ===================== HIGHLIGHTS ===================== -->
+<div class="form-section">
+
+    <h3>Highlight Places</h3>
 
     <div id="highlight-container">
 
         <div class="highlight-item">
 
             <input type="text" name="highlight_name[]" placeholder="Place name">
-
             <input type="file" name="highlight_image[]">
 
-            <button type="button" class="remove-highlight-btn">
-                Remove
-            </button>
+            <button type="button" class="remove-highlight-btn">Remove</button>
 
         </div>
 
     </div>
 
-    <button type="button" id="add-highlight-btn">
-        + Add Highlight
-    </button>
+    <button type="button" id="add-highlight-btn">+ Add Highlight</button>
 
 </div>
 
-<!-- INCLUDED -->
-<div class="included-row">
 
-    <!-- FULLBOARD -->
-    <div class="included-box">
+<!-- ===================== INCLUDED ===================== -->
+<div class="form-section">
 
-        <h4>Fullboard</h4>
+    <h3>Package Includes</h3>
 
-        <div id="fullboard-container"></div>
+    <div class="included-row">
 
-        <button type="button" onclick="addPoint('fullboard')">
-            + Add Point
-        </button>
+        <div class="included-box">
+            <h4>Fullboard</h4>
+            <div id="fullboard-container"></div>
+            <button type="button" onclick="addPoint('fullboard')">+ Add Point</button>
+        </div>
 
-    </div>
-
-    <!-- HALFB0ARD -->
-    <div class="included-box">
-
-        <h4>Halfboard</h4>
-
-        <div id="halfboard-container"></div>
-
-        <button type="button" onclick="addPoint('halfboard')">
-            + Add Point
-        </button>
+        <div class="included-box">
+            <h4>Halfboard</h4>
+            <div id="halfboard-container"></div>
+            <button type="button" onclick="addPoint('halfboard')">+ Add Point</button>
+        </div>
 
     </div>
 
 </div>
 
-<!-- EXCLUDED -->
-<div class="form-group">
 
-    <label>Excluded</label>
+<!-- ===================== EXCLUDED ===================== -->
+<div class="form-section">
 
-    <textarea name="excluded" rows="4"></textarea>
+    <h3>Excluded</h3>
 
-</div>
+    <div class="included-box excluded-box">
 
-<!-- FINAL -->
-<div class="form-row">
+        <div id="excluded-container"></div>
 
-    <div class="form-group">
-
-        <label>Upload Itinerary File</label>
-
-        <input type="file" name="itinerary_file">
-
-    </div>
-
-    <div class="form-group">
-
-        <label>Status</label>
-
-        <select name="status">
-
-            <option value="">-- Select Status --</option>
-
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-
-        </select>
-
-    </div>
-
-    <div class="form-group">
-
-        <label>Main Image</label>
-
-        <input type="file" name="main_image" accept="image/*">
+        <button type="button" onclick="addPoint('excluded')">+ Add Point</button>
 
     </div>
 
 </div>
 
+
+<!-- ===================== FINAL ===================== -->
+<div class="form-section">
+
+    <h3>Final Setup</h3>
+
+    <div class="form-row">
+
+        <div class="form-group">
+            <label>Upload Itinerary File</label>
+            <input type="file" name="itinerary_file">
+        </div>
+
+        <div class="form-group">
+            <label>Status</label>
+            <select name="status">
+                <option value="">-- Select Status --</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Main Image</label>
+            <input type="file" name="main_image" accept="image/*">
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- SUBMIT -->
 <button type="submit" name="submit_package">
     Add Package
 </button>

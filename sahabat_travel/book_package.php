@@ -244,7 +244,7 @@ function showStep(index) {
 }
 
 function updateProgressLine() {
-    const percent = (currentStep / (steps.length - 1)) * 100;
+    const percent = (currentStep / (steps.length - 1)) * 75;
     document.getElementById("progressLine").style.width = percent + "%";
 }
 
