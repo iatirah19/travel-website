@@ -6,7 +6,7 @@ if ($conn->connect_error) {
 }
 
 // 2. Ambil data dari table 'reviews'
-$sql = "SELECT comment, rating FROM reviews";
+$sql = "SELECT name, comment, rating FROM reviews";
 $result = $conn->query($sql);
 
 $reviews_data = [];
@@ -101,7 +101,7 @@ $json_reviews = json_encode($reviews_data);
             const dotsContainer = document.getElementById('dots-container');
             
             if (testimonials.length === 0) {
-                display.innerHTML = "<p>Tiada testimoni setakat ini.</p>";
+                display.innerHTML = "<p>Tiada review setakat ini.</p>";
                 return;
             }
 
@@ -110,7 +110,7 @@ $json_reviews = json_encode($reviews_data);
             // Render Card Content
             display.innerHTML = `
                 <div class="quote-content">
-                    <p class="message">"${data.review_text}"</p>
+                    <p class="message">"${data.comment}"</p>
                     <div class="stars">${data.stars_html}</div>
                 </div>
                 <div class="client-info">

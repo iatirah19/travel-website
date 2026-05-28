@@ -32,10 +32,10 @@ if (isset($_POST['add_review'])) {
 
     $name = $_POST['name'];
     $rating = $_POST['rating'];
-    $comment = $_POST['review_text'];
+    $comment = $_POST['comment'];
 
     mysqli_query($conn, "
-        INSERT INTO reviews (name, rating, review_text, created_at)
+        INSERT INTO reviews (name, rating, comment, created_at)
         VALUES ('$name', '$rating', '$comment', NOW())
     ");
 
@@ -143,69 +143,136 @@ if (isset($_POST['add_review'])) {
 <!-- OVERLAY -->
 <div class="overlay" id="overlay"></div>
 
+<!-- PAGE HEADER -->
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Manage Review
+        </h1>
+
+        <p>
+            Dashboard > Review
+        </p>
+
+    </div>
+
+</div>
+
 <div class="main-wrapper">
-    
-    <form method="POST" class="review-form">
-        <h2>💬 Add Review</h2>
-        
-        <input type="text" name="name" placeholder="Nama Pelanggan" required>
 
-        <select name="rating" required>
-            <option value="">Pilih Rating</option>
-            <option value="5">⭐⭐⭐⭐⭐</option>
-            <option value="4">⭐⭐⭐⭐</option>
-            <option value="3">⭐⭐⭐</option>
-            <option value="2">⭐⭐</option>
-            <option value="1">⭐</option>
-        </select>
+    <!-- LEFT -->
+    <div class="left-section">
 
-        <textarea name="review_text" placeholder="Tulis komen anda di sini..." required></textarea>
+        <form method="POST" class="review-form">
 
-        <button type="submit" name="add_review">Hantar Komen</button>
-    </form>
+            <h2>💬 Add Review</h2>
 
-    <hr style="border: 0; height: 1px; background: #ddd; margin: 30px 0;">
+            <input type="text" name="name" placeholder="Nama Pelanggan" required>
 
-    <div class="reviews-list-container">
-		<h2>⭐ Semua Review Pelanggan</h2>
+            <select name="rating" required>
+                <option value="">Pilih Rating</option>
+                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="1">⭐</option>
+            </select>
 
-		<table class="review-table">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Rating</th>
-					<th>Message</th>
-                    <th>Action</th>
-				</tr>
-			</thead>
+            <textarea name="comment" placeholder="Tulis komen anda di sini..." required></textarea>
 
-			<tbody>
-			<?php
-			$reviews = mysqli_query($conn, "SELECT * FROM reviews ORDER BY created_at DESC");
+            <button type="submit" name="add_review">Hantar Komen</button>
 
-			while ($row = mysqli_fetch_assoc($reviews)) {
-			?>
-				<tr>
-					<td><?php echo htmlspecialchars($row['name']); ?></td>
+        </form>
 
-					<td class="stars">
-						<?php echo str_repeat("⭐", (int)$row['rating']); ?>
-					</td>
+    </div>
 
-					<td><?php echo nl2br(htmlspecialchars($row['review_text'])); ?></td>
+    <!-- RIGHT -->
+    <div class="right-section">
 
-                    <td>
-                        <a href="?delete_id=<?php echo $row['review_id']; ?>"
-                        onclick="return confirm('Are you sure want to delete this review?')"
-                        class="btn-delete">
-                        Delete
-                        </a>
-                    </td>
-				</tr>
-			<?php } ?>
-			</tbody>
-		</table>
-	</div>
+        <div class="reviews-list-container">
+
+            <h2>⭐ Semua Review Pelanggan</h2>
+
+            <div class="table-container">
+
+                <table class="review-table">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Rating</th>
+                            <th>Message</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <?php
+                    $reviews = mysqli_query($conn, "SELECT * FROM reviews ORDER BY created_at DESC");
+
+                    if(mysqli_num_rows($reviews) > 0){
+
+                        while ($row = mysqli_fetch_assoc($reviews)) {
+                    ?>
+
+                        <tr>
+
+                            <td>
+                                <?php echo htmlspecialchars($row['name']); ?>
+                            </td>
+
+                            <td class="stars">
+                                <?php echo str_repeat("⭐", (int)$row['rating']); ?>
+                            </td>
+
+                            <td class="message-column">
+                                <?php echo nl2br(htmlspecialchars($row['comment'])); ?>
+                            </td>
+
+                            <td>
+                                <a href="?delete_id=<?php echo $row['review_id']; ?>"
+                                   onclick="return confirm('Are you sure want to delete this review?')"
+                                   class="btn-delete">
+
+                                    Delete
+
+                                </a>
+                            </td>
+
+                        </tr>
+
+                    <?php
+
+                        }
+
+                    } else {
+
+                    ?>
+
+                        <tr>
+
+                            <td colspan="4" style="text-align:center; padding:20px;">
+
+                                No reviews found
+
+                            </td>
+
+                        </tr>
+
+                    <?php } ?>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 <script>
