@@ -117,7 +117,7 @@ if (isset($_POST['add_review'])) {
         </li>
 
         <li>
-            <a href="#">
+            <a href="auth.php">
 
                 <i class="fa-solid fa-user-plus"></i>
 

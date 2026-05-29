@@ -36,6 +36,39 @@ if (!empty($search)) {
 }
 
 $result = mysqli_query($conn, $sql);
+
+/* DELETE COUNTRY */
+if (isset($_GET['delete'])) {
+
+    $delete_id = intval($_GET['delete']);
+
+    // GET IMAGE FIRST (to delete file)
+    $getImg = mysqli_query($conn, "SELECT country_image FROM countries WHERE country_id='$delete_id'");
+    $imgRow = mysqli_fetch_assoc($getImg);
+
+    if ($imgRow) {
+
+        $image = $imgRow['country_image'];
+
+        // clean path
+        $image = str_replace('uploads/', '', $image);
+        $path = "../uploads/" . $image;
+
+        // delete file
+        if (!empty($image) && file_exists($path)) {
+            unlink($path);
+        }
+
+        // delete DB
+        mysqli_query($conn, "DELETE FROM countries WHERE country_id='$delete_id'");
+    }
+
+    echo "<script>
+        alert('Country berjaya dipadam!');
+        window.location.href='admin_manage_country.php';
+    </script>";
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -70,7 +103,7 @@ $result = mysqli_query($conn, $sql);
         <li><a href="admin_manage_country.php"><i class="fa-solid fa-earth-asia"></i> Manage Country</a></li>
         <li><a href="admin_manage_package.php"><i class="fa-solid fa-box"></i> Manage Package</a></li>
         <li><a href="admin_manage_review.php"><i class="fa-solid fa-star"></i> Manage Review</a></li>
-        <li><a href="#"><i class="fa-solid fa-user-plus"></i> Add Admin</a></li>
+        <li><a href="auth.php"><i class="fa-solid fa-user-plus"></i> Add Admin</a></li>
         <li><a href="#" onclick="confirmLogout(event)"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
     </ul>
 
@@ -143,8 +176,8 @@ $result = mysqli_query($conn, $sql);
                             <i class="fa-solid fa-pen"></i>
                         </a>
 
-                        <a href="delete_country.php?id=<?php echo $row['country_id']; ?>"
-                           onclick="return confirm('Are you sure want to delete this country?')">
+                        <a href="admin_manage_country.php?delete=<?php echo $row['country_id']; ?>"
+                            onclick="return confirm('Are you sure want to delete this country?')">
                             <i class="fa-solid fa-trash"></i>
                         </a>
 

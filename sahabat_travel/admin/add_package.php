@@ -160,44 +160,62 @@ if (isset($_POST['submit_package'])) {
     | PACKAGE INCLUDES
     |--------------------------------------------------------------------------
     */
-
-    if (!empty($_POST['fullboard_points'])) {
-        foreach ($_POST['fullboard_points'] as $point) {
+    
+    if (!empty($_POST['fullboard'])) {
+    
+        foreach ($_POST['fullboard'] as $point) {
+    
             $point = mysqli_real_escape_string($conn, trim($point));
+    
             if ($point) {
+    
                 mysqli_query($conn, "
-                    INSERT INTO package_include (package_id, include_type, description)
-                    VALUES ('$package_id', 'Fullboard', '$point')
+                    INSERT INTO package_include
+                    (package_id, include_type, description)
+                    VALUES
+                    ('$package_id', 'Fullboard', '$point')
                 ");
             }
         }
     }
-
-    if (!empty($_POST['halfboard_points'])) {
-        foreach ($_POST['halfboard_points'] as $point) {
+    
+    if (!empty($_POST['halfboard'])) {
+    
+        foreach ($_POST['halfboard'] as $point) {
+    
             $point = mysqli_real_escape_string($conn, trim($point));
+    
             if ($point) {
+    
                 mysqli_query($conn, "
-                    INSERT INTO package_include (package_id, include_type, description)
-                    VALUES ('$package_id', 'Halfboard', '$point')
+                    INSERT INTO package_include
+                    (package_id, include_type, description)
+                    VALUES
+                    ('$package_id', 'Halfboard', '$point')
                 ");
             }
         }
     }
-
+    
     /*
     |--------------------------------------------------------------------------
-    | PACKAGE EXCLUDES (FIXED PART)
+    | PACKAGE EXCLUDES
     |--------------------------------------------------------------------------
     */
-
-    if (!empty($_POST['exclude_points'])) {
-        foreach ($_POST['exclude_points'] as $point) {
+    
+    if (!empty($_POST['excluded'])) {
+    
+        foreach ($_POST['excluded'] as $point) {
+    
             $point = mysqli_real_escape_string($conn, trim($point));
+    
             if ($point) {
+    
                 mysqli_query($conn, "
-                    INSERT INTO package_exclude (package_id, description)
-                    VALUES ('$package_id', '$point')
+                    INSERT INTO package_exclude
+                    (package_id, description)
+                    VALUES
+                    ('$package_id', '$point')
                 ");
             }
         }
@@ -224,9 +242,9 @@ if (isset($_POST['submit_package'])) {
     |--------------------------------------------------------------------------
     */
 
-    if (!empty($_POST['highlight_title'])) {
+    if (!empty($_POST['highlight_name'])) {
 
-        foreach ($_POST['highlight_title'] as $key => $title) {
+        foreach ($_POST['highlight_name'] as $key => $title) {
 
             $title = mysqli_real_escape_string($conn, trim($title));
 
@@ -242,7 +260,7 @@ if (isset($_POST['submit_package'])) {
                 mysqli_query($conn, "
                     INSERT INTO package_highlights (
                         package_id,
-                        highlight_title,
+                        highlight_name,
                         highlight_image
                     )
                     VALUES (
@@ -265,355 +283,485 @@ if (isset($_POST['submit_package'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Package - Sahabat International Travel Sdn Bhd</title>
     <link rel="icon" type="image/png" href="../picture/LOGO.png">
     <link rel="stylesheet" href="add_package.css">
 </head>
 <body>
 
-<h1 class="page-title">Add New Package</h1>
+<div class="top-header">
+        <h1>Add Package</h1>
+        <p>Dashboard > Package > Add Package</p>
+    </div>
 
-<form action="" method="POST" enctype="multipart/form-data">
+<div class="layout">
 
-<!-- ===================== BASIC INFO ===================== -->
-<div class="form-section">
+    <!-- LEFT SIDEBAR STEP -->
+    <div class="step-sidebar">
 
-    <h3>Basic Information</h3>
-
-    <div class="form-row">
-
-        <div class="form-group">
-            <label>Package Name</label>
-            <input type="text" name="title" required>
+        <div class="step active" data-step="1">
+            <span>1</span> Basic Info
         </div>
 
-        <div class="form-group">
-            <label>Duration</label>
-            <input type="text" name="duration" placeholder="Example: 5D4N" required>
+        <div class="step" data-step="2">
+            <span>2</span> Pricing
+        </div>
+
+        <div class="step" data-step="3">
+            <span>3</span> Extra Info
+        </div>
+
+        <div class="step" data-step="4">
+            <span>4</span> Travel & Highlight
+        </div>
+
+        <div class="step" data-step="5">
+            <span>5</span> Include / Exclude
+        </div>
+
+        <div class="step" data-step="6">
+            <span>6</span> Final Info
         </div>
 
     </div>
 
-    <div class="form-row">
+    <!-- RIGHT CONTENT -->
+    <div class="form-content">
 
-        <div class="form-group">
-            <label>Tour Category</label>
-            <select name="tour_category" id="tour-category">
-                <option value="">-- Select Category --</option>
-                <?php while($category = mysqli_fetch_assoc($tourCategoryQuery)) { ?>
-                    <option value="<?= $category['tour_category_id']; ?>">
-                        <?= $category['tour_category_name']; ?>
-                    </option>
-                <?php } ?>
-            </select>
-        </div>
+        <form action="" method="POST" enctype="multipart/form-data">
 
-        <div class="form-group" id="country-group" style="display:none;">
-            <label>Country</label>
-            <select name="country_id" id="country-select">
-                <option value="">-- Select Country --</option>
-                <?php while($country = mysqli_fetch_assoc($countryQuery)) { ?>
-                    <option value="<?= $country['country_id']; ?>">
-                        <?= $country['country_name']; ?>
-                    </option>
-                <?php } ?>
-            </select>
-        </div>
+            <!-- STEP 1 -->
+            <div class="form-step active-step" data-step="1">
+
+                <div class="form-section">
+                    <h3>Basic Information</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Package Name</label>
+                            <input type="text" name="title" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Duration</label>
+                            <input type="text" name="duration" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Tour Category</label>
+                            <select name="tour_category" id="tour-category">
+                                <option value="">-- Select Category --</option>
+                                <?php while($category = mysqli_fetch_assoc($tourCategoryQuery)) { ?>
+                                    <option value="<?= $category['tour_category_id']; ?>">
+                                        <?= $category['tour_category_name']; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="country-group" style="display:none;">
+                            <label>Country</label>
+                            <select name="country_id" id="country-select">
+                                <option value="">-- Select Country --</option>
+                                <?php while($country = mysqli_fetch_assoc($countryQuery)) { ?>
+                                    <option value="<?= $country['country_id']; ?>">
+                                        <?= $country['country_name']; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Agency</label>
+                            <select name="agency_id">
+                                <option value="">-- Select Agency --</option>
+                                <?php while($agency = mysqli_fetch_assoc($agencyQuery)) { ?>
+                                    <option value="<?= $agency['agency_id']; ?>">
+                                        <?= $agency['agency_name']; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Package Category</label>
+                            <select name="package_category_id">
+                                <option value="">-- Select Package Type --</option>
+                                <?php while($packageCategory = mysqli_fetch_assoc($packageCategoryQuery)) { ?>
+                                    <option value="<?= $packageCategory['package_category_id']; ?>">
+                                        <?= $packageCategory['category_name']; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="next-btn">Next</button>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="form-step" data-step="2">
+
+                <div class="form-section">
+                    <h3>Package Price</h3>
+
+                    <div class="price-grid">
+
+                        <div class="form-group">
+                            <label for="adult_twin_triple">Adult Twin</label>
+                            <input type="number" id="adult_twin_triple" name="adult_twin_triple">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="single_price">Single</label>
+                            <input type="number" id="single_price" name="single_price">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="child_twin">Child Twin</label>
+                            <input type="number" id="child_twin" name="child_twin">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="child_no_bed">Child No Bed</label>
+                            <input type="number" id="child_no_bed" name="child_no_bed">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="child_with_bed">Child With Bed</label>
+                            <input type="number" id="child_with_bed" name="child_with_bed">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="infant_price">Infant</label>
+                            <input type="number" id="infant_price" name="infant_price">
+                        </div>
+
+                    </div>
+                </div>
+
+                <button type="button" class="back-btn">Back</button>
+                <button type="button" class="next-btn">Next</button>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="form-step" data-step="3">
+
+                <div class="form-section">
+                    <h3>Extra Information</h3>
+
+                    <div class="form-group">
+                        <label for="deposit">Deposit</label>
+                        <input type="number" id="deposit" name="deposit">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="min_pax">Min Pax</label>
+                        <input type="number" id="min_pax" name="min_pax">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="flight_details">Flight Details</label>
+                        <textarea id="flight_details" name="flight_details"></textarea>
+                    </div>
+
+                </div>
+
+                <button type="button" class="back-btn">Back</button>
+                <button type="button" class="next-btn">Next</button>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="form-step" data-step="4">
+
+                <!-- TRAVEL DATES -->
+                <div class="form-section">
+                    <h3>Travel Dates</h3>
+
+                    <div id="travel-date-container">
+                        <div class="travel-date-item">
+                            <input type="date" name="travel_date[]">
+                            <button type="button" class="remove-date-btn">Remove</button>
+                        </div>
+                    </div>
+
+                    <button type="button" id="add-date-btn">+ Add Date</button>
+                </div>
+
+                <!-- HIGHLIGHTS -->
+                <div class="form-section">
+                    <h3>Highlights</h3>
+
+                    <div id="highlight-container">
+                        <div class="highlight-item">
+                            <input type="text" name="highlight_name[]" placeholder="Highlight Name">
+                            <input type="file" name="highlight_image[]">
+                            <button type="button" class="remove-highlight-btn">Remove</button>
+                        </div>
+                    </div>
+
+                    <button type="button" id="add-highlight-btn">+ Add Highlight</button>
+                </div>
+
+                <button type="button" class="back-btn">Back</button>
+                <button type="button" class="next-btn">Next</button>
+            </div>
+
+            <!-- STEP 5 -->
+            <div class="form-step" data-step="5">
+
+                <div class="form-section">
+                    <h3>Included / Excluded</h3>
+
+                    <!-- FULLBOARD -->
+                    <h4>Fullboard</h4>
+                    <div id="fullboard-container">
+                        <div class="point-item">
+                            <input type="text" name="fullboard[]" placeholder="Fullboard point">
+                            <button type="button" class="remove-point-btn">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-point-btn" data-target="fullboard-container">
+                        + Add Fullboard
+                    </button>
+
+                    <hr>
+
+                    <!-- HALFOARD -->
+                    <h4>Halfboard</h4>
+                    <div id="halfboard-container">
+                        <div class="point-item">
+                            <input type="text" name="halfboard[]" placeholder="Halfboard point">
+                            <button type="button" class="remove-point-btn">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-point-btn" data-target="halfboard-container">
+                        + Add Halfboard
+                    </button>
+
+                    <hr>
+
+                    <!-- EXCLUDED -->
+                    <h4>Excluded</h4>
+                    <div id="excluded-container">
+                        <div class="point-item">
+                            <input type="text" name="excluded[]" placeholder="Excluded point">
+                            <button type="button" class="remove-point-btn">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-point-btn" data-target="excluded-container">
+                        + Add Excluded
+                    </button>
+
+                </div>
+
+                <button type="button" class="back-btn">Back</button>
+                <button type="button" class="next-btn">Next</button>
+            </div>
+
+            <!-- STEP 6 -->
+            <div class="form-step" data-step="6">
+
+                <div class="form-section">
+                    <h3>Final Setup</h3>
+
+                    <!-- ITINERARY FILE -->
+                    <div class="form-group">
+                        <label for="itinerary_file">Itinerary File</label>
+                        <input type="file" id="itinerary_file" name="itinerary_file">
+                    </div>
+
+                    <!-- MAIN IMAGE -->
+                    <div class="form-group">
+                        <label for="main_image">Main Image</label>
+                        <input type="file" id="main_image" name="main_image">
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status">
+                            <option value="">Select Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button type="button" class="back-btn">Back</button>
+
+                <button type="submit" name="submit_package" class="submit-btn">
+                    Submit Package
+                </button>
+            </div>
+
+        </form>
 
     </div>
-
-    <div class="form-row">
-
-        <div class="form-group">
-            <label>Agency</label>
-            <select name="agency_id">
-                <option value="">-- Select Agency --</option>
-                <?php while($agency = mysqli_fetch_assoc($agencyQuery)) { ?>
-                    <option value="<?= $agency['agency_id']; ?>">
-                        <?= $agency['agency_name']; ?>
-                    </option>
-                <?php } ?>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Package Category</label>
-            <select name="package_category_id">
-                <option value="">-- Select Package Type --</option>
-                <?php while($packageCategory = mysqli_fetch_assoc($packageCategoryQuery)) { ?>
-                    <option value="<?= $packageCategory['package_category_id']; ?>">
-                        <?= $packageCategory['category_name']; ?>
-                    </option>
-                <?php } ?>
-            </select>
-        </div>
-
-    </div>
-
 </div>
 
-
-<!-- ===================== PRICE ===================== -->
-<div class="form-section">
-
-    <h3>Package Price</h3>
-
-    <div class="price-grid">
-
-        <div class="form-group">
-            <label>Adult Twin / Triple</label>
-            <input type="number" step="0.01" name="adult_twin_triple">
-        </div>
-
-        <div class="form-group">
-            <label>Single</label>
-            <input type="number" step="0.01" name="single_price">
-        </div>
-
-        <div class="form-group">
-            <label>Child Twin</label>
-            <input type="number" step="0.01" name="child_twin">
-        </div>
-
-        <div class="form-group">
-            <label>Child No Bed</label>
-            <input type="number" step="0.01" name="child_no_bed">
-        </div>
-
-        <div class="form-group">
-            <label>Child With Bed</label>
-            <input type="number" step="0.01" name="child_with_bed">
-        </div>
-
-        <div class="form-group">
-            <label>Infant</label>
-            <input type="number" step="0.01" name="infant_price">
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ===================== EXTRA INFO ===================== -->
-<div class="form-section">
-
-    <h3>Extra Information</h3>
-
-    <div class="form-row">
-
-        <div class="form-group">
-            <label>Deposit Per Pax</label>
-            <input type="number" step="0.01" name="deposit">
-        </div>
-
-        <div class="form-group">
-            <label>Minimum Pax</label>
-            <input type="number" name="min_pax">
-        </div>
-
-    </div>
-
-    <div class="form-group full-width">
-        <label>Flight Details</label>
-        <textarea name="flight_details" rows="4"></textarea>
-    </div>
-
-</div>
-
-
-<!-- ===================== TRAVEL DATES ===================== -->
-<div class="form-section">
-
-    <h3>Travel Dates</h3>
-
-    <div id="travel-date-container">
-
-        <div class="travel-date-item">
-            <input type="date" name="travel_date[]">
-            <button type="button" class="remove-date-btn">Remove</button>
-        </div>
-
-    </div>
-
-    <button type="button" id="add-date-btn">+ Add Date</button>
-
-</div>
-
-
-<!-- ===================== HIGHLIGHTS ===================== -->
-<div class="form-section">
-
-    <h3>Highlight Places</h3>
-
-    <div id="highlight-container">
-
-        <div class="highlight-item">
-
-            <input type="text" name="highlight_name[]" placeholder="Place name">
-            <input type="file" name="highlight_image[]">
-
-            <button type="button" class="remove-highlight-btn">Remove</button>
-
-        </div>
-
-    </div>
-
-    <button type="button" id="add-highlight-btn">+ Add Highlight</button>
-
-</div>
-
-
-<!-- ===================== INCLUDED ===================== -->
-<div class="form-section">
-
-    <h3>Package Includes</h3>
-
-    <div class="included-row">
-
-        <div class="included-box">
-            <h4>Fullboard</h4>
-            <div id="fullboard-container"></div>
-            <button type="button" onclick="addPoint('fullboard')">+ Add Point</button>
-        </div>
-
-        <div class="included-box">
-            <h4>Halfboard</h4>
-            <div id="halfboard-container"></div>
-            <button type="button" onclick="addPoint('halfboard')">+ Add Point</button>
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ===================== EXCLUDED ===================== -->
-<div class="form-section">
-
-    <h3>Excluded</h3>
-
-    <div class="included-box excluded-box">
-
-        <div id="excluded-container"></div>
-
-        <button type="button" onclick="addPoint('excluded')">+ Add Point</button>
-
-    </div>
-
-</div>
-
-
-<!-- ===================== FINAL ===================== -->
-<div class="form-section">
-
-    <h3>Final Setup</h3>
-
-    <div class="form-row">
-
-        <div class="form-group">
-            <label>Upload Itinerary File</label>
-            <input type="file" name="itinerary_file">
-        </div>
-
-        <div class="form-group">
-            <label>Status</label>
-            <select name="status">
-                <option value="">-- Select Status --</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Main Image</label>
-            <input type="file" name="main_image" accept="image/*">
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- SUBMIT -->
-<button type="submit" name="submit_package">
-    Add Package
-</button>
-
-</form>
-
-<!-- JS -->
 <script>
 
 // ================================
-// TRAVEL DATE
+// STEP WIZARD SYSTEM (IMPROVED)
+// ================================
+
+let currentStep = 1;
+
+const steps = document.querySelectorAll(".form-step");
+const sidebarSteps = document.querySelectorAll(".step");
+
+function showStep(step) {
+
+    steps.forEach(s => s.classList.remove("active-step"));
+    sidebarSteps.forEach(s => s.classList.remove("active"));
+
+    const target = document.querySelector(`.form-step[data-step="${step}"]`);
+    const sidebar = document.querySelector(`.step[data-step="${step}"]`);
+
+    if (target) target.classList.add("active-step");
+    if (sidebar) sidebar.classList.add("active");
+
+    currentStep = step;
+}
+
+// init first step
+showStep(1);
+
+
+// ================================
+// NEXT / BACK BUTTON (FIXED)
+// ================================
+
+document.querySelectorAll(".next-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        if (currentStep < 6) showStep(currentStep + 1);
+    });
+});
+
+document.querySelectorAll(".back-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        if (currentStep > 1) showStep(currentStep - 1);
+    });
+});
+
+
+// ================================
+// SIDEBAR CLICK NAVIGATION
+// ================================
+
+sidebarSteps.forEach(step => {
+    step.addEventListener("click", () => {
+        const targetStep = parseInt(step.dataset.step);
+        if (!isNaN(targetStep)) showStep(targetStep);
+    });
+});
+
+
+// ================================
+// TRAVEL DATE (ADD / REMOVE)
 // ================================
 
 const travelContainer = document.getElementById("travel-date-container");
+const addDateBtn = document.getElementById("add-date-btn");
 
-document.getElementById("add-date-btn").addEventListener("click", function () {
+if (travelContainer && addDateBtn) {
 
-    const div = document.createElement("div");
+    addDateBtn.addEventListener("click", function () {
 
-    div.classList.add("travel-date-item");
+        const div = document.createElement("div");
+        div.classList.add("travel-date-item");
 
-    div.innerHTML = `
-        <input type="date" name="travel_date[]">
+        div.innerHTML = `
+            <input type="date" name="travel_date[]">
+            <button type="button" class="remove-date-btn">Remove</button>
+        `;
 
-        <button type="button" class="remove-date-btn">
-            Remove
-        </button>
-    `;
+        travelContainer.appendChild(div);
+    });
 
-    travelContainer.appendChild(div);
+    travelContainer.addEventListener("click", function (e) {
+        if (e.target.classList.contains("remove-date-btn")) {
+            e.target.parentElement.remove();
+        }
+    });
+}
 
-});
-
-travelContainer.addEventListener("click", function (e) {
-
-    if (e.target.classList.contains("remove-date-btn")) {
-        e.target.parentElement.remove();
-    }
-
-});
 
 // ================================
-// HIGHLIGHT
+// HIGHLIGHTS (ADD / REMOVE)
 // ================================
 
 const highlightContainer = document.getElementById("highlight-container");
+const addHighlightBtn = document.getElementById("add-highlight-btn");
 
-document.getElementById("add-highlight-btn").addEventListener("click", function () {
+if (highlightContainer && addHighlightBtn) {
 
-    const div = document.createElement("div");
+    addHighlightBtn.addEventListener("click", function () {
 
-    div.classList.add("highlight-item");
+        const div = document.createElement("div");
+        div.classList.add("highlight-item");
 
-    div.innerHTML = `
-        <input type="text" name="highlight_title[]" placeholder="Place name">
+        div.innerHTML = `
+            <input type="text" name="highlight_name[]" placeholder="Highlight Name">
+            <input type="file" name="highlight_image[]">
+            <button type="button" class="remove-highlight-btn">Remove</button>
+        `;
 
-        <input type="file" name="highlight_image[]">
+        highlightContainer.appendChild(div);
+    });
 
-        <button type="button" class="remove-highlight-btn">
-            Remove
-        </button>
-    `;
+    highlightContainer.addEventListener("click", function (e) {
+        if (e.target.classList.contains("remove-highlight-btn")) {
+            e.target.parentElement.remove();
+        }
+    });
+}
 
-    highlightContainer.appendChild(div);
-
-});
-
-highlightContainer.addEventListener("click", function (e) {
-
-    if (e.target.classList.contains("remove-highlight-btn")) {
-        e.target.parentElement.remove();
-    }
-
-});
 
 // ================================
-// TOUR CATEGORY
+// FULLBOARD / HALFB0ARD / EXCLUDED (FIXED CLEAN VERSION)
+// ================================
+
+document.querySelectorAll(".add-point-btn").forEach(btn => {
+
+    btn.addEventListener("click", function () {
+
+        const target = this.dataset.target;
+        const container = document.getElementById(target);
+
+        if (!container) return;
+
+        const type = target.replace("-container", "");
+
+        const div = document.createElement("div");
+        div.classList.add("point-item");
+
+        div.innerHTML = `
+            <input type="text" name="${type}[]" placeholder="Enter point">
+            <button type="button" class="remove-point-btn">Remove</button>
+        `;
+
+        container.appendChild(div);
+    });
+});
+
+document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("remove-point-btn")) {
+        e.target.parentElement.remove();
+    }
+});
+
+
+// ================================
+// TOUR CATEGORY (COUNTRY SHOW/HIDE)
 // ================================
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -622,7 +770,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const countryGroup = document.getElementById("country-group");
     const countrySelect = document.getElementById("country-select");
 
-    if (!tourCategory) return;
+    if (!tourCategory || !countryGroup || !countrySelect) return;
 
     tourCategory.addEventListener("change", function () {
 
@@ -634,40 +782,9 @@ document.addEventListener("DOMContentLoaded", function () {
             countryGroup.style.display = "none";
             countrySelect.value = "";
         }
-
     });
 
 });
-
-// ================================
-// FULLBOARD / HALFB0ARD
-// ================================
-
-function addPoint(type) {
-
-    let container = document.getElementById(type + "-container");
-
-    let div = document.createElement("div");
-
-    div.classList.add("point-item");
-
-    div.innerHTML = `
-        <input 
-            type="text" 
-            name="${type}_points[]" 
-            placeholder="Enter point"
-        >
-
-        <button 
-            type="button" 
-            onclick="this.parentElement.remove()"
-        >
-            X
-        </button>
-    `;
-
-    container.appendChild(div);
-}
 
 </script>
 

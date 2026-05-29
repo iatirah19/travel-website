@@ -163,7 +163,7 @@ if(isset($_GET['toggle_status_id'])){
         </li>
 
         <li>
-            <a href="#">
+            <a href="auth.php">
 
                 <i class="fa-solid fa-user-plus"></i>
 

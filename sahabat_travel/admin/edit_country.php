@@ -1,102 +1,148 @@
 <?php
 require '../db.php';
 
-/* =========================
-   FUNCTION SLUG
-========================= */
-function createSlug($string) {
-    $slug = strtolower(trim($string));
-    $slug = preg_replace('/[^a-z0-9-]+/', '-', $slug);
-    $slug = preg_replace('/-+/', '-', $slug);
-    return trim($slug, '-');
+session_start();
+
+if ($_SESSION['role'] != 'admin') {
+    header("Location: homepage.php");
+    exit();
 }
 
-/* =========================
-   GET OLD DATA
-========================= */
+// CHECK ID
 if (!isset($_GET['id'])) {
-    die("Invalid request");
+    die("Country ID not found.");
 }
 
-$id = (int)$_GET['id'];
+$country_id = intval($_GET['id']);
 
-$sql = "SELECT * FROM countries WHERE country_id = $id";
-$result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result);
+// FETCH COUNTRY
+$query = mysqli_query($conn, "SELECT * FROM countries WHERE country_id = '$country_id'");
+$country = mysqli_fetch_assoc($query);
 
-if (!$row) {
-    die("Country not found");
+if (!$country) {
+    die("Country not found.");
 }
 
-/* =========================
-   UPDATE PROCESS
-========================= */
+
+/*
+|--------------------------------------------------------------------------
+| IMAGE PATH (FIX FOR DISPLAY)
+|--------------------------------------------------------------------------
+*/
+$image = $country['country_image'] ?? '';
+
+// remove "uploads/" if accidentally stored in DB
+$image = str_replace('uploads/', '', $image);
+
+// build path
+$imagePath = "../uploads/" . $image;
+
+// fallback image
+if (empty($image) || !file_exists($imagePath)) {
+    $imagePath = "../uploads/default.png";
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| UPDATE COUNTRY
+|--------------------------------------------------------------------------
+*/
 if (isset($_POST['update_country'])) {
 
     $name = mysqli_real_escape_string($conn, $_POST['country_name']);
-    $slug = createSlug($name);
 
-    $oldName = $row['country_name'];
-    $oldImage = $row['country_image'];
+    // generate slug
+    $slug = strtolower(trim($name));
+    $slug = preg_replace('/[^a-z0-9-]+/', '-', $slug);
+    $slug = trim($slug, '-');
 
-    $newImageUploaded = !empty($_FILES['image']['name']);
+    // current data
+    $oldName = $country['country_name'];
+    $oldSlug = $country['country_slug'];
+    $oldImage = $country['country_image'];
 
-    $changes = false;
-    $finalImage = $oldImage;
+    // default image
+    $newImageName = $oldImage;
+    $imageChanged = false;
 
-    // check nama berubah
-    if ($name != $oldName) {
-        $changes = true;
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | HANDLE IMAGE UPLOAD
+    |--------------------------------------------------------------------------
+    */
+    if (!empty($_FILES['image']['name'])) {
 
-    // check image baru
-    if ($newImageUploaded) {
-
-        $image = time() . "_" . basename($_FILES['image']['name']);
+        $image = $_FILES['image']['name'];
         $tmp = $_FILES['image']['tmp_name'];
 
-        $folder = "../uploads/" . $image;
+        $ext = strtolower(pathinfo($image, PATHINFO_EXTENSION));
 
-        if (move_uploaded_file($tmp, $folder)) {
+        $allowed = ['jpg', 'jpeg', 'png', 'webp'];
 
-            // delete old image
-            if (!empty($oldImage) && file_exists("../uploads/" . $oldImage)) {
-                unlink("../uploads/" . $oldImage);
-            }
-
-            $finalImage = $image;
-            $changes = true;
-
-        } else {
-
-            echo "<script>alert('Upload image gagal!');</script>";
+        if (!in_array($ext, $allowed)) {
+            echo "<script>alert('File type tidak dibenarkan');</script>";
             exit;
         }
+
+        $newImageName = time() . "_" . preg_replace('/[^a-zA-Z0-9.]/', '_', $image);
+
+        move_uploaded_file($tmp, "../uploads/" . $newImageName);
+
+        // delete old image
+        if (!empty($oldImage)) {
+
+            $oldImageClean = str_replace('uploads/', '', $oldImage);
+            $oldPath = "../uploads/" . $oldImageClean;
+
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+        }
+
+        $imageChanged = true;
     }
 
-    // kalau ada perubahan
-    if ($changes) {
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK IF ANY CHANGE
+    |--------------------------------------------------------------------------
+    */
+    $dataChanged =
+        ($name != $oldName) ||
+        ($slug != $oldSlug) ||
+        $imageChanged;
 
-        $sql = "UPDATE countries 
-                SET country_name='$name',
-                    country_slug='$slug',
-                    country_image='$finalImage'
-                WHERE country_id=$id";
+    if (!$dataChanged) {
 
-        mysqli_query($conn, $sql);
-
-        echo "<script>
-                alert('Country berjaya diupdate!');
-                window.location.href='admin_manage_country.php';
-              </script>";
-
-    } else {
-
-        echo "<script>
-                alert('Tiada perubahan berlaku');
-                window.location.href='admin_manage_country.php';
-              </script>";
+        echo "
+        <script>
+            alert('Tiada perubahan untuk country ini.');
+            window.location.href='admin_manage_country.php';
+        </script>
+        ";
+        exit;
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE DATABASE
+    |--------------------------------------------------------------------------
+    */
+    $sql = "UPDATE countries SET
+            country_name = '$name',
+            country_slug = '$slug',
+            country_image = '$newImageName'
+            WHERE country_id = '$country_id'";
+
+    mysqli_query($conn, $sql);
+
+    echo "
+    <script>
+        alert('Country berjaya dikemaskini!');
+        window.location.href='admin_manage_country.php';
+    </script>
+    ";
 }
 ?>
 
@@ -104,50 +150,157 @@ if (isset($_POST['update_country'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Country - Sahabat International Travel Sdn Bhd</title>
-
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Country - Sahabat International Travel</title>
     <link rel="icon" type="image/png" href="../picture/LOGO.png">
     <link rel="stylesheet" href="edit_country.css">
 </head>
 
 <body>
 
-<div class="card">
+<div class="page-wrapper">
 
-    <h2>✏️ Edit Country</h2>
+    <div class="top-header">
+        <h1>Edit Country</h1>
+        <p>Dashboard > Countries > Edit Country</p>
+    </div>
 
-    <form method="POST" enctype="multipart/form-data">
+    <div class="form-card">
 
-        <label>Country Name</label>
+        <form method="POST" enctype="multipart/form-data">
 
-        <input type="text"
-               name="country_name"
-               value="<?php echo htmlspecialchars($row['country_name']); ?>"
-               required>
+            <!-- LEFT -->
+            <div class="left-side">
 
-        <label>Current Image</label><br>
+                <h3>Country Image</h3>
 
-        <img src="../uploads/<?php echo $row['country_image']; ?>"
-             width="100"><br><br>
+                <label class="upload-box">
 
-        <label>Change Image (optional)</label>
+                    <input type="file"
+                           name="image"
+                           id="imageInput"
+                           hidden>
 
-        <input type="file" name="image">
+                    <div class="upload-content">
 
-        <button type="submit" name="update_country">
-            Update Country
-        </button>
+                        <div class="upload-icon">☁</div>
 
-    </form>
+                        <p>Drag & drop image here</p>
 
-    <div class="back">
-        <a href="admin_manage_country.php">
-            ← Back to Manage Country
-        </a>
+                        <span>or click to browse</span>
+
+                    </div>
+
+                </label>
+
+                <!-- CURRENT IMAGE -->
+                <img id="previewImage"
+                     src="<?= $imagePath; ?>"
+                     alt="Country Image"
+                     style="width:100%; height:190px; display:block; margin-top:10px; border-radius:8px;">
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="right-side">
+
+                <div class="form-group">
+
+                    <label>Country Name</label>
+
+                    <input type="text"
+                           name="country_name"
+                           id="countryName"
+                           value="<?= htmlspecialchars($country['country_name']); ?>"
+                           required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Slug</label>
+
+                    <input type="text"
+                           id="slug"
+                           value="<?= htmlspecialchars($country['country_slug']); ?>"
+                           readonly>
+
+                    <small>
+                        The “Slug” is the URL-friendly version of the name.
+                    </small>
+
+                </div>
+
+                <div class="button-group">
+
+                    <a href="admin_manage_country.php"
+                       class="cancel-btn">
+
+                        Cancel
+
+                    </a>
+
+                    <button type="submit"
+                            name="update_country"
+                            class="save-btn">
+
+                        Update Country
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
     </div>
 
 </div>
+
+<script>
+
+// AUTO SLUG
+const countryName = document.getElementById("countryName");
+const slug = document.getElementById("slug");
+
+countryName.addEventListener("keyup", function(){
+
+    let value = this.value
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+    slug.value = value;
+
+});
+
+// IMAGE PREVIEW
+const imageInput = document.getElementById("imageInput");
+const previewImage = document.getElementById("previewImage");
+
+imageInput.addEventListener("change", function(){
+
+    const file = this.files[0];
+
+    if(file){
+
+        const reader = new FileReader();
+
+        reader.onload = function(e){
+
+            previewImage.src = e.target.result;
+
+        }
+
+        reader.readAsDataURL(file);
+
+    }
+
+});
+
+</script>
 
 </body>
 </html>

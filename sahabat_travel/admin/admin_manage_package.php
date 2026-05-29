@@ -179,7 +179,7 @@ $result = mysqli_query($conn, $query);
             </li>
 
             <li>
-                <a href="#">
+                <a href="auth.php">
                     <i class="fa-solid fa-user-plus"></i>
                     Add Admin
                 </a>
