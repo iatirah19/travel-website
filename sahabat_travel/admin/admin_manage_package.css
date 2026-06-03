@@ -218,3 +218,23 @@ tbody td{
     color: red;
 }
 
+.status{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px 14px;
+    border-radius:999px;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:0.3px;
+}
+
+.status.popular{
+    background:#22c55e20;
+    color:#16a34a;
+}
+
+.status.not-popular{
+    background:#ef444420;
+    color:#dc2626;
+}

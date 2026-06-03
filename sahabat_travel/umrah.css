@@ -69,14 +69,6 @@ body {
     gap: 20px;
 }
 
-.section-title {
-    grid-column: 1 / -1; /* 🔥 span full semua column */
-    text-align: center;
-    margin-top: 30px;
-    color: #000;
-    font-size: 1.8rem;
-}
-
 .empty-state {
     width: 100%;
     text-align: center;
@@ -126,8 +118,10 @@ body {
 
 .pakej-main-info h3 {
     font-size: 1.1rem;
+    font-weight: 600;
     margin-bottom: 5px;
     text-align: center;
+    text-transform: uppercase;
 }
 
 .pakej-desc {

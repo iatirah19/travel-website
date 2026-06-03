@@ -89,11 +89,11 @@ if ($package_id > 0) {
 
     while ($i = mysqli_fetch_assoc($include_query)) {
 
-        if ($i['include_type'] == 'halfboard') {
+        if ($i['include_type'] == 'Halfboard') {
             $halfboard[] = $i['description'];
         }
 
-        if ($i['include_type'] == 'fullboard') {
+        if ($i['include_type'] == 'Fullboard') {
             $fullboard[] = $i['description'];
         }
     }
@@ -131,7 +131,7 @@ if ($package_id > 0) {
 
 <section class="hero">
     <div class="hero-overlay"></div>
-    <!--<a href="javascript:history.back()" class="back-btn">← Back</a>-->
+    <a href="javascript:history.back()" class="back-btn">← Back</a>
     <?php if($data) { ?>
         <img src="uploads/<?php echo $data['main_image']; ?>" class="hero-img">
     <?php } ?>
