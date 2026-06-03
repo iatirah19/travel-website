@@ -42,7 +42,7 @@ if ($package_id > 0) {
        PACKAGE TYPE
     ========================================= */
 
-    $type = strtolower($data['package_type'] ?? 'sit');
+    $type = strtolower($data['agency_id'] ?? 'sit');
 
     /* =========================================
        HIGHLIGHTS

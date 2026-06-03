@@ -1,5 +1,22 @@
 <?php
+session_start();
 require 'db.php';
+
+/* =======================
+   LOGIN CHECK
+======================= */
+
+if (!isset($_SESSION['user_id'])) {
+
+    echo "
+    <script>
+        alert('Please login first before booking a package.');
+        window.location.href='auth.php';
+    </script>
+    ";
+
+    exit();
+}
 
 $package_id = $_GET['package_id'] ?? '';
 $travel_date = $_GET['travel_date'] ?? '';
