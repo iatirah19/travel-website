@@ -48,7 +48,7 @@ require 'db.php';
 
 			<div class="pakej-action">
 				<a href="view_package.php?id=<?php echo $row['package_id']; ?>" class="btn-lihat">
-					Lihat Details
+					View Details
 				</a>
 			</div>
 		</div>

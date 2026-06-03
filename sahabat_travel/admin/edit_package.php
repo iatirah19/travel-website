@@ -277,12 +277,12 @@ if (isset($_POST['update_package'])) {
     |--------------------------
     */
     $newPrices = [
-        'adult_twin' => $_POST['adult_twin_triple'] ?? '',
-        'single' => $_POST['single_price'] ?? '',
-        'child_twin' => $_POST['child_twin'] ?? '',
-        'child_no_bed' => $_POST['child_no_bed'] ?? '',
-        'child_with_bed' => $_POST['child_with_bed'] ?? '',
-        'infant' => $_POST['infant_price'] ?? ''
+        'Adult Twin / Triple' => $_POST['adult_twin_triple'] ?? '',
+        'Single' => $_POST['single_price'] ?? '',
+        'Child Twin' => $_POST['child_twin'] ?? '',
+        'Child No Bed' => $_POST['child_no_bed'] ?? '',
+        'Child With Bed' => $_POST['child_with_bed'] ?? '',
+        'Infant' => $_POST['infant_price'] ?? ''
     ];
 
     $priceChanged = false;
@@ -698,11 +698,11 @@ if (isset($_POST['update_package'])) {
                     <div class="price-grid">
 
                         <div class="form-group">
-                            <label for="adult_twin_triple">Adult Twin</label>
+                            <label for="adult_twin_triple">Adult Twin / Triple</label>
                             <input type="number"
                                    id="adult_twin_triple"
                                    name="adult_twin_triple"
-                                   value="<?= $prices['adult_twin_triple'] ?? '' ?>">
+                                   value="<?= $prices['Adult Twin / Triple'] ?? '' ?>">
                         </div>
 
                         <div class="form-group">
@@ -710,7 +710,7 @@ if (isset($_POST['update_package'])) {
                             <input type="number"
                                    id="single_price"
                                    name="single_price"
-                                   value="<?= $prices['single_price'] ?? '' ?>">
+                                   value="<?= $prices['Single'] ?? '' ?>">
                         </div>
 
                         <div class="form-group">
@@ -718,7 +718,7 @@ if (isset($_POST['update_package'])) {
                             <input type="number"
                                    id="child_twin"
                                    name="child_twin"
-                                   value="<?= $prices['child_twin'] ?? '' ?>">
+                                   value="<?= $prices['Child Twin'] ?? '' ?>">
                         </div>
 
                         <div class="form-group">
@@ -726,7 +726,7 @@ if (isset($_POST['update_package'])) {
                             <input type="number"
                                    id="child_no_bed"
                                    name="child_no_bed"
-                                   value="<?= $prices['child_no_bed'] ?? '' ?>">
+                                   value="<?= $prices['Child No Bed'] ?? '' ?>">
                         </div>
 
                         <div class="form-group">
@@ -734,7 +734,7 @@ if (isset($_POST['update_package'])) {
                             <input type="number"
                                    id="child_with_bed"
                                    name="child_with_bed"
-                                   value="<?= $prices['child_with_bed'] ?? '' ?>">
+                                   value="<?= $prices['Child With Bed'] ?? '' ?>">
                         </div>
 
                         <div class="form-group">
@@ -742,7 +742,7 @@ if (isset($_POST['update_package'])) {
                             <input type="number"
                                    id="infant_price"
                                    name="infant_price"
-                                   value="<?= $prices['infant_price'] ?? '' ?>">
+                                   value="<?= $prices['Infant'] ?? '' ?>">
                         </div>
 
                     </div>
