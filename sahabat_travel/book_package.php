@@ -32,6 +32,16 @@ if (!$pack) {
     die("Invalid package selected");
 }
 
+// --- NEW: FETCH DYNAMIC PRICES BASED ON TYPE ---
+// 1. Fetch Adult Price
+$adult_query = mysqli_query($conn, "SELECT price FROM package_pricing WHERE package_id='$package_id' AND type='adult'");
+$price_adult = ($adult_row = mysqli_fetch_assoc($adult_query)) ? $adult_row['price'] : 0;
+
+// 2. Fetch Child Price
+$child_query = mysqli_query($conn, "SELECT price FROM package_pricing WHERE package_id='$package_id' AND type='child'");
+$price_child = ($child_row = mysqli_fetch_assoc($child_query)) ? $child_row['price'] : 0;
+// -----------------------------------------------
+
 // =======================
 // SUBMIT BOOKING
 // =======================
@@ -165,7 +175,7 @@ if (isset($_POST['book'])) {
     <div class="step active"><div class="circle">1</div><p>Package</p></div>
     <div class="step"><div class="circle">2</div><p>Pax</p></div>
     <div class="step"><div class="circle">3</div><p>Details</p></div>
-    <div class="step"><div class="circle">4</div><p>Success</p></div>
+    <div class="step"><div class="circle">4</div><p>Payment</p></div>
 </div>
 
 <div class="step-content active">
