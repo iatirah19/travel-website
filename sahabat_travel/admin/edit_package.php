@@ -1,6 +1,13 @@
 <?php
 require '../db.php';
 
+session_start();
+
+if ($_SESSION['role'] != 'admin') {
+    header("Location: auth.php");
+    exit();
+}
+
 if (!isset($_GET['id'])) {
     die("Package ID not found.");
 }

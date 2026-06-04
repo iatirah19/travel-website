@@ -5,7 +5,13 @@ require '../db.php';
 session_start();
 
 if ($_SESSION['role'] != 'admin') {
-    header("Location: homepage.php");
+    header("Location: auth.php");
+    exit();
+}
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: auth.php");
     exit();
 }
 

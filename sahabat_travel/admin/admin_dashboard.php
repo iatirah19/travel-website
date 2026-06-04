@@ -4,7 +4,7 @@ require '../db.php';
 session_start();
 
 if ($_SESSION['role'] != 'admin') {
-    header("Location: homepage.php");
+    header("Location: auth.php");
     exit();
 }
 

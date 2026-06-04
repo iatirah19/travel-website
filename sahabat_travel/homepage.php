@@ -2,7 +2,28 @@
 session_start();
 
 if (isset($_GET['logout'])) {
+
+    // Buang semua session data
+    $_SESSION = [];
+
+    // Hapus session cookie
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
+            $params["httponly"]
+        );
+    }
+
+    // Hancurkan session
     session_destroy();
+
     header("Location: auth.php");
     exit();
 }
@@ -56,7 +77,6 @@ if (isset($_GET['logout'])) {
 
             <div class="package-info">
                 <h3><?php echo $row['title']; ?></h3>
-                <p class="details"><?= $row['duration_days'] ?></p>
 
                 <a href="view_package.php?id=<?php echo $row['package_id']; ?>" class="view-btn">
                     View Details

@@ -109,7 +109,7 @@ $navbarClass = in_array($currentPage, $lightPages) ? 'navbar-light' : 'navbar-da
                             <i class="fa-solid fa-suitcase"></i>
                             My Booking
                         </a>
-                        <a href="#" onclick="confirmLogout(event)">
+                        <a href="homepage.php?logout=1">
                             <i class="fa-solid fa-right-from-bracket"></i> 
                             Logout
                         </a>

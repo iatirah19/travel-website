@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require '../db.php';
 
 $booking_id = $_GET['id'] ?? 0;
 $booking_id = mysqli_real_escape_string($conn, $booking_id);
