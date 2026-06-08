@@ -255,7 +255,7 @@ if(isset($_GET['toggle_status_id'])){
 
             <td>
                 <?php
-                if($row['payment_status'] == 'Paid'){
+                if($row['status'] == 'Paid'){
                     echo "<span class='status paid'>Paid</span>";
                 } else {
                     echo "<span class='status pending'>Pending</span>";
