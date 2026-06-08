@@ -179,7 +179,7 @@ if (isset($_POST['book'])) {
         'txn_buyer_phone'   => $_POST['txn_buyer_phone'] ?? '',
     ];
 
-    header("Location: payment_redirect.php");
+    header("Location: payment/payment_redirect.php");
     exit();
 }
 ?>
@@ -247,7 +247,7 @@ if (isset($_POST['book'])) {
         <br><br>
 
         <button type="button" onclick="prevStep()">Back</button>
-        <button type="button" onclick="generatePaxForm(); nextStep()">Next</button>
+        <button type="button" onclick="validatePax()">Next</button>
     </div>
 
     <!-- STEP 3 -->
@@ -383,17 +383,24 @@ let currentStep = 0;
 const steps = document.querySelectorAll(".progress-container .step");
 const contents = document.querySelectorAll(".step-content");
 
+// =================
+// STEP NAVIGATION
+// =================
 function showStep(index) {
-    contents.forEach(c => c.classList.remove("active"));
 
-    steps.forEach((s, i) => {
-        s.classList.remove("active", "completed");
+    contents.forEach(content => {
+        content.classList.remove("active");
+    });
+
+    steps.forEach((step, i) => {
+
+        step.classList.remove("active", "completed");
 
         if (i < index) {
-            s.classList.add("completed");
-            s.querySelector(".circle").textContent = "✓";
+            step.classList.add("completed");
+            step.querySelector(".circle").textContent = "✓";
         } else {
-            s.querySelector(".circle").textContent = i + 1;
+            step.querySelector(".circle").textContent = i + 1;
         }
     });
 
@@ -401,21 +408,28 @@ function showStep(index) {
     contents[index].classList.add("active");
 
     currentStep = index;
+
     updateProgressLine();
 }
 
 function updateProgressLine() {
-    const percent = (currentStep / (steps.length - 1)) * 75;
-    document.getElementById("progressLine").style.width = percent + "%";
+
+    const percent =
+        (currentStep / (steps.length - 1)) * 75;
+
+    document.getElementById("progressLine").style.width =
+        percent + "%";
 }
 
 function nextStep() {
+
     if (currentStep < contents.length - 1) {
         showStep(currentStep + 1);
     }
 }
 
 function prevStep() {
+
     if (currentStep > 0) {
         showStep(currentStep - 1);
     }
@@ -424,44 +438,93 @@ function prevStep() {
 showStep(0);
 
 // =================
-// PAX
+// PAX COUNTER
 // =================
 function changePax(type, value) {
-    let input = document.getElementById(type);
-    let current = parseInt(input.value) || 0;
 
-    if (current + value >= 0) {
-        input.value = current + value;
+    let input = document.getElementById(type);
+
+    let current =
+        parseInt(input.value) || 0;
+
+    let newValue = current + value;
+
+    if (newValue >= 0) {
+        input.value = newValue;
     }
 }
 
-function generatePaxForm() {
-    let adult = parseInt(document.getElementById("adult").value) || 0;
-    let child = parseInt(document.getElementById("child").value) || 0;
+// =================
+// VALIDATE PAX
+// =================
+function validatePax() {
+
+    let adult =
+        parseInt(document.getElementById("adult").value) || 0;
+
+    let child =
+        parseInt(document.getElementById("child").value) || 0;
 
     let total = adult + child;
 
     if (total <= 0) {
+
         alert("Please select at least 1 pax");
+
         return;
     }
+
+    generatePaxForm();
+
+    nextStep();
+}
+
+// =================
+// GENERATE PAX FORM
+// =================
+function generatePaxForm() {
+
+    let adult =
+        parseInt(document.getElementById("adult").value) || 0;
+
+    let child =
+        parseInt(document.getElementById("child").value) || 0;
+
+    let total = adult + child;
 
     let html = "";
 
     for (let i = 1; i <= total; i++) {
+
         html += `
-            <h4>Pax ${i}</h4>
-            <input type="text" name="pax_name[]" placeholder="Name" required>
-            <input type="text" name="pax_phone[]" placeholder="Phone" required>
+            <div class="pax-card">
 
-            <select name="pax_gender[]" required>
-                <option value="">Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
+                <h4>Pax ${i}</h4>
 
-            <input type="text" name="pax_state[]" placeholder="State" required>
-            <hr>
+                <input type="text"
+                       name="pax_name[]"
+                       placeholder="Full Name"
+                       required>
+
+                <input type="text"
+                       name="pax_phone[]"
+                       placeholder="Phone Number"
+                       required>
+
+                <select name="pax_gender[]" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+
+                <input type="text"
+                       name="pax_state[]"
+                       placeholder="State"
+                       required>
+
+                <hr>
+
+            </div>
         `;
     }
 
@@ -469,19 +532,26 @@ function generatePaxForm() {
 }
 
 // =================
-// T&C MODAL LOGIC
+// SUBMIT CONFIRM
 // =================
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('bookingForm');
+document.addEventListener("DOMContentLoaded", function () {
 
-    form.addEventListener('submit', function (e) {
-        const confirmSubmit = confirm("Confirm booking and proceed to payment?");
+    const form =
+        document.getElementById("bookingForm");
+
+    form.addEventListener("submit", function (e) {
+
+        console.log("FORM SUBMIT");
+
+        const confirmSubmit = confirm(
+            "Confirm booking and proceed to payment?"
+        );
+
         if (!confirmSubmit) {
             e.preventDefault();
         }
-        // kalau OK → TIDAK prevent default
-        // form akan submit ke PHP seperti biasa
     });
+
 });
 </script>
 
