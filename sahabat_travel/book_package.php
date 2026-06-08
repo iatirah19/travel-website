@@ -179,7 +179,7 @@ if (isset($_POST['book'])) {
         'txn_buyer_phone'   => $_POST['txn_buyer_phone'] ?? '',
     ];
 
-    header("Location: payment/payment_redirect.php");
+    header("Location: payment_redirect.php");
     exit();
 }
 ?>
