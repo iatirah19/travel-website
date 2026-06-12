@@ -43,6 +43,11 @@ if (!$pack) {
 }
 
 /* =======================
+   DEPOSIT (ADD HERE)
+======================= */
+$deposit = $pack['deposit'];
+
+/* =======================
    GET PRICING (ALL TYPES)
 ======================= */
 $prices = [];
@@ -91,12 +96,12 @@ if (isset($_POST['book'])) {
     if (in_array($agency, ['SUKA', 'MTB'])) {
 
         $total_amount =
-            ($adult_twin * ($prices['adult_twin'] ?? 0)) +
-            ($single * ($prices['single'] ?? 0)) +
-            ($child_twin * ($prices['child_twin'] ?? 0)) +
-            ($child_no_bed * ($prices['child_no_bed'] ?? 0)) +
-            ($child_with_bed * ($prices['child_with_bed'] ?? 0)) +
-            ($infant * ($prices['infant'] ?? 0));
+            ($adult_twin * ($prices['Adult Twin / Triple'] ?? 0)) +
+            ($single * ($prices['Single'] ?? 0)) +
+            ($child_twin * ($prices['Child Twin'] ?? 0)) +
+            ($child_no_bed * ($prices['Child No Bed'] ?? 0)) +
+            ($child_with_bed * ($prices['Child With Bed'] ?? 0)) +
+            ($infant * ($prices['Infant'] ?? 0));
 
         $total_pax = $adult_twin + $single + $child_twin + $child_no_bed + $child_with_bed + $infant;
 
@@ -150,11 +155,10 @@ if (isset($_POST['book'])) {
             tnc_accepted,
             digital_signature,
             requested_tnc_copy,
-            tnc_accepted_at,
-            total_amount
+            tnc_accepted_at
         )
         VALUES
-        (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)
+        (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?)
     ");
 
     $digital_signature = $_POST['digital_signature'] ?? '';
@@ -163,7 +167,7 @@ if (isset($_POST['book'])) {
     $current_time = date('Y-m-d H:i:s');
 
     $stmt->bind_param(
-        "iissssississsd",
+        "iissssisisss",
         $user_id,
         $package_id,
         $customer_name,
@@ -175,8 +179,7 @@ if (isset($_POST['book'])) {
         $tnc_accepted,
         $digital_signature,
         $requested_copy,
-        $current_time,
-        $total_amount
+        $current_time
     );
 
     if (!$stmt->execute()) {
@@ -221,7 +224,7 @@ if (isset($_POST['book'])) {
         'booking_id' => $booking_id,
         'payment_method' => $payment_method,
         'txn_order_id' => $booking_id,
-        'txn_amount' => $total_amount,
+        'txn_amount' => $deposit,
         'txn_buyer_name' => $customer_name,
         'txn_buyer_email' => $_POST['txn_buyer_email'] ?? '',
         'txn_buyer_phone' => $_POST['txn_buyer_phone'] ?? '',
@@ -406,7 +409,7 @@ if (isset($_POST['book'])) {
 
             <div class="price-box">
                 <span>Total Payable:</span>
-                <span>RM 250.00</span>
+                <span>RM <?php echo number_format($deposit, 2); ?></span>
             </div>
 
         </div>

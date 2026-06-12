@@ -8,9 +8,15 @@ $booking_id = mysqli_real_escape_string($conn, $booking_id);
 // GET BOOKING INFO
 // =======================
 $query = "
-SELECT b.*, p.title 
+SELECT 
+    b.*, 
+    p.title,
+    a.agency_name
 FROM bookings b
-JOIN packages p ON b.package_id = p.package_id
+JOIN packages p 
+    ON b.package_id = p.package_id
+JOIN agencies a
+    ON p.agency_id = a.agency_id
 WHERE b.booking_id = '$booking_id'
 ";
 
@@ -52,6 +58,7 @@ $pax_result = mysqli_query($conn, $pax_query);
 <div class="info">
     <p><b>Customer:</b> <?php echo $booking['customer_name']; ?></p>
     <p><b>Phone:</b> <?php echo $booking['phone']; ?></p>
+    <p><b>Agency:</b> <?php echo $booking['agency_name']; ?></p>
     <p><b>Package:</b> <?php echo $booking['title']; ?></p>
     <p><b>Travel Date:</b> <?php echo date("d M Y", strtotime($booking['travel_date'])); ?></p>
     <p><b>Total Pax:</b> <?php echo $booking['total_pax']; ?></p>
