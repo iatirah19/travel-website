@@ -30,7 +30,7 @@ if (isset($_POST['add_country'])) {
     $ext = strtolower(pathinfo($newImageName, PATHINFO_EXTENSION));
 
     if (!in_array($ext, $allowed)) {
-        echo "<script>alert('File type tidak dibenarkan!');</script>";
+        echo "<script>alert('File type not allowed!');</script>";
         exit;
     }
 
@@ -44,12 +44,12 @@ if (isset($_POST['add_country'])) {
         mysqli_query($conn, $sql);
 
         echo "<script>
-                alert('Country berjaya ditambah!');
+                alert('Country successfully added!');
                 window.location.href='admin_manage_country.php';
               </script>";
 
     } else {
-        echo "<script>alert('Upload image gagal!');</script>";
+        echo "<script>alert('Upload image failed!');</script>";
     }
 }
 ?>

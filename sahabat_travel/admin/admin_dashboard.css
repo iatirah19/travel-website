@@ -203,6 +203,7 @@ th {
 td {
     border-top: 1px solid #f1f1f1;
     color: #111827;
+    text-transform: uppercase;
 }
 
 td a {

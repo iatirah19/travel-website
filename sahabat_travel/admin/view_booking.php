@@ -1,7 +1,7 @@
 <?php
 require '../db.php';
 
-$booking_id = $_GET['id'] ?? 0;
+$booking_id = $_GET['booking_id'] ?? 0;
 $booking_id = mysqli_real_escape_string($conn, $booking_id);
 
 // =======================
@@ -54,7 +54,7 @@ $pax_result = mysqli_query($conn, $pax_query);
     <p><b>Phone:</b> <?php echo $booking['phone']; ?></p>
     <p><b>Package:</b> <?php echo $booking['title']; ?></p>
     <p><b>Travel Date:</b> <?php echo date("d M Y", strtotime($booking['travel_date'])); ?></p>
-    <p><b>Total Pax:</b> <?php echo $booking['pax']; ?></p>
+    <p><b>Total Pax:</b> <?php echo $booking['total_pax']; ?></p>
     <p><b>Payment:</b> <?php echo strtoupper($booking['payment_method']); ?></p>
     <p>
         <b>Status:</b> 

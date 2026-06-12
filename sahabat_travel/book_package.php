@@ -5,17 +5,17 @@ require 'db.php';
 /* =======================
    LOGIN CHECK
 ======================= */
-
 if (!isset($_SESSION['user_id'])) {
-    echo "
-    <script>
+    echo "<script>
         alert('Please login first before booking a package.');
         window.location.href='auth.php';
-    </script>
-    ";
+    </script>";
     exit();
 }
 
+/* =======================
+   GET DATA
+======================= */
 $package_id = $_GET['package_id'] ?? '';
 $travel_date = $_GET['travel_date'] ?? '';
 
@@ -25,50 +25,103 @@ if (empty($package_id)) {
 
 $package_id = mysqli_real_escape_string($conn, $package_id);
 
-$package = mysqli_query($conn, "SELECT * FROM packages WHERE package_id='$package_id'");
+/* =======================
+   GET PACKAGE
+======================= */
+$package = mysqli_query($conn, "
+    SELECT packages.*, agencies.agency_name
+    FROM packages
+    LEFT JOIN agencies
+    ON packages.agency_id = agencies.agency_id
+    WHERE packages.package_id='$package_id'
+");
+
 $pack = mysqli_fetch_assoc($package);
 
 if (!$pack) {
     die("Invalid package selected");
 }
 
-// --- NEW: FETCH DYNAMIC PRICES BASED ON TYPE ---
-// 1. Fetch Adult Price
-$adult_query = mysqli_query($conn, "SELECT price FROM package_pricing WHERE package_id='$package_id' AND type='adult'");
-$price_adult = ($adult_row = mysqli_fetch_assoc($adult_query)) ? $adult_row['price'] : 0;
+/* =======================
+   GET PRICING (ALL TYPES)
+======================= */
+$prices = [];
 
-// 2. Fetch Child Price
-$child_query = mysqli_query($conn, "SELECT price FROM package_pricing WHERE package_id='$package_id' AND type='child'");
-$price_child = ($child_row = mysqli_fetch_assoc($child_query)) ? $child_row['price'] : 0;
-// -----------------------------------------------
+$q = mysqli_query($conn, "
+    SELECT type, price 
+    FROM package_pricing 
+    WHERE package_id='$package_id'
+");
 
-// =======================
-// SUBMIT BOOKING
-// =======================
+while ($row = mysqli_fetch_assoc($q)) {
+    $prices[$row['type']] = $row['price'];
+}
+
+/* =======================
+   SUBMIT BOOKING
+======================= */
 if (isset($_POST['book'])) {
 
     $package_id = mysqli_real_escape_string($conn, $_POST['package_id']);
     $travel_date = $_POST['travel_date'] ?? '';
 
+    $payment_method = $_POST['payment_method'] ?? '';
+
+    /* =======================
+       NORMAL PAX
+    ======================= */
     $adult = (int)($_POST['adult'] ?? 0);
     $child = (int)($_POST['child'] ?? 0);
-    $pax = $adult + $child;
 
+    /* =======================
+       SUKA / MTB PAX
+    ======================= */
+    $adult_twin = (int)($_POST['Adult Twin / Triple'] ?? 0);
+    $single = (int)($_POST['Single'] ?? 0);
+    $child_twin = (int)($_POST['Child Twin'] ?? 0);
+    $child_no_bed = (int)($_POST['Child No Bed'] ?? 0);
+    $child_with_bed = (int)($_POST['Child With Bed'] ?? 0);
+    $infant = (int)($_POST['Infant'] ?? 0);
+
+    /* =======================
+       CALCULATE TOTAL
+    ======================= */
+    $agency = strtoupper($pack['agency_name']);
+
+    if (in_array($agency, ['SUKA', 'MTB'])) {
+
+        $total_amount =
+            ($adult_twin * ($prices['adult_twin'] ?? 0)) +
+            ($single * ($prices['single'] ?? 0)) +
+            ($child_twin * ($prices['child_twin'] ?? 0)) +
+            ($child_no_bed * ($prices['child_no_bed'] ?? 0)) +
+            ($child_with_bed * ($prices['child_with_bed'] ?? 0)) +
+            ($infant * ($prices['infant'] ?? 0));
+
+        $total_pax = $adult_twin + $single + $child_twin + $child_no_bed + $child_with_bed + $infant;
+
+    } else {
+
+        $total_amount =
+            ($adult * ($prices['adult'] ?? 0)) +
+            ($child * ($prices['child'] ?? 0));
+
+        $total_pax = $adult + $child;
+    }
+
+    /* =======================
+       PAX DETAILS
+    ======================= */
     $pax_names = $_POST['pax_name'] ?? [];
     $pax_phones = $_POST['pax_phone'] ?? [];
     $pax_gender = $_POST['pax_gender'] ?? [];
     $pax_state = $_POST['pax_state'] ?? [];
 
-    $payment_method = $_POST['payment_method'] ?? '';
+    $address = $_POST['address'] ?? '';
 
-    // --- NEW T&C VARIABLES ---
-    $digital_signature = mysqli_real_escape_string($conn, $_POST['digital_signature'] ?? '');
-    $requested_copy = mysqli_real_escape_string($conn, $_POST['wants_tnc_copy'] ?? 'no');
-    $tnc_accepted = isset($_POST['accept_tnc']) ? 1 : 0; 
-    $current_time = date('Y-m-d H:i:s');
-    // -------------------------
-
-    // MAIN CUSTOMER (first pax)
+    /* =======================
+       CUSTOMER DATA
+    ======================= */
     $customer_name = $pax_names[0] ?? '';
     $phone = $pax_phones[0] ?? '';
     $state = $pax_state[0] ?? '';
@@ -77,11 +130,11 @@ if (isset($_POST['book'])) {
         die("Customer details required");
     }
 
-    // =======================
-    // INSERT INTO BOOKINGS
-    // =======================
     $user_id = $_SESSION['user_id'];
 
+    /* =======================
+       INSERT BOOKING
+    ======================= */
     $stmt = $conn->prepare("
         INSERT INTO bookings
         (
@@ -97,49 +150,47 @@ if (isset($_POST['book'])) {
             tnc_accepted,
             digital_signature,
             requested_tnc_copy,
-            tnc_accepted_at
+            tnc_accepted_at,
+            total_amount
         )
         VALUES
-        (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?)
+        (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)
     ");
-    
+
+    $digital_signature = $_POST['digital_signature'] ?? '';
+    $requested_copy = $_POST['wants_tnc_copy'] ?? 'no';
+    $tnc_accepted = isset($_POST['accept_tnc']) ? 1 : 0;
+    $current_time = date('Y-m-d H:i:s');
+
     $stmt->bind_param(
-        "iissssississ",
+        "iissssississsd",
         $user_id,
         $package_id,
         $customer_name,
         $phone,
         $state,
         $travel_date,
-        $pax,
+        $total_pax,
         $payment_method,
         $tnc_accepted,
         $digital_signature,
         $requested_copy,
-        $current_time
+        $current_time,
+        $total_amount
     );
-    
+
     if (!$stmt->execute()) {
         die("Booking failed: " . $stmt->error);
     }
-    
+
     $booking_id = $stmt->insert_id;
 
-    // =======================
-    // INSERT INTO BOOKINGS_PAX
-    // =======================
-        $address = $_POST['address'] ?? '';
-
+    /* =======================
+       INSERT PAX
+    ======================= */
     $stmt_pax = $conn->prepare("
         INSERT INTO bookings_pax
-        (
-            booking_id,
-            name,
-            phone,
-            gender,
-            state,
-            address
-        )
+        (booking_id, name, phone, gender, state, address)
         VALUES (?, ?, ?, ?, ?, ?)
     ");
 
@@ -148,35 +199,32 @@ if (isset($_POST['book'])) {
     for ($i = 0; $i < $count; $i++) {
 
         $name = $pax_names[$i] ?? '';
-        $phone_pax = $pax_phones[$i] ?? '';
-        $gender = $pax_gender[$i] ?? '';
-        $state_pax = $pax_state[$i] ?? '';
-
-        if (empty($name)) {
-            continue;
-        }
+        if (!$name) continue;
 
         $stmt_pax->bind_param(
             "isssss",
             $booking_id,
             $name,
-            $phone_pax,
-            $gender,
-            $state_pax,
+            $pax_phones[$i],
+            $pax_gender[$i],
+            $pax_state[$i],
             $address
         );
 
         $stmt_pax->execute();
     }
 
-        $_SESSION['payment_data'] = [
-        'booking_id'        => $booking_id,
-        'payment_method'    => $payment_method,
-        'txn_order_id'      => $booking_id,
-        'txn_amount'        => 250.00,
-        'txn_buyer_name'    => $customer_name,
-        'txn_buyer_email'   => $_POST['txn_buyer_email'] ?? '',
-        'txn_buyer_phone'   => $_POST['txn_buyer_phone'] ?? '',
+    /* =======================
+       PAYMENT SESSION
+    ======================= */
+    $_SESSION['payment_data'] = [
+        'booking_id' => $booking_id,
+        'payment_method' => $payment_method,
+        'txn_order_id' => $booking_id,
+        'txn_amount' => $total_amount,
+        'txn_buyer_name' => $customer_name,
+        'txn_buyer_email' => $_POST['txn_buyer_email'] ?? '',
+        'txn_buyer_phone' => $_POST['txn_buyer_phone'] ?? '',
     ];
 
     header("Location: payment/payment_redirect.php");
@@ -232,17 +280,68 @@ if (isset($_POST['book'])) {
     <div class="step-content">
         <h3>Select Pax</h3>
 
-        <label>Dewasa:</label>
-        <button type="button" onclick="changePax('adult', -1)">-</button>
-        <input type="number" id="adult" name="adult" value="0">
-        <button type="button" onclick="changePax('adult', 1)">+</button>
+        <?php
+            $agency = strtoupper($pack['agency_name']);
+            if (in_array($agency, ['SUKA', 'MTB'])) {
+        ?>
 
-        <br><br>
+            <!-- SUKA PACKAGE ONLY -->
+            <label>Adult Twin / Triple: RM<?= number_format($prices['Adult Twin / Triple'] ?? 0, 2) ?></label>
+            <button type="button" onclick="changePax('adult_twin', -1)">-</button>
+            <input type="number" id="adult_twin" name="adult_twin" value="0">
+            <button type="button" onclick="changePax('adult_twin', 1)">+</button>
 
-        <label>Kanak-kanak:</label>
-        <button type="button" onclick="changePax('child', -1)">-</button>
-        <input type="number" id="child" name="child" value="0">
-        <button type="button" onclick="changePax('child', 1)">+</button>
+            <br><br>
+
+            <label>Single: RM<?= number_format($prices['Single'] ?? 0, 2) ?></label>
+            <button type="button" onclick="changePax('single', -1)">-</button>
+            <input type="number" id="single" name="single" value="0">
+            <button type="button" onclick="changePax('single', 1)">+</button>
+
+            <br><br>
+
+            <label>Child Twin: RM<?= number_format($prices['Child Twin'] ?? 0, 2) ?></label>
+            <button type="button" onclick="changePax('child_twin', -1)">-</button>
+            <input type="number" id="child_twin" name="child_twin" value="0">
+            <button type="button" onclick="changePax('child_twin', 1)">+</button>
+
+            <br><br>
+
+            <label>Child No Bed: RM<?= number_format($prices['Child No Bed'] ?? 0, 2) ?></label>
+            <button type="button" onclick="changePax('child_no_bed', -1)">-</button>
+            <input type="number" id="child_no_bed" name="child_no_bed" value="0">
+            <button type="button" onclick="changePax('child_no_bed', 1)">+</button>
+
+            <br><br>
+
+            <label>Child With Bed: RM<?= number_format($prices['Child With Bed'] ?? 0, 2) ?></label>
+            <button type="button" onclick="changePax('child_with_bed', -1)">-</button>
+            <input type="number" id="child_with_bed" name="child_with_bed" value="0">
+            <button type="button" onclick="changePax('child_with_bed', 1)">+</button>
+
+            <br><br>
+
+            <label>Infant: RM<?= number_format($prices['Infant'] ?? 0, 2) ?></label>
+            <button type="button" onclick="changePax('infant', -1)">-</button>
+            <input type="number" id="infant" name="infant" value="0">
+            <button type="button" onclick="changePax('infant', 1)">+</button>
+
+        <?php } else { ?>
+
+            <!-- NORMAL PACKAGE -->
+            <label>Dewasa:</label>
+            <button type="button" onclick="changePax('adult', -1)">-</button>
+            <input type="number" id="adult" name="adult" value="0">
+            <button type="button" onclick="changePax('adult', 1)">+</button>
+
+            <br><br>
+
+            <label>Kanak-kanak:</label>
+            <button type="button" onclick="changePax('child', -1)">-</button>
+            <input type="number" id="child" name="child" value="0">
+            <button type="button" onclick="changePax('child', 1)">+</button>
+
+        <?php } ?>
 
         <br><br>
 
@@ -378,10 +477,21 @@ if (isset($_POST['book'])) {
 </form>
 
 <script>
+    window.packageAgency = "<?= $pack['agency_name'] ?>";
+</script>
+
+<script>
 let currentStep = 0;
 
 const steps = document.querySelectorAll(".progress-container .step");
 const contents = document.querySelectorAll(".step-content");
+
+// =================
+// PACKAGE CHECK
+// =================
+function isSpecialPackage() {
+    return ["SUKA", "MTB"].includes(window.packageAgency);
+}
 
 // =================
 // STEP NAVIGATION
@@ -408,7 +518,6 @@ function showStep(index) {
     contents[index].classList.add("active");
 
     currentStep = index;
-
     updateProgressLine();
 }
 
@@ -422,14 +531,12 @@ function updateProgressLine() {
 }
 
 function nextStep() {
-
     if (currentStep < contents.length - 1) {
         showStep(currentStep + 1);
     }
 }
 
 function prevStep() {
-
     if (currentStep > 0) {
         showStep(currentStep - 1);
     }
@@ -443,10 +550,9 @@ showStep(0);
 function changePax(type, value) {
 
     let input = document.getElementById(type);
+    if (!input) return;
 
-    let current =
-        parseInt(input.value) || 0;
-
+    let current = parseInt(input.value) || 0;
     let newValue = current + value;
 
     if (newValue >= 0) {
@@ -459,23 +565,34 @@ function changePax(type, value) {
 // =================
 function validatePax() {
 
-    let adult =
-        parseInt(document.getElementById("adult").value) || 0;
+    const fields = isSpecialPackage()
+        ? ["adult_twin","single","child_twin","child_no_bed","child_with_bed","infant"]
+        : ["adult","child"];
 
-    let child =
-        parseInt(document.getElementById("child").value) || 0;
+    let total = 0;
 
-    let total = adult + child;
+    fields.forEach(f => {
+        const el = document.getElementById(f);
+
+        if (!el) {
+            console.log("Missing input:", f);
+            return;
+        }
+
+        const val = Number(el.value);
+        console.log(f, val);
+
+        total += val || 0;
+    });
+
+    console.log("TOTAL PAX:", total);
 
     if (total <= 0) {
-
         alert("Please select at least 1 pax");
-
         return;
     }
 
     generatePaxForm();
-
     nextStep();
 }
 
@@ -484,13 +601,31 @@ function validatePax() {
 // =================
 function generatePaxForm() {
 
-    let adult =
-        parseInt(document.getElementById("adult").value) || 0;
+    let total = 0;
 
-    let child =
-        parseInt(document.getElementById("child").value) || 0;
+    if (isSpecialPackage()) {
 
-    let total = adult + child;
+        const fields = [
+            "adult_twin",
+            "single",
+            "child_twin",
+            "child_no_bed",
+            "child_with_bed",
+            "infant"
+        ];
+
+        fields.forEach(f => {
+            let el = document.getElementById(f);
+            if (el) total += parseInt(el.value) || 0;
+        });
+
+    } else {
+
+        let adult = parseInt(document.getElementById("adult")?.value) || 0;
+        let child = parseInt(document.getElementById("child")?.value) || 0;
+
+        total = adult + child;
+    }
 
     let html = "";
 
@@ -501,15 +636,8 @@ function generatePaxForm() {
 
                 <h4>Pax ${i}</h4>
 
-                <input type="text"
-                       name="pax_name[]"
-                       placeholder="Full Name"
-                       required>
-
-                <input type="text"
-                       name="pax_phone[]"
-                       placeholder="Phone Number"
-                       required>
+                <input type="text" name="pax_name[]" placeholder="Full Name" required>
+                <input type="text" name="pax_phone[]" placeholder="Phone Number" required>
 
                 <select name="pax_gender[]" required>
                     <option value="">Select Gender</option>
@@ -517,10 +645,7 @@ function generatePaxForm() {
                     <option value="Female">Female</option>
                 </select>
 
-                <input type="text"
-                       name="pax_state[]"
-                       placeholder="State"
-                       required>
+                <input type="text" name="pax_state[]" placeholder="State" required>
 
                 <hr>
 

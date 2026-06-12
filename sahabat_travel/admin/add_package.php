@@ -61,6 +61,7 @@ if (isset($_POST['submit_package'])) {
     |--------------------------------------------------------------------------
     */
 
+    $starting_price = $_POST['starting_price'] ?? 0;
     $deposit        = $_POST['deposit'] ?? 0;
     $flight_details = mysqli_real_escape_string($conn, $_POST['flight_details']);
     $min_pax        = $_POST['min_pax'] ?? 1;

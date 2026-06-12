@@ -23,9 +23,14 @@ if ($package_id > 0) {
 
     // PACKAGE
     $package = mysqli_query($conn, "
-        SELECT *
-        FROM packages
-        WHERE package_id = '$package_id'
+        SELECT 
+            p.*,
+            MAX(pp.price) AS starting_price
+        FROM packages p
+        LEFT JOIN package_pricing pp 
+        ON p.package_id = pp.package_id
+        WHERE p.package_id = '$package_id'
+        GROUP BY p.package_id
     ");
 
     if (!$package) {
@@ -220,7 +225,7 @@ if ($package_id > 0) {
 
                 <div class="tour-row">
                     <?php if ($data) { ?>
-                        <p>💰 Price <span class="highlight-word">RM <?php echo number_format($data['price'] ?? 0, 2); ?></span></p>
+                        <p>💰 Starting From <span class="highlight-word">RM <?php echo number_format($data['starting_price'] ?? 0, 2); ?></span></p>
                         <p>💵 Deposit per pax <span class="highlight-word">RM <?php echo $data['deposit'] ?? '0'; ?></span></p>
                         <?php if (($data['package_type'] ?? '') == 'MTB'): ?>
                             <?php if (($data['package_category'] ?? '') == 'group'): ?>

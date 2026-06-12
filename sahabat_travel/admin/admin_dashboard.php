@@ -231,6 +231,7 @@ if(isset($_GET['toggle_status_id'])){
             <th>Total Pax</th>
             <th>Payment Method</th>
             <th>Status</th>
+            <th>Action</th>
         </tr>
     </thead>
 
@@ -262,17 +263,24 @@ if(isset($_GET['toggle_status_id'])){
                 }
                 ?>
             </td>
+
+            <!-- ACTION -->
+            <td>
+                <a href="view_booking.php?booking_id=<?php echo $row['booking_id']; ?>" 
+                   class="btn-view">
+                    View
+                </a>
+            </td>
         </tr>
 
         <?php } ?>
 
     <?php } else { ?>
         <tr>
-            <td colspan="7" style="text-align:center;">No bookings found</td>
+            <td colspan="8" style="text-align:center;">No bookings found</td>
         </tr>
     <?php } ?>
     </tbody>
-
 </table>
 
 </div>

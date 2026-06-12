@@ -105,10 +105,6 @@ $navbarClass = in_array($currentPage, $lightPages) ? 'navbar-light' : 'navbar-da
                             <i class="fa-solid fa-user"></i>
                             Profile
                         </a>
-                        <a href="mybooking.php">
-                            <i class="fa-solid fa-suitcase"></i>
-                            My Booking
-                        </a>
                         <a href="homepage.php?logout=1">
                             <i class="fa-solid fa-right-from-bracket"></i> 
                             Logout
@@ -240,12 +236,6 @@ $navbarClass = in_array($currentPage, $lightPages) ? 'navbar-light' : 'navbar-da
 
         <!-- MOBILE AUTH -->
         <?php if(isset($_SESSION['user_id'])): ?>
-
-            <li>
-                <a href="mybooking.php">
-                    My Booking
-                </a>
-            </li>
 
             <li>
                 <a href="#" onclick="confirmLogout(event)">

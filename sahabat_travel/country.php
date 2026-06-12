@@ -59,6 +59,15 @@ $packages = $stmt2->get_result();
 <!-- TITLE -->
 <h2 class="section-title">Senarai Pakej Eksklusif</h2>
 
+    <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Cari pakej...">
+    </div>
+
+    <div id="noResult" style="display:none; text-align:center; margin:30px 0;">
+        <h3>Tiada pakej dijumpai.</h3>
+    </div>
+
 <!-- PACKAGE CONTAINER -->
 <div class="pakej-table-container">
 
@@ -131,5 +140,40 @@ $packages = $stmt2->get_result();
         <p>© 2025 Sahabat International Travel Sdn Bhd. Hak Cipta Terpelihara.</p>
     </div>
 </footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("searchInput");
+    const packageRows = document.querySelectorAll(".pakej-row");
+    const noResult = document.getElementById("noResult");
+
+    searchInput.addEventListener("input", function () {
+
+        const keyword = this.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        packageRows.forEach(function (row) {
+
+            const title =
+                row.querySelector(".pakej-main-info h3")
+                ?.textContent
+                .toLowerCase() || "";
+
+            if (title.includes(keyword)) {
+                row.style.display = "flex";
+                visibleCount++;
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        noResult.style.display =
+            visibleCount === 0 ? "block" : "none";
+
+    });
+
+});
+</script>
 </body>
 </html>

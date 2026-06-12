@@ -53,7 +53,7 @@ if(isset($_GET['delete'])){
 
         echo "
         <script>
-            alert('Package deleted successfully');
+            alert('Package successfully deleted!');
             window.location.href='admin_manage_package.php';
         </script>
         ";
@@ -107,7 +107,8 @@ SELECT
     package_categories.category_name,
     countries.country_name,
     agencies.agency_name,
-    tour_categories.tour_category_name
+    tour_categories.tour_category_name,
+    pp.starting_price
 
 FROM packages
 
@@ -122,6 +123,13 @@ ON packages.tour_category_id = tour_categories.tour_category_id
 
 LEFT JOIN package_categories
 ON packages.package_category_id = package_categories.package_category_id
+
+LEFT JOIN (
+    SELECT package_id, MIN(price) AS starting_price
+    FROM package_pricing
+    GROUP BY package_id
+) pp
+ON packages.package_id = pp.package_id
 
 $where
 

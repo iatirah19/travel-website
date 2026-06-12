@@ -81,7 +81,7 @@ if (isset($_POST['update_country'])) {
         $allowed = ['jpg', 'jpeg', 'png', 'webp'];
 
         if (!in_array($ext, $allowed)) {
-            echo "<script>alert('File type tidak dibenarkan');</script>";
+            echo "<script>alert('File type is not allowed!');</script>";
             exit;
         }
 
@@ -117,7 +117,7 @@ if (isset($_POST['update_country'])) {
 
         echo "
         <script>
-            alert('Tiada perubahan untuk country ini.');
+            alert('There is no change for this country.');
             window.location.href='admin_manage_country.php';
         </script>
         ";
@@ -139,7 +139,7 @@ if (isset($_POST['update_country'])) {
 
     echo "
     <script>
-        alert('Country berjaya dikemaskini!');
+        alert('Country successfully updated!');
         window.location.href='admin_manage_country.php';
     </script>
     ";

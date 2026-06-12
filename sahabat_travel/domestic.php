@@ -21,50 +21,56 @@ require 'db.php';
     <h2 class="section-title">Senarai Pakej Eksklusif</h2>
 
     <div class="search-bar">
-            <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Cari pakej...">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Cari pakej...">
     </div>
 
+    <div id="noResult" style="display:none; text-align:center; margin:30px 0;">
+        <h3>Tiada pakej dijumpai.</h3>
+    </div>
+
+    <!-- PACKAGE CONTAINER -->
 <div class="pakej-table-container">
 
-	<?php
-	$category_id = 1;
-	$sql = "SELECT * FROM packages WHERE tour_category_id = $category_id";
-	$result = $conn->query($sql);
+<?php
+$category_id = 1;
+$sql = "SELECT * FROM packages WHERE tour_category_id = $category_id";
+$result = $conn->query($sql);
 
-	if ($result && $result->num_rows > 0) {
+if ($result && $result->num_rows > 0):
+?>
 
-    while($row = $result->fetch_assoc()) {
-	?>
+    <?php while ($row = $result->fetch_assoc()): ?>
 
-		<div class="pakej-row">
-			<div class="pakej-img-box">
-				<img src="uploads/<?php echo !empty($row['main_image']) ? $row['main_image'] : 'default.png'; ?>" alt="">
-			</div>
+        <div class="pakej-row">
 
-			<div class="pakej-main-info">
-				<h3><?php echo $row['title']; ?></h3>
-			</div>
+            <div class="pakej-img-box">
+                <img src="uploads/<?php echo !empty($row['main_image']) ? $row['main_image'] : 'default.png'; ?>" alt="">
+            </div>
 
-			<div class="pakej-action">
-				<a href="view_package.php?id=<?php echo $row['package_id']; ?>" class="btn-lihat">
-					View Details
-				</a>
-			</div>
-		</div>
+            <div class="pakej-main-info">
+                <h3><?php echo htmlspecialchars($row['title']); ?></h3>
+            </div>
 
-	<?php 
-		}
-	} else {
-	?>
+            <div class="pakej-action">
+                <a href="view_package.php?id=<?php echo $row['package_id']; ?>" class="btn-lihat">
+                    View Details
+                </a>
+            </div>
 
-		<!-- EMPTY STATE -->
-        <div class="empty-state">
-            <h3>Tiada Pakej Dalam Negara Setakat Ini.</h3>
-            <p>Pakej akan dikemaskini tidak lama lagi.</p>
         </div>
 
-    <?php } ?>
+    <?php endwhile; ?>
+
+<?php else: ?>
+
+    <?php
+        echo "<p style='text-align:center; grid-column:1/-1;'>
+                No package available.
+              </p>";
+    ?>
+
+<?php endif; ?>
 
 </div>
 
@@ -101,5 +107,40 @@ require 'db.php';
         <p>© 2025 Sahabat International Travel Sdn Bhd. Hak Cipta Terpelihara.</p>
     </div>
 </footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("searchInput");
+    const packageRows = document.querySelectorAll(".pakej-row");
+    const noResult = document.getElementById("noResult");
+
+    searchInput.addEventListener("input", function () {
+
+        const keyword = this.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        packageRows.forEach(function (row) {
+
+            const title =
+                row.querySelector(".pakej-main-info h3")
+                ?.textContent
+                .toLowerCase() || "";
+
+            if (title.includes(keyword)) {
+                row.style.display = "flex";
+                visibleCount++;
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        noResult.style.display =
+            visibleCount === 0 ? "block" : "none";
+
+    });
+
+});
+</script>
 </body>
 </html>

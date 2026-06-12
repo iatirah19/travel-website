@@ -26,14 +26,23 @@ if(isset($_POST['update_profile'])){
     ");
 
     if($update){
-        echo "<script>alert('Profile updated successfully!');</script>";
 
-        // Refresh data
-        $query = mysqli_query($conn, "SELECT * FROM users WHERE user_id='$user_id'");
-        $user = mysqli_fetch_assoc($query);
+    echo "
+    <script>
+        alert('Profile updated successfully!');
+        window.location.href='profile.php';
+    </script>
+    ";
+    exit();
 
     }else{
-        echo "<script>alert('Failed to update profile!');</script>";
+    
+        echo "
+        <script>
+            alert('Failed to update profile!');
+            window.location.href='edit_profile.php';
+        </script>
+        ";
     }
 }
 ?>

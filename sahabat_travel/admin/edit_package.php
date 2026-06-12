@@ -544,7 +544,7 @@ if (isset($_POST['update_package'])) {
     
         echo "
         <script>
-            alert('Package ini telah diupdate');
+            alert('This package has been updated!');
             window.location.href='admin_manage_package.php';
         </script>
         ";
@@ -553,7 +553,7 @@ if (isset($_POST['update_package'])) {
     
         echo "
         <script>
-            alert('Tiada perubahan berlaku untuk package ini');
+            alert('No changes have occurred for this package.');
             window.location.href='admin_manage_package.php';
         </script>
         ";

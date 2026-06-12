@@ -64,7 +64,7 @@ if (isset($_GET['delete'])) {
     }
 
     echo "<script>
-        alert('Country berjaya dipadam!');
+        alert('Country successfully deleted!');
         window.location.href='admin_manage_country.php';
     </script>";
     exit();
