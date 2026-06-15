@@ -238,7 +238,7 @@ $navbarClass = in_array($currentPage, $lightPages) ? 'navbar-light' : 'navbar-da
         <?php if(isset($_SESSION['user_id'])): ?>
 
             <li>
-                <a href="#" onclick="confirmLogout(event)">
+                <a href="homepage.php?logout=1">
                     <i class="fa-solid fa-right-from-bracket"></i> 
                     Logout
                 </a>
@@ -294,10 +294,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function confirmLogout(event) {
-    event.preventDefault(); // stop link behavior
+    event.preventDefault();
 
     if (confirm("Are you sure you want to logout?")) {
-        window.location.href = "navbar.php?logout=1";
+        window.location.href = "?logout=1";
     }
     }
 });
