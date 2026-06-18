@@ -96,12 +96,12 @@ if (isset($_POST['book'])) {
     if (in_array($agency, ['SUKA', 'MTB'])) {
 
         $total_amount =
-            ($adult_twin * ($prices['Adult Twin / Triple'] ?? 0)) +
-            ($single * ($prices['Single'] ?? 0)) +
-            ($child_twin * ($prices['Child Twin'] ?? 0)) +
-            ($child_no_bed * ($prices['Child No Bed'] ?? 0)) +
-            ($child_with_bed * ($prices['Child With Bed'] ?? 0)) +
-            ($infant * ($prices['Infant'] ?? 0));
+        $adult_twin = (int)($_POST['adult_twin'] ?? 0);
+        $single = (int)($_POST['single'] ?? 0);
+        $child_twin = (int)($_POST['child_twin'] ?? 0);
+        $child_no_bed = (int)($_POST['child_no_bed'] ?? 0);
+        $child_with_bed = (int)($_POST['child_with_bed'] ?? 0);
+        $infant = (int)($_POST['infant'] ?? 0);
 
         $total_pax = $adult_twin + $single + $child_twin + $child_no_bed + $child_with_bed + $infant;
 

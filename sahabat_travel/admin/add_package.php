@@ -141,12 +141,12 @@ if (isset($_POST['submit_package'])) {
     */
 
     $pricingData = [
-        ['Adult Twin / Triple', $adult_twin_triple],
-        ['Single', $single_price],
-        ['Child Twin', $child_twin],
-        ['Child No Bed', $child_no_bed],
-        ['Child With Bed', $child_with_bed],
-        ['Infant', $infant_price]
+        ['adult_twin_triple', $adult_twin_triple],
+        ['single', $single_price],
+        ['child_twin', $child_twin],
+        ['child_no_bed', $child_no_bed],
+        ['child_with_bed', $child_with_bed],
+        ['infant', $infant_price]
     ];
 
     foreach ($pricingData as $p) {
