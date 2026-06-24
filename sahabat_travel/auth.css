@@ -59,7 +59,7 @@ body{
 
 /* FORM STYLE */
 form{
-    background:#fff;
+    background-image: url(picture/background\ auth.jpeg);
     display:flex;
     align-items:center;
     justify-content:center;
