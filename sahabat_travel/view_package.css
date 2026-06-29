@@ -258,6 +258,18 @@ th.th-4 { background: #ff6a00; }  /* SUKA */
     cursor: pointer;
 }
 
+.no-data{
+    color: #888;
+    font-style: italic;
+    margin: 10px 0;
+}
+
+.unavailable-link{
+    color: #999;
+    font-style: italic;
+    cursor: not-allowed;
+}
+
 /* =========================
    POPUP MODAL
 ========================= */

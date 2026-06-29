@@ -224,90 +224,121 @@ if ($package_id > 0) {
                 <h2 class="section-title">Tour Information</h2>
 
                 <div class="tour-row">
-                    <?php if ($data) { ?>
-                        <p>💰 Starting From <span class="highlight-word">RM <?php echo number_format($data['starting_price'] ?? 0, 2); ?></span></p>
-                        <p>💵 Deposit per pax <span class="highlight-word">RM <?php echo $data['deposit'] ?? '0'; ?></span></p>
-                        <?php if (($data['package_type'] ?? '') == 'MTB'): ?>
-                            <?php if (($data['package_category'] ?? '') == 'group'): ?>
-                                <p>👨‍👩‍👧‍👦 Group Package</p>
+                <?php if ($data) { ?>
 
-                            <?php elseif (($data['package_category'] ?? '') == 'private'): ?>
-                                <p>🚶 Private Package</p>
+                    <p>💰 Starting From <span class="highlight-word">
+                        RM <?php echo number_format($data['starting_price'] ?? 0, 2); ?>
+                    </span></p>
 
-                            <?php elseif (($data['package_category'] ?? '') == 'honeymoon'): ?>
-                                <p>🧑‍🤝‍🧑 Honeymoon Package</p>
-                                
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        <p>👥 Min <?php echo $data['min_pax'] ?? '0'; ?> Pax</p>
-                        <p>✈️ Flight: <?php echo $data['flight_details'] ?? 'TBA'; ?></p>
-                        <p>
-                            📋 <a href="#" class="view-link" onclick="openPopup(); return false;">
-                                Tour Details
-                            </a>
-                        </p>
-                        <p>
-                            📄 Download Itinerary:
-                            <a href="uploads/<?php echo $data['itinerary_file'] ?? '#'; ?>" class="view-link" download>
+                    <p>💵 Deposit per pax <span class="highlight-word">
+                        RM <?php echo number_format($data['deposit'] ?? 0, 2); ?>
+                    </span></p>
+
+                    <?php if (($data['package_type'] ?? '') == 'MTB') { ?>
+
+                        <?php if (($data['package_category'] ?? '') == 'group') { ?>
+                            <p>👨‍👩‍👧‍👦 Group Package</p>
+
+                        <?php } elseif (($data['package_category'] ?? '') == 'private') { ?>
+                            <p>🚶 Private Package</p>
+
+                        <?php } elseif (($data['package_category'] ?? '') == 'honeymoon') { ?>
+                            <p>🧑‍🤝‍🧑 Honeymoon Package</p>
+                        <?php } ?>
+
+                    <?php } ?>
+
+                    <p>👥 Min <?php echo $data['min_pax'] ?? '0'; ?> Pax</p>
+
+                    <p>✈️ Flight:
+                        <?php echo !empty($data['flight_details']) ? htmlspecialchars($data['flight_details']) : 'TBA'; ?>
+                    </p>
+
+                    <p>
+                        📋
+                        <a href="#" class="view-link" onclick="openPopup(); return false;">
+                            Tour Details
+                        </a>
+                    </p>
+
+                    <?php
+                    $file = $data['itinerary_file'] ?? '';
+                    $filePath = 'uploads/' . $file;
+                    ?>
+
+                    <p>
+                        📄 Download Itinerary:
+
+                        <?php if (!empty($file) && file_exists($filePath)) { ?>
+                            <a href="<?php echo htmlspecialchars($filePath); ?>" class="view-link" download>
                                 Click here
                             </a>
-                        </p>
-                    <?php } else { ?>
-                        <p style="text-align:center;">No package data found</p>
-                    <?php } ?>
-                </div>
-            </div>
+                        <?php } else { ?>
+                            <span class="unavailable-link">Unavailable</span>
+                        <?php } ?>
+                    </p>
 
+                <?php } ?>
+            </div>
         </div>
 
     </div>
 
-    <!-- POPUP (UNCHANGED) -->
+    <!-- POPUP -->
     <div id="popupBox" class="popup-overlay">
         <div class="popup-content">
 
             <span class="close-btn" onclick="closePopup()">&times;</span>
 
-            <?php if (!empty($halfboard) || !empty($fullboard)) { ?>
+            <!-- Included -->
             <div class="include-box">
-
                 <h4>✅ Included</h4>
 
-                <?php if (!empty($halfboard)) { ?>
+                <!-- Halfboard -->
                 <div class="sub-include">
                     <h5>🍽️ Halfboard</h5>
-                    <ul>
-                        <?php foreach ($halfboard as $item) { ?>
-                            <li><?php echo $item; ?></li>
-                        <?php } ?>
-                    </ul>
-                </div>
-                <?php } ?>
 
-                <?php if (!empty($fullboard)) { ?>
+                    <?php if (!empty($halfboard)) { ?>
+                        <ul>
+                            <?php foreach ($halfboard as $item) { ?>
+                                <li><?php echo htmlspecialchars($item); ?></li>
+                            <?php } ?>
+                        </ul>
+                    <?php } else { ?>
+                        <p class="no-data">No halfboard details available.</p>
+                    <?php } ?>
+                </div>
+
+                <!-- Fullboard -->
                 <div class="sub-include">
                     <h5>🍴 Fullboard</h5>
-                    <ul>
-                        <?php foreach ($fullboard as $item) { ?>
-                            <li><?php echo $item; ?></li>
-                        <?php } ?>
-                    </ul>
+
+                    <?php if (!empty($fullboard)) { ?>
+                        <ul>
+                            <?php foreach ($fullboard as $item) { ?>
+                                <li><?php echo htmlspecialchars($item); ?></li>
+                            <?php } ?>
+                        </ul>
+                    <?php } else { ?>
+                        <p class="no-data">No fullboard details available.</p>
+                    <?php } ?>
                 </div>
-                <?php } ?>
-
             </div>
-            <?php } ?>
 
-            <?php if (!empty($exclude)) { ?>
+            <!-- Excluded -->
             <div class="exclude-box">
                 <h4>❌ Not Included</h4>
-                <ul>
-                    <?php foreach ($exclude as $item) { ?>
-                        <li><?php echo $item; ?></li>
-                    <?php } ?>
-                </ul>
+
+                <?php if (!empty($exclude)) { ?>
+                    <ul>
+                        <?php foreach ($exclude as $item) { ?>
+                            <li><?php echo htmlspecialchars($item); ?></li>
+                        <?php } ?>
+                    </ul>
+                <?php } else { ?>
+                    <p class="no-data">No excluded details available.</p>
+                <?php } ?>
             </div>
-            <?php } ?>
 
         </div>
     </div>

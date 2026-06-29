@@ -38,6 +38,14 @@ if (isset($_POST['submit_package'])) {
     $title               = mysqli_real_escape_string($conn, $_POST['title']);
     $duration            = mysqli_real_escape_string($conn, $_POST['duration']);
     $tour_category_id    = intval($_POST['tour_category']);
+    $categoryResult = mysqli_query($conn,
+        "SELECT tour_category_name
+        FROM tour_categories
+        WHERE tour_category_id = '$tour_category_id'"
+    );
+
+    $category = mysqli_fetch_assoc($categoryResult);
+
     $country_id          = !empty($_POST['country_id']) ? intval($_POST['country_id']) : "NULL";
     $agency_id           = intval($_POST['agency_id']);
     $package_category_id = intval($_POST['package_category_id']);
@@ -63,10 +71,10 @@ if (isset($_POST['submit_package'])) {
 
     $starting_price = $_POST['starting_price'] ?? 0;
     $deposit        = $_POST['deposit'] ?? 0;
-    $flight_details = mysqli_real_escape_string($conn, $_POST['flight_details']);
+    $flight_details = mysqli_real_escape_string($conn, $_POST['flight_details'] ?? '');
     $min_pax        = $_POST['min_pax'] ?? 1;
 
-    $status = mysqli_real_escape_string($conn, $_POST['status']);
+    $status = mysqli_real_escape_string($conn, $_POST['status'] ?? '');
 
     /*
     |--------------------------------------------------------------------------
@@ -96,6 +104,26 @@ if (isset($_POST['submit_package'])) {
     | INSERT PACKAGE (ONLY MAIN TABLE)
     |--------------------------------------------------------------------------
     */
+
+    if (
+        empty($_POST['title']) ||
+        empty($_POST['duration']) ||
+        empty($_POST['tour_category']) ||
+        empty($_POST['agency_id']) ||
+        empty($_POST['package_category_id']) ||
+        empty($_POST['status']) ||
+        empty($_FILES['main_image']['name'])
+    
+    ) {
+        die("Please complete all required fields.");
+    }
+
+    if (
+        $category['tour_category_name'] == "International" &&
+        empty($_POST['country_id'])
+    ) {
+        die("Please select a country.");
+    }
 
     $insertPackage = mysqli_query($conn, "
         INSERT INTO packages (
@@ -353,7 +381,7 @@ if (isset($_POST['submit_package'])) {
                     <div class="form-row">
                         <div class="form-group">
                             <label>Tour Category</label>
-                            <select name="tour_category" id="tour-category">
+                            <select name="tour_category" id="tour-category" required>
                                 <option value="">-- Select Category --</option>
                                 <?php while($category = mysqli_fetch_assoc($tourCategoryQuery)) { ?>
                                     <option value="<?= $category['tour_category_id']; ?>">
@@ -379,7 +407,7 @@ if (isset($_POST['submit_package'])) {
                     <div class="form-row">
                         <div class="form-group">
                             <label>Agency</label>
-                            <select name="agency_id">
+                            <select name="agency_id" required>
                                 <option value="">-- Select Agency --</option>
                                 <?php while($agency = mysqli_fetch_assoc($agencyQuery)) { ?>
                                     <option value="<?= $agency['agency_id']; ?>">
@@ -391,7 +419,7 @@ if (isset($_POST['submit_package'])) {
 
                         <div class="form-group">
                             <label>Package Category</label>
-                            <select name="package_category_id">
+                            <select name="package_category_id" required>
                                 <option value="">-- Select Package Type --</option>
                                 <?php while($packageCategory = mysqli_fetch_assoc($packageCategoryQuery)) { ?>
                                     <option value="<?= $packageCategory['package_category_id']; ?>">
@@ -581,13 +609,13 @@ if (isset($_POST['submit_package'])) {
                     <!-- MAIN IMAGE -->
                     <div class="form-group">
                         <label for="main_image">Main Image</label>
-                        <input type="file" id="main_image" name="main_image">
+                        <input type="file" id="main_image" name="main_image" accept="image/*" required>
                     </div>
 
                     <!-- STATUS -->
                     <div class="form-group">
                         <label for="status">Status</label>
-                        <select id="status" name="status">
+                        <select id="status" name="status" required>
                             <option value="">Select Status</option>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
@@ -779,8 +807,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (selectedText === "International") {
             countryGroup.style.display = "block";
+            countrySelect.required = true;
         } else {
             countryGroup.style.display = "none";
+            countrySelect.required = false;
             countrySelect.value = "";
         }
     });

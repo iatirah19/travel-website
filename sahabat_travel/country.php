@@ -78,7 +78,7 @@ $packages = $stmt2->get_result();
         <div class="pakej-row">
 
             <div class="pakej-img-box">
-                <img src="uploads/<?php echo !empty($row['image']) ? $row['image'] : 'default.jpg'; ?>" alt="">
+                <img src="uploads/<?php echo !empty($row['main_image']) ? $row['main_image'] : 'default.jpg'; ?>" alt="">
             </div>
 
             <div class="pakej-main-info">
