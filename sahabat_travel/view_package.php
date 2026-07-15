@@ -280,6 +280,23 @@ if ($package_id > 0) {
 
                 <?php } ?>
             </div>
+
+            <!-- WhatsApp Box -->
+            <div class="box whatsapp-box">
+
+                <h2 class="section-title">Need Assistance?</h2>
+
+                <p class="wa-text">
+                    Have any questions regarding this tour?<br>
+                    Scan the QR code or click the WhatsApp button below to chat with us.
+                </p>
+
+                <img src="picture/QR ws.png" alt="WhatsApp QR Code" class="wa-qr">
+        
+                    <a href="https://wa.me/60148803100" target="_blank" class="wa-btn">
+                        💬 Chat via WhatsApp
+                    </a>
+            </div>
         </div>
 
     </div>
